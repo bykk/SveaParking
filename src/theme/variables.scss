@@ -86,3 +86,7 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+h1, p, small, i {
+  color: #00325c;
+}
