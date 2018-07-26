@@ -7,8 +7,6 @@ import { HttpMethod } from './../model/enum/http-method.enum';
 import { User } from './../model/user';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
-import * as _ from 'lodash';
-
 
 @Injectable()
 export class AuthService {
