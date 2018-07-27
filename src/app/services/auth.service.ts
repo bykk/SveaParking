@@ -1,41 +1,38 @@
 import { Mocks } from './../model/mock-objects';
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs/Observable';
-import { AuthHttp } from 'angular2-jwt';
-import { Headers } from '@angular/http';
+import { Headers, Http, Response } from '@angular/http';
 import { HttpMethod } from './../model/enum/http-method.enum';
 import { User } from './../model/user';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class AuthService {
-    private domain = '';
-    private isMock = true;
+    private domain = "http://sveaparkingapi.azurewebsites.net";
+    private isMock = false;
 
-    constructor(private authHttp: AuthHttp) { }
+    constructor(public httpService: Http) { }
 
     login(user: User) {        
         let isAuthenticated = Mocks.signIn.find(obj => obj.email === user.email && obj.password === user.password);
         return this.isMock ? Observable.of(isAuthenticated).delay(100) :
-            this.ajaxHandler<User>('/api/blahblah', HttpMethod.POST, user);
-    }
+            this.ajaxHandler<string>(`api/account/GetAccount/${user.email}/${user.password}`, HttpMethod.GET);
+    } 
 
-    private ajaxHandler<T>(route: string, httpMethod: HttpMethod, data?: T): Observable<any> {
-        const baseUrl = `${this.domain}/api/${route}`;
+    private ajaxHandler<T>(route: string, httpMethod: HttpMethod, data?: T) : Observable<any> {        
+        const baseUrl = `${this.domain}/${route}`;
+        
         const headers = new Headers();
-        headers.set('content', 'application/json');
-        const url = `${baseUrl}/${route}`;
+        headers.set('Access-Control-Allow-Origin' , '*');
+        headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
+        headers.set('Accept','application/json');
+        headers.set('content-type','application/json');
 
         switch (httpMethod) {
             case HttpMethod.GET:
-                return this.authHttp.get(url, { headers: headers }).flatMap(res => res.json());
-            case HttpMethod.POST:
-                return this.authHttp.post(url, data, { headers: headers }).flatMap(res => res.json());
-            case HttpMethod.DELETE:
-                return this.authHttp.put(url, data, { headers: headers }).flatMap(res => res.json());
-            case HttpMethod.PUT:
-                return this.authHttp.put(url, data, { headers: headers }).flatMap(res => res.json());
+                return this.httpService.get(baseUrl, {}).map((response: Response) => { return response.json(); });
         }
     }
 }

@@ -5,13 +5,12 @@ page-login {
         background-size: cover;
       
         .logo-row {
-          padding-top: 50px;
-          padding-bottom: 20px;
+          padding-top: 10px;
+          padding-bottom: 10px;
         }
      
         .login-box {          
-          padding: 10px 20px 0px 20px;
-          margin-top: 40%;
+          padding: 10px 20px 0px 20px;          
         }
      
         ion-row {
@@ -34,11 +33,14 @@ page-login {
            box-shadow: none !important;
          }
      
-         .submit-btn {
-           background: #1c8da0;
-           border-radius: 30px !important;
-           border: 1px solid #ffffff;
-         }
+        //  .submit-btn {
+        //    background: #1c8da0;
+        //    border-radius: 30px !important;
+        //    border: 1px solid #ffffff;
+        //  }
      
       }  
+      button{
+        border-radius: 30px !important;
+      }
 }

@@ -1,42 +1,63 @@
-import { AboutPage } from './../pages/about/about';
-
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav } from 'ionic-angular';
+import { Platform, Nav, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Storage } from '@ionic/storage';
 
 import { HomePage } from '../pages/home/home';
 import { DashboardPage } from './../pages/dashboard/dashboard';
 import { ParkingPlanPage } from './../pages/parking-plan/parking-plan';
+import { LoginPage } from './../pages/login/login';
+import { AboutPage } from './../pages/about/about';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-  pages: Array<{title: string, component: any}>;
-  rootPage:any = HomePage;
+  pages: Array<{ title: string, component: any }>;
+  rootPage: any = LoginPage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private storage: Storage, private toastCtrl: ToastController) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
+      
+      this.storage.get('authenticated').then(isAuthenticated => {
+        
+        isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
+      }).catch(error => {
+        this.nav.setRoot(LoginPage);
+        let toast = this.toastCtrl.create({
+          message: 'Please enter your credentials',
+          duration: 3000,
+          position: 'bottom'
+        });
+
+        toast.present();
+      });
+
     });
 
     this.pages = [
-      { title: 'Home', component: HomePage },
+      // { title: 'Home', component: HomePage },
       { title: 'Dashboard', component: DashboardPage },
-      { title: 'Your parking plan', component: ParkingPlanPage },          
-      { title: 'About', component: AboutPage }      
+      { title: 'Your parking plan', component: ParkingPlanPage },
+      { title: 'About', component: AboutPage }
     ];
   }
 
   openPage(page) {
-    this.nav.setRoot(page.component)
+    this.nav.push(page.component);
   }
 
- 
+  onLogout(){
+    this.storage.remove('authenticated');
+    this.storage.remove('loggedInUser');
+    this.nav.setRoot(LoginPage);
+  }
 }
+
 

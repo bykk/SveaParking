@@ -1,10 +1,11 @@
+import { LoggedInUser } from './../../app/model/register-user';
 import { HomePage } from './../home/home';
 import { AuthService } from './../../app/services/auth.service';
 import { User } from './../../app/model/user';
 import { Component } from '@angular/core';
-import { NavController, Loading, LoadingController, ToastController, IonicPage } from 'ionic-angular';
+import { NavController, Loading, LoadingController, ToastController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
-@IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
@@ -16,18 +17,24 @@ export class LoginPage {
     public navCtrl: NavController, 
     private authService: AuthService, 
     private loadingCtrl: LoadingController, 
-    private toastCtrl: ToastController) {
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+    private toastCtrl: ToastController,
+    private storage: Storage) {
   }
 
   login() {    
     this.showLoading();
-
-    this.authService.login(this.userCredentials).subscribe(allowed => {
-      if (allowed) {
+   
+    this.authService.login(this.userCredentials).subscribe(userData => {    
+      let response = JSON.parse(userData);      
+      let loggedInUser: LoggedInUser = { 
+        id: response.RegisterUserModel.Id, 
+        firstName: response.RegisterUserModel.FirstName, 
+        lastName:  response.RegisterUserModel.LastName 
+      };
+      
+      this.storage.set('authenticated', true);
+      if (userData != 'null') {
+        this.storage.set('loggedInUser', loggedInUser);
         this.navCtrl.setRoot(HomePage);
       } else {
         this.presentToast('Access denied')

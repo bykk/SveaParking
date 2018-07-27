@@ -1,7 +1,7 @@
 <ion-content class="login-content" padding>
   <ion-row class="logo-row">
-    <ion-col width-100>
-      <img src="../../assets/imgs/logo_invert.png" />
+    <ion-col>
+      <img src="../../assets/imgs/logo_invert.png" width="80%" />
     </ion-col>
   </ion-row>
   <div class="login-box">
@@ -29,7 +29,7 @@
           </ion-list>
         </ion-col>
       </ion-row>
-      <button ion-button type="submit" class="submit-btn" [disabled]="!loginForm.form.valid" block full> Login </button>
+      <button ion-button type="submit" [disabled]="!loginForm.form.valid" color="primary" block full> Login </button>
     </form>
     <!-- <ion-row>
         <ion-col class="signup-col">

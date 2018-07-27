@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @Component({
   selector: 'page-about',
@@ -7,11 +6,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class AboutPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor() {
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad AboutPage');
-  }
-
 }
