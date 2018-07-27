@@ -24,16 +24,16 @@ export class LoginPage {
   login() {    
     this.showLoading();
    
-    this.authService.login(this.userCredentials).subscribe(userData => {    
-      let response = JSON.parse(userData);      
-      let loggedInUser: LoggedInUser = { 
-        id: response.RegisterUserModel.Id, 
-        firstName: response.RegisterUserModel.FirstName, 
-        lastName:  response.RegisterUserModel.LastName 
-      };
-      
-      this.storage.set('authenticated', true);
+    this.authService.login(this.userCredentials).subscribe(userData => {         
       if (userData != 'null') {
+        let response = JSON.parse(userData);      
+        let loggedInUser: LoggedInUser = { 
+          id: response.RegisterUserModel.Id, 
+          firstName: response.RegisterUserModel.FirstName, 
+          lastName:  response.RegisterUserModel.LastName 
+        };
+        
+        this.storage.set('authenticated', true);
         this.storage.set('loggedInUser', loggedInUser);
         this.navCtrl.setRoot(HomePage);
       } else {
