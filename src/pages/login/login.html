@@ -1,4 +1,4 @@
-<ion-content class="login-content" padding>
+<ion-content class="login-content" padding text-center>
   <ion-row class="logo-row">
     <ion-col>
       <img src="../../assets/imgs/logo_invert.png" width="80%" />
@@ -12,7 +12,7 @@
 
             <ion-item>
               <ion-label>
-                <ion-icon ios="ios-person" md="md-person"></ion-icon>
+                <ion-icon ios="ios-contact" md="md-contact"></ion-icon>
               </ion-label>
               <ion-input type="email" placeholder="User Name" name="email" [(ngModel)]="userCredentials.email" required></ion-input>
 
@@ -31,11 +31,11 @@
       </ion-row>
       <button ion-button type="submit" [disabled]="!loginForm.form.valid" color="primary" block full> Login </button>
     </form>
-    <!-- <ion-row>
-        <ion-col class="signup-col">
-          <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Login</button>
-          <button ion-button class="register-btn" block clear (click)="createAccount()">Create New Account</button>
-        </ion-col>
-      </ion-row> -->
   </div>
+  <div style="margin-top: 55%">
+      <h1>SVEA Parking application</h1>
+      <small>Version: 1.0</small><br>
+      <i> by SVEA development team</i>
+  </div>
+  
 </ion-content>

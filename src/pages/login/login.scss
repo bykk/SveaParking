@@ -1,9 +1,13 @@
 page-login {
-    .login-content {
+      ion-content {
         background-image: url('../../assets/imgs/parking_background.jpg');
-        background-repeat: no-repeat;
-        background-size: cover;
-      
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+      }
+
+    .login-content {
+    
         .logo-row {
           padding-top: 10px;
           padding-bottom: 10px;
@@ -20,7 +24,7 @@ page-login {
      
          ion-item {
              border-radius: 30px !important;
-             padding-left: 30px !important;
+             padding-left: 20px !important;
              font-size: 1em;
              margin-bottom: 10px;
              border: 1px solid #ffffff;

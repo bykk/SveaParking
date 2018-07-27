@@ -15,6 +15,7 @@ import { ParkingPlanPage } from './../pages/parking-plan/parking-plan';
 import { HistoryPage } from './../pages/history/history';
 import { AboutPage } from './../pages/about/about';
 import { DashboardPage } from './../pages/dashboard/dashboard';
+import { ProfilePage } from './../pages/profile/profile';
 
 // services
 import { AuthService } from './services/auth.service';
@@ -28,7 +29,8 @@ import { AuthService } from './services/auth.service';
     DashboardPage,
     AboutPage,
     HistoryPage,
-    ParkingPlanPage
+    ParkingPlanPage,
+    ProfilePage
   ],
   imports: [
     BrowserModule,
@@ -47,7 +49,8 @@ import { AuthService } from './services/auth.service';
     DashboardPage,
     AboutPage,
     HistoryPage,
-    ParkingPlanPage
+    ParkingPlanPage,
+    ProfilePage
   ],
   providers: [
     StatusBar,

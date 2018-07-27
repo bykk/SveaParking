@@ -1,3 +1,4 @@
+import { ProfilePage } from './../pages/profile/profile';
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -43,6 +44,7 @@ export class MyApp {
 
     this.pages = [
       // { title: 'Home', component: HomePage },
+      { title: 'Profile', component: ProfilePage },
       { title: 'Dashboard', component: DashboardPage },
       { title: 'Your parking plan', component: ParkingPlanPage },
       { title: 'About', component: AboutPage }
