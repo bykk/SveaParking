@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Headers, Http, Response } from '@angular/http';
 import { HttpMethod } from './../model/enum/http-method.enum';
 import { User } from './../model/user';
+import { Storage } from '@ionic/storage';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/map';
@@ -20,6 +21,19 @@ export class AuthService {
         return this.isMock ? Observable.of(isAuthenticated).delay(100) :
             this.ajaxHandler<string>(`api/account/GetAccount/${user.email}/${user.password}`, HttpMethod.GET);
     } 
+
+    isAuthenticated(): boolean {
+        // let isAuthenticated: boolean = false;
+        // this.storage.get('loggedInUser').then((loggedInUser) => {
+        //     if(loggedInUser != null)
+        //         isAuthenticated = true;
+        //   }).catch(error => {
+        //         isAuthenticated = false;            
+        //   });
+
+        //   return isAuthenticated;
+        return true;
+    }
 
     private ajaxHandler<T>(route: string, httpMethod: HttpMethod, data?: T) : Observable<any> {        
         const baseUrl = `${this.domain}/${route}`;

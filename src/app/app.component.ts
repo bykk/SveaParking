@@ -1,3 +1,4 @@
+import { HomePage } from './../pages/home/home';
 import { ProfilePage } from './../pages/profile/profile';
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, ToastController } from 'ionic-angular';
@@ -5,11 +6,10 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
 
-import { HomePage } from '../pages/home/home';
-import { DashboardPage } from './../pages/dashboard/dashboard';
 import { ParkingPlanPage } from './../pages/parking-plan/parking-plan';
 import { LoginPage } from './../pages/login/login';
 import { AboutPage } from './../pages/about/about';
+import { HallOfFamePage } from '../pages/hall-of-fame/hall-of-fame';
 
 @Component({
   templateUrl: 'app.html'
@@ -25,12 +25,12 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
-      
+
       this.storage.get('authenticated').then(isAuthenticated => {
-        
-        isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
+        isAuthenticated != null ? this.nav.setRoot(ProfilePage) : this.nav.setRoot(LoginPage);
       }).catch(error => {
         this.nav.setRoot(LoginPage);
+
         let toast = this.toastCtrl.create({
           message: 'Please enter your credentials',
           duration: 3000,
@@ -43,19 +43,23 @@ export class MyApp {
     });
 
     this.pages = [
-      // { title: 'Home', component: HomePage },
+      { title: 'Home', component: HomePage },
       { title: 'Profile', component: ProfilePage },
-      { title: 'Dashboard', component: DashboardPage },
+      // { title: 'Dashboard', component: DashboardPage },
       { title: 'Your parking plan', component: ParkingPlanPage },
+      { title: 'Hall of fame', component: HallOfFamePage },
       { title: 'About', component: AboutPage }
     ];
   }
 
-  openPage(page) {
-    this.nav.push(page.component);
+  openPage(page) {        
+    if (page.title == "Home")
+      this.nav.setRoot(page.component);
+    else
+      this.nav.push(page.component);
   }
 
-  onLogout(){
+  onLogout() {
     this.storage.remove('authenticated');
     this.storage.remove('loggedInUser');
     this.nav.setRoot(LoginPage);

@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title text-right>
+      <img class="title-image" src='../../assets/imgs/logo_invert.png' />
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding class="hall-of-fame">
+  <h2 text-center> Hall of fame </h2>
+  <ion-list>
+    <!-- <button ion-item *ngFor="let item of items; let i = index">
+      {{ i+1 }}. {{ item.name }} <span text-right>{{ item.counter }}</span>
+    </button> -->
+    <ion-item class="item" *ngFor="let item of items; let i = index">
+      {{ i+1 }}. {{ item.name }} <span item-end> {{ item.counter }}</span>
+    </ion-item>
+  </ion-list>
+  <!-- <ion-grid>
+    <ion-row *ngFor="let item of items; let i = index">
+      <ion-col>
+        <div>{{ i+1 }}.</div>
+      </ion-col>
+      <ion-col col-auto>
+        <div>{{item.name}}</div>
+      </ion-col>
+      <ion-col>
+        <div>{{item.counter}}</div>
+      </ion-col>
+    </ion-row>
+  </ion-grid> -->
+</ion-content>

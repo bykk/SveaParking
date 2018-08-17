@@ -1,3 +1,5 @@
+import { HallOfFamePage } from './../pages/hall-of-fame/hall-of-fame';
+import { ProfileModule } from './../pages/profile/profile.module';
 import { HTTP } from '@ionic-native/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -15,10 +17,10 @@ import { ParkingPlanPage } from './../pages/parking-plan/parking-plan';
 import { HistoryPage } from './../pages/history/history';
 import { AboutPage } from './../pages/about/about';
 import { DashboardPage } from './../pages/dashboard/dashboard';
-import { ProfilePage } from './../pages/profile/profile';
 
 // services
 import { AuthService } from './services/auth.service';
+
 
 
 @NgModule({
@@ -29,8 +31,8 @@ import { AuthService } from './services/auth.service';
     DashboardPage,
     AboutPage,
     HistoryPage,
-    ParkingPlanPage,
-    ProfilePage
+    ParkingPlanPage, 
+    HallOfFamePage    
   ],
   imports: [
     BrowserModule,
@@ -39,7 +41,8 @@ import { AuthService } from './services/auth.service';
       scrollAssist: false,
       autoFocusAssist: false
     }),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    ProfileModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -50,7 +53,7 @@ import { AuthService } from './services/auth.service';
     AboutPage,
     HistoryPage,
     ParkingPlanPage,
-    ProfilePage
+    HallOfFamePage
   ],
   providers: [
     StatusBar,
