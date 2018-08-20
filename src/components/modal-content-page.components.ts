@@ -1,6 +1,6 @@
 import { AjaxService } from './../app/services/ajax.service';
 import { User } from './../app/model/user';
-import { Platform, NavParams, ViewController } from 'ionic-angular';
+import { Platform, NavParams, ViewController, AlertController } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { CallNumber } from '@ionic-native/call-number';
 
@@ -35,7 +35,7 @@ import { CallNumber } from '@ionic-native/call-number';
         </ion-item>
         <ion-item>
           Phone number
-          <ion-note item-end (click)="callUser(user.phone)">
+          <ion-note item-end (click)="callUser(user)">
             {{ user.phone }}
           </ion-note>
         </ion-item>
@@ -55,16 +55,39 @@ import { CallNumber } from '@ionic-native/call-number';
 export class ModalContentPage {
     user: User = { id: null, firstName: '', lastName: '' };
 
-    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, private ajaxService: AjaxService, private callNumber: CallNumber) {
+    constructor(
+      public platform: Platform, 
+      public params: NavParams, 
+      public viewCtrl: ViewController, 
+      private ajaxService: AjaxService, 
+      private callNumber: CallNumber,
+      public alertCtrl: AlertController) {
         this.ajaxService.getUserById(this.params.get('id')).subscribe(res => {
             this.user = res;
         });
     }
 
-    callUser(phoneNumber) {
-      this.callNumber.callNumber(phoneNumber, true).then(res => {
-        console.log('Launched dialer!', res);
-      }).catch(err => console.log('Error launching dialer', err));
+    callUser(user: User) {
+      const confirmDialog = this.alertCtrl.create({
+        title: 'Call this number: ',
+        message: `${user.firstName} ${user.lastName}: ${user.phone}`,
+        buttons: [
+          {
+            text: 'Disagree',
+            handler: () => console.log('Disagree clicked!')
+          },
+          {
+            text: 'Agree',
+            handler: () => {
+              this.callNumber.callNumber(user.phone, true).then(res => {
+                console.log('Launched dialer!', res);
+              }).catch(err => console.log('Error launching dialer', err));
+            }
+          }
+        ]
+      });
+
+      confirmDialog.present();     
     }
 
     dismiss() {

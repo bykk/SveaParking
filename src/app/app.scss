@@ -24,12 +24,14 @@
 
 .normalToast { 
     .toast-message {         
-        background: color($colors, primary) 
+        background: color($colors, secondary);
+        text-align: center;
     } 
 }
 
 .errorToast { 
     .toast-message {         
-        background: color($colors, danger) 
+        background: color($colors, danger);
+        text-align: center;
     } 
 }
