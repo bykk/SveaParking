@@ -1,3 +1,4 @@
+import { UsersPage } from './../pages/users/users';
 import { HomePage } from './../pages/home/home';
 import { ProfilePage } from './../pages/profile/profile';
 import { Component, ViewChild } from '@angular/core';
@@ -44,10 +45,10 @@ export class MyApp {
 
     this.pages = [
       { title: 'Home', component: HomePage },
-      { title: 'Profile', component: ProfilePage },
-      // { title: 'Dashboard', component: DashboardPage },
+      { title: 'Profile', component: ProfilePage },      
       { title: 'Your parking plan', component: ParkingPlanPage },
       { title: 'Hall of fame', component: HallOfFamePage },
+      { title: 'Users', component: UsersPage },
       { title: 'About', component: AboutPage }
     ];
   }

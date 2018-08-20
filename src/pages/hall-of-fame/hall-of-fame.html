@@ -11,26 +11,11 @@
 
 
 <ion-content padding class="hall-of-fame">
-  <h2 text-center> Hall of fame </h2>
+  <h1 text-center> <ion-icon name="trophy"></ion-icon> Hall of fame <ion-icon name="trophy"></ion-icon> </h1>
+  <!-- <ion-item-divider></ion-item-divider> -->
   <ion-list>
-    <!-- <button ion-item *ngFor="let item of items; let i = index">
-      {{ i+1 }}. {{ item.name }} <span text-right>{{ item.counter }}</span>
-    </button> -->
     <ion-item class="item" *ngFor="let item of items; let i = index">
-      {{ i+1 }}. {{ item.name }} <span item-end> {{ item.counter }}</span>
+      {{ i+1 }}. {{ item.firstName }} {{ item.lastName }} <span item-end> {{ item.tookParkingCounter }}</span>
     </ion-item>
   </ion-list>
-  <!-- <ion-grid>
-    <ion-row *ngFor="let item of items; let i = index">
-      <ion-col>
-        <div>{{ i+1 }}.</div>
-      </ion-col>
-      <ion-col col-auto>
-        <div>{{item.name}}</div>
-      </ion-col>
-      <ion-col>
-        <div>{{item.counter}}</div>
-      </ion-col>
-    </ion-row>
-  </ion-grid> -->
 </ion-content>

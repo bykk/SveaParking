@@ -27,9 +27,9 @@
             <p>You can authorize other colleagues to manage your parking spot. Select colleague from dropdown menu that you
                 want to grant rights to release your own parking spot</p>
             <ion-item>
-                <ion-label>Impersonate colleagues</ion-label>
-                <ion-select [(ngModel)]="impersonatedCollegues" okText="Save" cancelText="Dismiss" multiple="true" (ionChange)="updateImpersonateList()">
-                    <ion-option *ngFor="let collegue of colleagues">{{ collegue.name }}</ion-option>
+                <ion-label text-left> <ion-icon ios="ios-apps" md="md-apps"></ion-icon>&nbsp;&nbsp; Impersonate users</ion-label>
+                <ion-select [(ngModel)]="impersonatedUsers" okText="Save" cancelText="Dismiss" multiple="true" (ionChange)="updateImpersonateList($event)">
+                    <ion-option *ngFor="let user of users" value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</ion-option>
                 </ion-select>
             </ion-item>
         </ion-list>
@@ -39,7 +39,7 @@
                 <ion-item>
                     <ion-label>User</ion-label>
                     <ion-select formControlName="user" [formGroup]="releaseParkingForm">
-                        <ion-option *ngFor="let collegue of listOfImpersonatedCollegues" [value]="collegue.id">{{ collegue.name }}</ion-option>
+                        <ion-option *ngFor="let user of listOfImpersonatedByUser" [value]="user.id">{{ user.firstName }} {{ user.lastName }} </ion-option>
                     </ion-select>
                 </ion-item>
                 <ion-item>

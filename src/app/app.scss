@@ -21,3 +21,15 @@
     height: 10%;
 
 }
+
+.normalToast { 
+    .toast-message {         
+        background: color($colors, primary) 
+    } 
+}
+
+.errorToast { 
+    .toast-message {         
+        background: color($colors, danger) 
+    } 
+}

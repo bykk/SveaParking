@@ -15,5 +15,6 @@ export class SettingsPage {
      updateEmailNotification(event) {
         let emailNotificationEnabled: boolean = event.value;        
         // write an ajax call for updating this
+        console.log(emailNotificationEnabled);
     }
 }

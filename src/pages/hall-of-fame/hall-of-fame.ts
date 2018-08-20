@@ -1,3 +1,5 @@
+import { AjaxService } from './../../app/services/ajax.service';
+import { UserHallOfFame } from './../../app/model/user-hall-of-fame';
 import { Component } from '@angular/core';
 
 @Component({
@@ -5,16 +7,17 @@ import { Component } from '@angular/core';
   templateUrl: 'hall-of-fame.html',
 })
 export class HallOfFamePage {
-  items: Array<{ id: number, name: string, counter: number}>;
-  constructor() {
-    this.items = [
-      { id: 1, name: 'Vukasin Jelic', counter: 5 },
-      { id: 2, name: 'Ivan Herceg', counter: 10 },
-      { id: 3, name: 'Nemanja Vuckovic', counter: 12 },
-      { id: 4, name: 'Srdjan Debic', counter: 43 },
-      { id: 5, name: 'Savo Garovic', counter: 12 },
-      { id: 6, name: 'Djordje Andric', counter: 11 }
-    ]
+  items: Array<UserHallOfFame>;
+
+  constructor(private ajaxService: AjaxService) {
+    this.items = new Array<UserHallOfFame>();
+
+    this.ajaxService.getUserForHallOfFame().subscribe(res=> {
+      this.items = res;
+      this.items.sort((x, y) => {
+        return y.tookParkingCounter-x.tookParkingCounter;
+      });
+    });
     
   }
 }

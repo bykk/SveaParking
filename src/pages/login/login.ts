@@ -1,10 +1,11 @@
-import { LoggedInUser } from './../../app/model/register-user';
-import { HomePage } from './../home/home';
-import { AuthService } from './../../app/services/auth.service';
-import { User } from './../../app/model/user';
 import { Component } from '@angular/core';
 import { NavController, Loading, LoadingController, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+
+import { UserCredentials } from './../../app/model/user-credentials';
+import { AjaxService } from './../../app/services/ajax.service';
+import { LoggedInUser } from './../../app/model/register-user';
+import { HomePage } from './../home/home';
 
 @Component({
   selector: 'page-login',
@@ -12,10 +13,10 @@ import { Storage } from '@ionic/storage';
 })
 export class LoginPage {
   loading: Loading
-  userCredentials: User = { email: '', password: '' };
+  userCredentials: UserCredentials = { email: '', password: '' };
   constructor(
     public navCtrl: NavController, 
-    private authService: AuthService, 
+    private ajaxService: AjaxService, 
     private loadingCtrl: LoadingController, 
     private toastCtrl: ToastController,
     private storage: Storage) {
@@ -24,7 +25,7 @@ export class LoginPage {
   login() {    
     this.showLoading();
    
-    this.authService.login(this.userCredentials).subscribe(userData => {         
+    this.ajaxService.signIn(this.userCredentials).subscribe(userData => {         
       if (userData != 'null') {
         let response = JSON.parse(userData);      
         let loggedInUser: LoggedInUser = { 

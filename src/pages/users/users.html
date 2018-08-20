@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title text-right>
+      <img class="title-image" src='../../assets/imgs/logo_invert.png' />
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      Users
+    </ion-list-header>
+    <a ion-item *ngFor="let user of users" (click)="openModal(user.id)">
+      {{ user.firstName }} {{ user.lastName }}
+    </a>
+  
+  </ion-list>
+</ion-content>

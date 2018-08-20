@@ -1,13 +1,11 @@
 .hall-of-fame {
-    background-image: url('../../assets/imgs/parking_background.jpg');
-    background-repeat: no-repeat;
-    background-size:cover;    
+    background-color: white;        
 }
 
-.hall-of-fame h2 {
-    color: white;
+.hall-of-fame {
+    color: color($colors, primary);
 }
 
 .hall-of-fame .item {
-    color: #1c8da0;
+    color: #1c8da0;    
 }

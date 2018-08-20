@@ -2,7 +2,6 @@ import { CarsPage } from './cars/cars';
 import { ChangePasswordPage } from './change-password/change-password';
 import { MyPage } from './my-page/my-page';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
 import { SettingsPage } from './settings/settings';
 import { ImpersonatePage } from './impersonate/impersonate';
 
@@ -17,7 +16,6 @@ export class ProfilePage {
   settings = SettingsPage;
   impersonate = ImpersonatePage
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  constructor() { }
 
 }

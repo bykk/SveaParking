@@ -1,39 +1,67 @@
+import { AjaxService } from './../../../app/services/ajax.service';
+import { ToastController } from 'ionic-angular';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Component } from '@angular/core';
+import { User } from '../../../app/model/user';
+import { Storage } from '@ionic/storage';
 
 @Component({
     selector: 'impersonate',
     templateUrl: 'impersonate.html',
 })
 export class ImpersonatePage {
+    loggedInUser: User;
     segmentOptions: string = 'others';
-    releaseParkingForm: FormGroup;    
-    impersonatedCollegues = null;    
-    
-    listOfImpersonatedCollegues: Array<{id: number, name: string}> = [
-        { id: 1, name: 'Vukasin Jelic' },
-        { id: 2, name: 'Djordje Andric' }
-    ]
+    users: Array<User>;
+    releaseParkingForm: FormGroup;
+    listOfImpersonatedByUser: Array<User>;     
+    impersonatedUsers: Array<User>;
 
-    // get list of colleagues from api
-    colleagues = [
-        { id: 1, name: 'Vukasin Jelic' },
-        { id: 2, name: 'Ivan Herceg' },
-        { id: 3, name: 'Nemanja Vuckovic' },
-        { id: 4, name: 'Srdjan Debic' },
-        { id: 5, name: 'Savo Garovic' },
-        { id: 6, name: 'Djordje Andric' }
-    ]
-    constructor() {
+    constructor(private ajaxService: AjaxService, private toastCtrl: ToastController, private storage: Storage) {
+        this.users = new Array<User>();
+        this.loggedInUser = { id: null, firstName: '', lastName: '' };
+
+        this.storage.get('loggedInUser').then(loggedInUser => {            
+            this.loggedInUser = loggedInUser;
+          }).catch(error => {
+            this.loggedInUser.firstName = 'Unknown';
+            this.loggedInUser.lastName = 'Unknown';
+          });
+
         this.releaseParkingForm = new FormGroup({
             user: new FormControl(''),
             date: new FormControl('')
         });
-     }
 
-    updateImpersonateList() {
-        console.log(this.impersonatedCollegues);
+        this.ajaxService.getAllUsers().subscribe((res) => {
+            this.users = res;
+        });
 
+        this.ajaxService.getImpersonatedColleguesByUser(this.loggedInUser.id).subscribe(res => {
+            this.listOfImpersonatedByUser = res;
+        })
+    }
+
+    updateImpersonateList(selectedColleguesIDs: Array<string>) {
+        if (selectedColleguesIDs.length > 3) {
+            let toast = this.toastCtrl.create({
+                message: 'You can impersonate only 3 collegues.',
+                duration: 3000,
+                position: 'bottom',
+                cssClass: 'errorToast'
+            });
+            toast.present();
+        }
+        else if (selectedColleguesIDs.length > 0 && selectedColleguesIDs.length <= 3) {
+            let toastr = this.toastCtrl.create({
+                message: 'You impersonated collegues successfully',
+                duration: 3000,
+                position: 'bottom',
+                cssClass: 'normalToast'
+            });
+            toastr.present();
+        }
+        console.log(selectedColleguesIDs);
     }
 
     onSubmit() {

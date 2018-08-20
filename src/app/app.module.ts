@@ -1,13 +1,8 @@
-import { HallOfFamePage } from './../pages/hall-of-fame/hall-of-fame';
-import { ProfileModule } from './../pages/profile/profile.module';
 import { HTTP } from '@ionic-native/http';
-import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-import { HttpModule } from '../../node_modules/@angular/http';
-import { IonicStorageModule } from '@ionic/storage';
 
 // components
 import { MyApp } from './app.component';
@@ -17,11 +12,17 @@ import { ParkingPlanPage } from './../pages/parking-plan/parking-plan';
 import { HistoryPage } from './../pages/history/history';
 import { AboutPage } from './../pages/about/about';
 import { DashboardPage } from './../pages/dashboard/dashboard';
+import { HallOfFamePage } from './../pages/hall-of-fame/hall-of-fame';
+import { UsersPage } from './../pages/users/users';
+
+// modules 
+import { HttpModule } from '../../node_modules/@angular/http';
+import { IonicStorageModule } from '@ionic/storage';
+import { BrowserModule } from '@angular/platform-browser';
+import { ProfileModule } from './../pages/profile/profile.module';
 
 // services
-import { AuthService } from './services/auth.service';
-
-
+import { AjaxService } from './services/ajax.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AuthService } from './services/auth.service';
     AboutPage,
     HistoryPage,
     ParkingPlanPage, 
-    HallOfFamePage    
+    HallOfFamePage,
+    UsersPage 
   ],
   imports: [
     BrowserModule,
@@ -53,14 +55,15 @@ import { AuthService } from './services/auth.service';
     AboutPage,
     HistoryPage,
     ParkingPlanPage,
-    HallOfFamePage
+    HallOfFamePage,
+    UsersPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthService,
-    HTTP
+    {provide: ErrorHandler, useClass: IonicErrorHandler},    
+    HTTP, 
+    AjaxService
   ]
 })
 export class AppModule {}

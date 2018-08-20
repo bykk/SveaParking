@@ -1,14 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { LoggedInUser } from '../../app/model/register-user';
 
 @Component({
 selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
-  @Input() rootPage = '';
-  loggedInUser: { firstName: string, lastName: string } = { firstName: '', lastName: '' };
+export class HomePage {  
+  loggedInUser: LoggedInUser = { id: null, firstName: '', lastName: '' };
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage) { }
 
