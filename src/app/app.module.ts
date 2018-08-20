@@ -1,3 +1,4 @@
+import { CallNumber } from '@ionic-native/call-number';
 import { ModalContentPage } from './../components/modal-content-page.components';
 import { HTTP } from '@ionic-native/http';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -66,7 +67,8 @@ import { AjaxService } from './services/ajax.service';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},    
     HTTP, 
-    AjaxService
+    AjaxService,
+    CallNumber
   ]
 })
 export class AppModule {}

@@ -2,6 +2,7 @@ import { AjaxService } from './../app/services/ajax.service';
 import { User } from './../app/model/user';
 import { Platform, NavParams, ViewController } from 'ionic-angular';
 import { Component } from '@angular/core';
+import { CallNumber } from '@ionic-native/call-number';
 
 @Component({
     template: `
@@ -34,7 +35,7 @@ import { Component } from '@angular/core';
         </ion-item>
         <ion-item>
           Phone number
-          <ion-note item-end>
+          <ion-note item-end (click)="callUser(user.phone)">
             {{ user.phone }}
           </ion-note>
         </ion-item>
@@ -54,10 +55,16 @@ import { Component } from '@angular/core';
 export class ModalContentPage {
     user: User = { id: null, firstName: '', lastName: '' };
 
-    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, private ajaxService: AjaxService) {
+    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, private ajaxService: AjaxService, private callNumber: CallNumber) {
         this.ajaxService.getUserById(this.params.get('id')).subscribe(res => {
             this.user = res;
         });
+    }
+
+    callUser(phoneNumber) {
+      this.callNumber.callNumber(phoneNumber, true).then(res => {
+        console.log('Launched dialer!', res);
+      }).catch(err => console.log('Error launching dialer', err));
     }
 
     dismiss() {
