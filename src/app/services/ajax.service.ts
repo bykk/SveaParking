@@ -27,6 +27,10 @@ export class AjaxService {
             Observable.of(Mocks.collegues).delay(100) : this.ajaxHandler<Array<User>>('api/users', HttpMethod.GET);
     }
 
+    getUserById(id: number) {
+        return this.isMock ?
+            Observable.of(Mocks.collegues.find((obj) => obj.id == id)).delay(100) : this.ajaxHandler<User>('api/users', HttpMethod.GET, id);
+    }
     getImpersonatedColleguesByUser(id: number) {
         return this.isMock ? 
             Observable.of(Mocks.impersonatedCollegues).delay(100) : this.ajaxHandler<Array<User>>('api/users/getImpersonatedByUser', HttpMethod.GET, id);

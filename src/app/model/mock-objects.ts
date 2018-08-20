@@ -12,12 +12,12 @@ const SIGN_IN_MOCK: Array<UserCredentials> = [
 ];
 
 const COLLEGUES_MOCK: Array<User> = [
-    { id: 1, firstName: 'Vukasin', lastName: 'Jelic' },
-    { id: 2, firstName: 'Ivan', lastName: 'Herceg' },
-    { id: 3, firstName: 'Nemanja', lastName: 'Vuckovic' },
-    { id: 4, firstName: 'Srdjan', lastName: 'Debic' },
-    { id: 5, firstName: 'Savo', lastName: 'Garovic' },
-    { id: 6, firstName: 'Djordje', lastName: 'Andric' }
+    { id: 1, firstName: 'Vukasin', lastName: 'Jelic', email: 'vukasin.jelic@svea.com', phone: '+381692211519', hasFixedSpot: false },
+    { id: 2, firstName: 'Ivan', lastName: 'Herceg', email: 'ivan.herceg@svea.com', phone: '+381658352495', hasFixedSpot: true },
+    { id: 3, firstName: 'Nemanja', lastName: 'Vuckovic', email: 'nemanja.vuckovic@svea.com', phone: '0631199309', hasFixedSpot: false },
+    { id: 4, firstName: 'Srdjan', lastName: 'Debic', email: 'srdjan.debic@svea.com', phone: '+38162316837', hasFixedSpot: false },
+    { id: 5, firstName: 'Savo', lastName: 'Garovic', email: 'savo.garovic@svea.com', phone: '+381646125366', hasFixedSpot: false },
+    { id: 6, firstName: 'Djordje', lastName: 'Andric', email: 'djordje.andric@svea.com', phone: '+381652271986', hasFixedSpot: true }
 ];
 
 

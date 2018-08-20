@@ -15,9 +15,9 @@
     <ion-list-header>
       Users
     </ion-list-header>
-    <a ion-item *ngFor="let user of users" (click)="openModal(user.id)">
+    <button ion-item *ngFor="let user of users" (click)="openModal({id: user.id})">
       {{ user.firstName }} {{ user.lastName }}
-    </a>
+    </button>
   
   </ion-list>
 </ion-content>

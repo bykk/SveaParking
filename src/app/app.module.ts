@@ -1,3 +1,4 @@
+import { ModalContentPage } from './../components/modal-content-page.components';
 import { HTTP } from '@ionic-native/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -34,7 +35,8 @@ import { AjaxService } from './services/ajax.service';
     HistoryPage,
     ParkingPlanPage, 
     HallOfFamePage,
-    UsersPage 
+    UsersPage,
+    ModalContentPage 
   ],
   imports: [
     BrowserModule,
@@ -44,7 +46,7 @@ import { AjaxService } from './services/ajax.service';
       autoFocusAssist: false
     }),
     IonicStorageModule.forRoot(),
-    ProfileModule
+    ProfileModule    
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -56,7 +58,8 @@ import { AjaxService } from './services/ajax.service';
     HistoryPage,
     ParkingPlanPage,
     HallOfFamePage,
-    UsersPage
+    UsersPage,
+    ModalContentPage
   ],
   providers: [
     StatusBar,
