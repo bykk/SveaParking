@@ -28,7 +28,7 @@ export class MyApp {
       splashScreen.hide();
 
       this.storage.get('authenticated').then(isAuthenticated => {
-        isAuthenticated != null ? this.nav.setRoot(ProfilePage) : this.nav.setRoot(LoginPage);
+        isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
       }).catch(error => {
         this.nav.setRoot(LoginPage);
 

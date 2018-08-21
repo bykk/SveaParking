@@ -1,3 +1,4 @@
+import { UserParkingSpot } from './user-parking-spot';
 import { UserHallOfFame } from './user-hall-of-fame';
 import { UserCredentials } from './user-credentials';
 import { User } from './user';
@@ -33,11 +34,23 @@ const HALL_OF_FAME_USERS_MOCK: Array<UserHallOfFame> = [
     { id: 4, firstName: 'Srdjan', lastName: 'Debic', tookParkingCounter: 4 },
     { id: 5, firstName: 'Savo', lastName: 'Garovic', tookParkingCounter: 12 },
     { id: 6, firstName: 'Djordje', lastName: 'Andric', tookParkingCounter: 16 }
-]
+];
+
+const AVAILABLE_PARKING_SPOTS_TODAY: Array<UserParkingSpot> = [
+    { id: 2, firstName: 'Ivan', lastName: 'Herceg', hasParkingSpot: true },
+    { id: 3, firstName: 'Nemanja', lastName: 'Vuckovic', hasParkingSpot: true }
+];
+
+const AVAILABLE_PARKING_SPOTS_TOMORROW: Array<UserParkingSpot> = [
+    { id: 4, firstName: 'Srdjan', lastName: 'Debic', hasParkingSpot: true },
+    { id: 5, firstName: 'Savo', lastName: 'Garovic' , hasParkingSpot: true},
+];
 
 export const Mocks = {
     signIn: SIGN_IN_MOCK,
     collegues: COLLEGUES_MOCK,
     impersonatedCollegues: IMPERSONATED_COLLEGUES_MOCK,
-    hallOfFameUsers: HALL_OF_FAME_USERS_MOCK
+    hallOfFameUsers: HALL_OF_FAME_USERS_MOCK,
+    availableParkingSpotsToday: AVAILABLE_PARKING_SPOTS_TODAY,
+    availableParkingSpotsTomorrow: AVAILABLE_PARKING_SPOTS_TOMORROW
 };

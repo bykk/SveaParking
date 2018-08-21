@@ -9,8 +9,54 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding text-center>
-  <h1>Svea Parking Application</h1>
+<ion-content padding>
+  <h2 text-center> Welcome, {{ loggedInUser.firstName }} {{ loggedInUser.lastName }}</h2>
+  <br>
+  <div *ngIf="!hasUserParkingSpot">
+    <ion-card>
+      <ion-card-header class="parking-spot-header">
+        Available parking spots (Today):
+      </ion-card-header>
+      <ion-card-content padding>
+        <ion-grid>
+          <ion-row *ngFor="let user of availableParkingSpotsToday">
+            <ion-col>
+              <div style="padding-top: 5px"> {{ user.firstName }} {{ user.lastName }}</div>
+            </ion-col>
+            <ion-col>
+              <div>
+                <button ion-button color="dark" (click)="takeParkingSpotToday(user)" block full small> Take </button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+    <br>
+    <ion-card>
+      <ion-card-header class="parking-spot-header">
+        Available parking spots (Tomorrow):
+      </ion-card-header>
+      <ion-card-content padding>
+        <ion-grid>
+          <ion-row *ngFor="let user of availableParkingSpotsTomorrow">
+            <ion-col>
+              <div style="padding-top: 5px">{{ user.firstName }} {{ user.lastName }}</div>
+            </ion-col>
+            <ion-col>
+              <div>
+                <button ion-button color="dark" (click)="takeParkingSpotTomorrow(user)" block full small> Take </button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <div *ngIf="hasUserParkingSpot">
+    <h3>Not coming:</h3>
+    <button ion-button color="primary" (click)="releaseParkingSpotToday()" block full> Today </button>
+    <button ion-button color="secondary" (click)="releaseParkingSpotTomorrow()" block full> Tomorrow </button>
+  </div>
 
-  <p> Welcome, {{ loggedInUser.firstName }}  {{ loggedInUser.lastName }}</p>
 </ion-content>
