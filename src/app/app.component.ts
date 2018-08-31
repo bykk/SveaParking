@@ -17,7 +17,7 @@ import { HallOfFamePage } from '../pages/hall-of-fame/hall-of-fame';
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-  pages: Array<{ title: string, component: any }>;
+  pages: Array<{ title: string, component: any, iconCss: any }>;
   rootPage: any = LoginPage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private storage: Storage, private toastCtrl: ToastController) {
@@ -44,12 +44,12 @@ export class MyApp {
     });
 
     this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'Profile', component: ProfilePage },      
-      { title: 'Your parking plan', component: ParkingPlanPage },
-      { title: 'Hall of fame', component: HallOfFamePage },
-      { title: 'Users', component: UsersPage },
-      { title: 'About', component: AboutPage }
+      { title: 'Home', component: HomePage, iconCss: 'home' },
+      { title: 'Profile', component: ProfilePage, iconCss: 'contact' },      
+      //{ title: 'Your parking plan', component: ParkingPlanPage },
+      //{ title: 'Hall of fame', component: HallOfFamePage },
+      //{ title: 'Users', component: UsersPage },
+      { title: 'About', component: AboutPage, iconCss: 'help-circle' }
     ];
   }
 

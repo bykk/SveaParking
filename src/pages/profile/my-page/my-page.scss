@@ -1,11 +1,19 @@
-.parking-spot-image {
-    height: 100px;
-    width: 100px;    
-    margin: auto;
+.parking-spot-header {
+    background-color: #1c8da0;
+    color: white;       
+
 }
 
-.parking-spot-header {
-    background-color:white;
-    color: #1c8da0;
-    border: 2px solid #1c8da0;
+.currentParkingSpot {
+    font-weight: bold;
+    color: color($colors, primary);
+    font-size: 60px;
+}
+
+.propName {
+    font-weight: bold;
+}
+
+.parking-spot-header span {
+    color: color($colors, light);
 }

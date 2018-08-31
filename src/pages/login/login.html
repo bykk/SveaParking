@@ -22,20 +22,21 @@
               <ion-label>
                 <ion-icon ios="ios-key" md="md-key"></ion-icon>
               </ion-label>
-              <ion-input type="password" placeholder="Password" name="password" [(ngModel)]="userCredentials.password" required></ion-input>
-
+              <ion-input #input type="password" placeholder="Password" name="password" [(ngModel)]="userCredentials.password"   required></ion-input>              
             </ion-item>
 
+            <br>
+            <button ion-button type="submit" [disabled]="!loginForm.form.valid" color="primary" round block large> Login </button>
           </ion-list>
         </ion-col>
       </ion-row>
-      <button ion-button type="submit" [disabled]="!loginForm.form.valid" color="primary" block full> Login </button>
+
     </form>
   </div>
   <div style="margin-top: 55%">
-      <h1>SVEA Parking application</h1>
-      <small>Version: 1.0</small><br>
-      <i> by SVEA development team</i>
+    <h1>SVEA Parking application</h1>
+    <small>Version: 1.0</small><br>
+    <i> by SVEA development team</i>
   </div>
-  
+
 </ion-content>

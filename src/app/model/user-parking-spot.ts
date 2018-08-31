@@ -1,6 +1,12 @@
+import { User } from './user';
+
 export interface UserParkingSpot {
     id: number;
-    firstName: string;
-    lastName: string;
-    hasParkingSpot: boolean;
+    parkingSpotNumber: string;
+    startDate: Date;
+    endDate: Date;
+    user: User;
+    daysLeft: any;
+    parkingType: string;
+    parkingPeriod?: string;
 }

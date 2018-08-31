@@ -6,6 +6,7 @@ import { UserCredentials } from './../../app/model/user-credentials';
 import { AjaxService } from './../../app/services/ajax.service';
 import { LoggedInUser } from './../../app/model/register-user';
 import { HomePage } from './../home/home';
+import _ from 'lodash';
 
 @Component({
   selector: 'page-login',
@@ -14,6 +15,7 @@ import { HomePage } from './../home/home';
 export class LoginPage {
   loading: Loading
   userCredentials: UserCredentials = { email: '', password: '' };
+
   constructor(
     public navCtrl: NavController, 
     private ajaxService: AjaxService, 
@@ -25,15 +27,15 @@ export class LoginPage {
   login() {    
     this.showLoading();
    
-    this.ajaxService.signIn(this.userCredentials).subscribe(userData => {         
-      if (userData != 'null') {
-        let response = JSON.parse(userData);      
+    this.ajaxService.signIn(this.userCredentials).subscribe(userData => {  
+      if (!_.isEmpty(userData)) {
+        let response = userData;      
         let loggedInUser: LoggedInUser = { 
-          id: response.RegisterUserModel.Id, 
-          firstName: response.RegisterUserModel.FirstName, 
-          lastName:  response.RegisterUserModel.LastName 
+          id: response.registerUserModel.id, 
+          firstName: response.registerUserModel.firstName, 
+          lastName:  response.registerUserModel.lastName 
         };
-        
+                
         this.storage.set('authenticated', true);
         this.storage.set('loggedInUser', loggedInUser);
         this.navCtrl.setRoot(HomePage);
@@ -65,7 +67,8 @@ export class LoginPage {
     let toast = this.toastCtrl.create({
       message: message,
       duration: 3000,
-      position: 'bottom'
+      position: 'bottom',
+      cssClass: 'errorToast'
     });
 
     toast.present();

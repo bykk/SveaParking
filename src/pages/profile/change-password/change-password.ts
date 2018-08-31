@@ -22,8 +22,7 @@ export class ChangePasswordPage {
     }
 
     onSubmit() {
-        let result = this.changePasswordForm.value;
-        console.log(result);
+        let result = this.changePasswordForm.value;        
 
         let toastr = this.toastCtrl.create({
             message: 'You changed password successfully',

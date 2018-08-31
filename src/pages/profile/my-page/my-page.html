@@ -10,39 +10,40 @@
 </ion-header>
 
 
-<ion-content padding text-center>
+<ion-content padding>
     <ion-card>
         <ion-card-header class="parking-spot-header">
-            Parking spot number (Today):
+            <ion-title color="light">
+                <ion-icon name="help-circle" color="light"></ion-icon>&nbsp; 
+                <span>Parking info</span>
+            </ion-title>
         </ion-card-header>
         <ion-card-content padding>
-            <img class="parking-spot-image" src="../../../assets/imgs/parking.jpg" />
-        </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-        <ion-card-header class="parking-spot-header">
-            Info:
-        </ion-card-header>
-        <ion-card-content padding>
-            <h1> Vukasin Jelic </h1>
             <ion-grid>
                 <ion-row>
-                    <ion-col>
-                        <div>Parking type: </div>
+                    <ion-col col-4>
+                        <span>Parking type: </span>
                     </ion-col>
-                    <ion-col>
-                        <div>-</div>
+                    <ion-col col-8>
+                        <span>{{ userParkingSpot?.parkingType }}</span>
                     </ion-col>
                 </ion-row>
                 <ion-row>
-                        <ion-col>
-                            <div>Parking period: </div>
-                        </ion-col>
-                        <ion-col>
-                            <div>-</div>
-                        </ion-col>
-                    </ion-row>
+                    <ion-col col-4>
+                        <span>Parking period: </span>
+                    </ion-col>
+                    <ion-col col-8>
+                        <span>{{ userParkingSpot?.parkingPeriod }}</span>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col col-4>
+                        <span>Days left: </span>
+                    </ion-col>
+                    <ion-col col-8>
+                        <span>{{ userParkingSpot?.daysLeft }}</span>
+                    </ion-col>
+                </ion-row>
             </ion-grid>
         </ion-card-content>
     </ion-card>

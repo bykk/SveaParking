@@ -5,5 +5,8 @@ export interface User {
     lastName: string;
     email?: string;
     phone?: string;
-    hasFixedSpot?: boolean;
+    userName?: string;
+    isAdmin?: boolean;
+    activated?: boolean;
+    active?: boolean;    
 }

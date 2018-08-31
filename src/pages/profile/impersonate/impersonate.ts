@@ -18,8 +18,7 @@ export class ImpersonatePage {
     impersonatedUsers: Array<User>;
 
     constructor(private ajaxService: AjaxService, private toastCtrl: ToastController, private storage: Storage) {
-        this.users = new Array<User>();
-        this.loggedInUser = { id: null, firstName: '', lastName: '' };
+        this.users = new Array<User>();        
 
         this.storage.get('loggedInUser').then(loggedInUser => {            
             this.loggedInUser = loggedInUser;
@@ -33,13 +32,13 @@ export class ImpersonatePage {
             date: new FormControl('')
         });
 
-        this.ajaxService.getAllUsers().subscribe((res) => {
-            this.users = res;
-        });
+        // this.ajaxService.getAllUsers().subscribe((res) => {
+        //     this.users = res;
+        // });
 
-        this.ajaxService.getImpersonatedColleguesByUser(this.loggedInUser.id).subscribe(res => {
-            this.listOfImpersonatedByUser = res;
-        })
+        // this.ajaxService.getImpersonatedColleguesByUser(this.loggedInUser.id).subscribe(res => {
+        //     this.listOfImpersonatedByUser = res;
+        // });
     }
 
     updateImpersonateList(selectedColleguesIDs: Array<string>) {

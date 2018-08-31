@@ -12,12 +12,14 @@
 
 <ion-content padding>
     <div padding>
+        <h1 text-center>Impersonate</h1>
+        <ion-item-divider></ion-item-divider>
         <ion-segment [(ngModel)]="segmentOptions">
             <ion-segment-button value="others">
-                Authorize others
+                others
             </ion-segment-button>
             <ion-segment-button value="behalf">
-                Impersonate on behalf
+                on behalf
             </ion-segment-button>
         </ion-segment>
     </div>
@@ -27,7 +29,9 @@
             <p>You can authorize other colleagues to manage your parking spot. Select colleague from dropdown menu that you
                 want to grant rights to release your own parking spot</p>
             <ion-item>
-                <ion-label text-left> <ion-icon ios="ios-apps" md="md-apps"></ion-icon>&nbsp;&nbsp; Impersonate users</ion-label>
+                <ion-label text-left>
+                    <ion-icon ios="ios-apps" md="md-apps"></ion-icon>&nbsp;&nbsp; Collegues
+                </ion-label>
                 <ion-select [(ngModel)]="impersonatedUsers" okText="Save" cancelText="Dismiss" multiple="true" (ionChange)="updateImpersonateList($event)">
                     <ion-option *ngFor="let user of users" value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</ion-option>
                 </ion-select>
@@ -39,7 +43,8 @@
                 <ion-item>
                     <ion-label>User</ion-label>
                     <ion-select formControlName="user" [formGroup]="releaseParkingForm">
-                        <ion-option *ngFor="let user of listOfImpersonatedByUser" [value]="user.id">{{ user.firstName }} {{ user.lastName }} </ion-option>
+                        <ion-option *ngFor="let user of listOfImpersonatedByUser" [value]="user.id">{{ user.firstName }}
+                            {{ user.lastName }} </ion-option>
                     </ion-select>
                 </ion-item>
                 <ion-item>
@@ -47,7 +52,7 @@
                     <ion-datetime displayFormat="MM/DD/YYYY" formControlName="date" [formGroup]="releaseParkingForm"></ion-datetime>
                 </ion-item>
                 <div padding>
-                    <button ion-button color="primary" block>Release parking</button>
+                    <button ion-button color="primary" block full large>Release parking</button>
                 </div>
             </form>
         </ion-list>

@@ -25,7 +25,7 @@ page-login {
          ion-item {
              border-radius: 30px !important;
              padding-left: 20px !important;
-             font-size: 1em;
+             font-size: 1.1em;
              margin-bottom: 10px;
              border: 1px solid #ffffff;
              border-bottom: 0px !important;
@@ -35,16 +35,7 @@ page-login {
          .item-inner {
            border-bottom-color: #ffffff !important;
            box-shadow: none !important;
-         }
-     
-        //  .submit-btn {
-        //    background: #1c8da0;
-        //    border-radius: 30px !important;
-        //    border: 1px solid #ffffff;
-        //  }
+         }    
      
       }  
-      button{
-        border-radius: 30px !important;
-      }
 }

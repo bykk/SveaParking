@@ -1,4 +1,4 @@
-import { UserParkingSpot } from './user-parking-spot';
+import { ParkingSpot } from './parking-spot';
 import { UserHallOfFame } from './user-hall-of-fame';
 import { UserCredentials } from './user-credentials';
 import { User } from './user';
@@ -13,12 +13,12 @@ const SIGN_IN_MOCK: Array<UserCredentials> = [
 ];
 
 const COLLEGUES_MOCK: Array<User> = [
-    { id: 1, firstName: 'Vukasin', lastName: 'Jelic', email: 'vukasin.jelic@svea.com', phone: '+381692211519', hasFixedSpot: false },
-    { id: 2, firstName: 'Ivan', lastName: 'Herceg', email: 'ivan.herceg@svea.com', phone: '+381658352495', hasFixedSpot: true },
-    { id: 3, firstName: 'Nemanja', lastName: 'Vuckovic', email: 'nemanja.vuckovic@svea.com', phone: '0631199309', hasFixedSpot: false },
-    { id: 4, firstName: 'Srdjan', lastName: 'Debic', email: 'srdjan.debic@svea.com', phone: '+38162316837', hasFixedSpot: false },
-    { id: 5, firstName: 'Savo', lastName: 'Garovic', email: 'savo.garovic@svea.com', phone: '+381646125366', hasFixedSpot: false },
-    { id: 6, firstName: 'Djordje', lastName: 'Andric', email: 'djordje.andric@svea.com', phone: '+381652271986', hasFixedSpot: true }
+    { id: 1, firstName: 'Vukasin', lastName: 'Jelic', email: 'vukasin.jelic@svea.com', phone: '+381692211519' },
+    { id: 2, firstName: 'Ivan', lastName: 'Herceg', email: 'ivan.herceg@svea.com', phone: '+381658352495' },
+    { id: 3, firstName: 'Nemanja', lastName: 'Vuckovic', email: 'nemanja.vuckovic@svea.com', phone: '0631199309' },
+    { id: 4, firstName: 'Srdjan', lastName: 'Debic', email: 'srdjan.debic@svea.com', phone: '+38162316837' },
+    { id: 5, firstName: 'Savo', lastName: 'Garovic', email: 'savo.garovic@svea.com', phone: '+381646125366' },
+    { id: 6, firstName: 'Djordje', lastName: 'Andric', email: 'djordje.andric@svea.com', phone: '+381652271986' }
 ];
 
 
@@ -36,14 +36,14 @@ const HALL_OF_FAME_USERS_MOCK: Array<UserHallOfFame> = [
     { id: 6, firstName: 'Djordje', lastName: 'Andric', tookParkingCounter: 16 }
 ];
 
-const AVAILABLE_PARKING_SPOTS_TODAY: Array<UserParkingSpot> = [
-    { id: 2, firstName: 'Ivan', lastName: 'Herceg', hasParkingSpot: true },
-    { id: 3, firstName: 'Nemanja', lastName: 'Vuckovic', hasParkingSpot: true }
+const AVAILABLE_PARKING_SPOTS_TODAY: Array<ParkingSpot> = [
+    { id: 2, user: { id: 1, firstName: 'Ivan', lastName: 'Herceg' }, userId: 1, parkingSpotNumber: 1  },
+    { id: 3, user: { id: 2, firstName: 'Nemanja', lastName: 'Vuckovic' },userId: 2, parkingSpotNumber: 2 }
 ];
 
-const AVAILABLE_PARKING_SPOTS_TOMORROW: Array<UserParkingSpot> = [
-    { id: 4, firstName: 'Srdjan', lastName: 'Debic', hasParkingSpot: true },
-    { id: 5, firstName: 'Savo', lastName: 'Garovic' , hasParkingSpot: true},
+const AVAILABLE_PARKING_SPOTS_TOMORROW: Array<ParkingSpot> = [
+    { id: 4, user: { id: 1, firstName: 'Srdjan', lastName: 'Debic' }, userId: 1, parkingSpotNumber: 1},
+    { id: 5, user: { id: 2, firstName: 'Savo', lastName: 'Garovic' }, userId: 2, parkingSpotNumber: 2},
 ];
 
 export const Mocks = {
