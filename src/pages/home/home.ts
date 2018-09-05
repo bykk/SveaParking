@@ -1,9 +1,10 @@
+import { ModalContentPage } from './../../components/modal-content-page.components';
+import { ParkingSpot } from './../../app/model/parking-spot';
 import { ReleaseParkingSpotDay } from './../../app/model/enum/release-parking-spot-day';
 import { UserParkingSpot } from './../../app/model/user-parking-spot';
-import { ParkingSpot } from '../../app/model/parking-spot';
 import { AjaxService } from './../../app/services/ajax.service';
-import { Component } from '@angular/core';
-import { ToastController, LoadingController, Loading, AlertController } from 'ionic-angular';
+import { Component, Output, Input } from '@angular/core';
+import { ToastController, LoadingController, Loading, AlertController, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { LoggedInUser } from '../../app/model/register-user';
 
@@ -22,7 +23,7 @@ export class HomePage {
   disableTomorrowButton: boolean;
   loading: Loading;
 
-  constructor(private ajaxService: AjaxService, private storage: Storage, private toastr: ToastController, public loadingCtrl: LoadingController, public alertCtrl: AlertController) {
+  constructor(private ajaxService: AjaxService, private storage: Storage, private toastr: ToastController, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public modalCtrl: ModalController) {
     this.hasParkingSpot = false;
     this.isPageReady = false;
   }
@@ -34,8 +35,10 @@ export class HomePage {
       this.loggedInUser = loggedInUser;
 
       this.ajaxService.checkIfUserHasParkingSpot(this.loggedInUser.id).subscribe(res => {
+        let todayDate = new Date();
         this.userParkingSpot = res;
-        this.hasParkingSpot = new Date().toDateString() == new Date(this.userParkingSpot.startDate).toDateString();
+        this.hasParkingSpot = todayDate > new Date(this.userParkingSpot.startDate) && todayDate < new Date(this.userParkingSpot.endDate);
+
         this.isPageReady = true;
         this.loading.dismiss();
       });
@@ -48,6 +51,8 @@ export class HomePage {
         this.availableParkingSpotsToday.forEach(parkingSpot => {
           this.ajaxService.getUserById(parkingSpot.userIdReplace).subscribe(res => {
             parkingSpot.replaceUser = res;
+            if (parkingSpot.userIdReplace == this.loggedInUser.id)
+              parkingSpot.isLoggedInUser = true;
 
             if (parkingSpot.user.id == this.loggedInUser.id)
               this.disableTodayButton = true;
@@ -63,7 +68,9 @@ export class HomePage {
           this.ajaxService.getUserById(parkingSpot.userIdReplace).subscribe(res => {
             parkingSpot.replaceUser = res;
 
-            debugger;
+            if (parkingSpot.userIdReplace == this.loggedInUser.id)
+              parkingSpot.isLoggedInUser = true;
+
             if (parkingSpot.user.id == this.loggedInUser.id)
               this.disableTomorrowButton = true;
 
@@ -73,21 +80,23 @@ export class HomePage {
     }
   };
 
-  releaseParkingSpotToday() {
+  releaseParkingSpotToday(): void {
     const confirmDialog = this.alertCtrl.create({
       title: 'Release parking spot',
       message: `Are you sure you want to release parking spot for today?`,
       buttons: [
         {
           text: 'Disagree',
-          handler: () => console.log('Disagree clicked!')
+          handler: () => { }
         },
         {
           text: 'Agree',
           handler: () => {
+            debugger;
             this.presentLoading();
             this.ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
               this.loading.dismiss();
+              this.disableTodayButton = true;
               this.showMessage('Parking spot released successfully');
             }, error => {
               this.showErrorMessage('Parking not released');
@@ -97,22 +106,24 @@ export class HomePage {
       ]
     });
     confirmDialog.present();
-
   }
 
-  releaseParkingSpotTomorrow() {
+  releaseParkingSpotTomorrow(): void {
     const confirmDialog = this.alertCtrl.create({
       title: 'Release parking spot',
       message: `Are you sure you want to release parking spot for tomorrow?`,
       buttons: [
         {
           text: 'Disagree',
-          handler: () => console.log('Disagree clicked!')
+          handler: () => { }
         },
         {
           text: 'Agree',
           handler: () => {
+            this.presentLoading();
             this.ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Tomorrow).subscribe(res => {
+              this.loading.dismiss();
+              this.disableTomorrowButton = true;
               this.showMessage('Parking spot released successfully');
             }, error => {
               this.showErrorMessage('Parking not released');
@@ -122,41 +133,60 @@ export class HomePage {
       ]
     });
     confirmDialog.present();
-  
   }
 
-  takeParkingSpotToday(userParkingSpot: ParkingSpot) {
-    this.ajaxService.takeParkingSpot(userParkingSpot.id, this.loggedInUser.id).subscribe(res => {
-      this.availableParkingSpotsToday.forEach(parkingSpot => {
-        if (parkingSpot.id == userParkingSpot.id) {
-          this.ajaxService.getUserById(this.loggedInUser.id).subscribe(res => {
-            parkingSpot.replaceUser = res;
-          });
-        }
+  takeParkingSpotToday(userParkingSpot: ParkingSpot): void {
+    this.presentLoading();
+    var user = this.loggedInUser;
+
+    this.ajaxService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {
+      debugger;
+      this.storage.get('loggedInUser').then((loggedInUser) => {
+        this.availableParkingSpotsToday.forEach(parkingSpot => {
+          if (parkingSpot.id == userParkingSpot.id) {
+            this.ajaxService.getUserById(loggedInUser.id).subscribe(res => {
+              parkingSpot.replaceUser = res;
+              parkingSpot.userIdReplace = res.id;
+
+              if (parkingSpot.userIdReplace == this.loggedInUser.id)
+                parkingSpot.isLoggedInUser = true;
+            });
+          }
+        });
       });
+
+      this.loading.dismiss();
       this.showMessage('Parking spot taken successfully');
     }, error => {
-      this.showErrorMessage('Parking not taken, try again later');
+      this.showErrorMessage('Parking not taken, you were late :(');
     });
 
   }
 
-  takeParkingSpotTomorrow(userParkingSpot: ParkingSpot) {
+  takeParkingSpotTomorrow(userParkingSpot: ParkingSpot): void {
+    this.presentLoading();
+
     this.ajaxService.takeParkingSpot(userParkingSpot.id, this.loggedInUser.id).subscribe(res => {
       this.availableParkingSpotsTomorrow.forEach(parkingSpot => {
         if (parkingSpot.id == userParkingSpot.id) {
           this.ajaxService.getUserById(this.loggedInUser.id).subscribe(res => {
             parkingSpot.replaceUser = res;
+            parkingSpot.userIdReplace = res.id;
+
+            if (parkingSpot.userIdReplace == this.loggedInUser.id)
+              parkingSpot.isLoggedInUser = true;
+
           });
         }
       });
+      this.loading.dismiss();
       this.showMessage('Parking spot taken successfully');
     }, error => {
-      this.showErrorMessage('Parking not taken, try again later');
+      this.showErrorMessage('Parking not taken, you were late :( ');
     });
-  }
+  };
 
-  presentLoading() {
+  presentLoading(): void {
     this.loading = this.loadingCtrl.create({
       content: 'Please wait...'
     });
@@ -177,18 +207,25 @@ export class HomePage {
     return false;
   }
 
-  showErrorMessage(message: string) {
+  openModal(user) {       
+    if(this.loggedInUser.id == user.id) 
+      return;
+    
+    let modal = this.modalCtrl.create(ModalContentPage, user);
+    modal.present();
+  }
+
+  showErrorMessage(message: string): void {
     let toast = this.toastr.create({
       message: message,
       duration: 3000,
       position: 'bottom',
       cssClass: 'errorToast'
     });
-
     toast.present();
   }
 
-  showMessage(message: string) {
+  showMessage(message: string): void {
     let toastr = this.toastr.create({
       message: message,
       duration: 3000,

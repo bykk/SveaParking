@@ -37,13 +37,13 @@ const HALL_OF_FAME_USERS_MOCK: Array<UserHallOfFame> = [
 ];
 
 const AVAILABLE_PARKING_SPOTS_TODAY: Array<ParkingSpot> = [
-    { id: 2, user: { id: 1, firstName: 'Ivan', lastName: 'Herceg' }, userId: 1, parkingSpotNumber: 1  },
-    { id: 3, user: { id: 2, firstName: 'Nemanja', lastName: 'Vuckovic' },userId: 2, parkingSpotNumber: 2 }
+    { id: 2, user: { id: 1, firstName: 'Ivan', lastName: 'Herceg' }, userId: 1, parkingSpotNumber: 1, isLoggedInUser: false  },
+    { id: 3, user: { id: 2, firstName: 'Nemanja', lastName: 'Vuckovic' },userId: 2, parkingSpotNumber: 2, isLoggedInUser: false }
 ];
 
 const AVAILABLE_PARKING_SPOTS_TOMORROW: Array<ParkingSpot> = [
-    { id: 4, user: { id: 1, firstName: 'Srdjan', lastName: 'Debic' }, userId: 1, parkingSpotNumber: 1},
-    { id: 5, user: { id: 2, firstName: 'Savo', lastName: 'Garovic' }, userId: 2, parkingSpotNumber: 2},
+    { id: 4, user: { id: 1, firstName: 'Srdjan', lastName: 'Debic' }, userId: 1, parkingSpotNumber: 1, isLoggedInUser: false},
+    { id: 5, user: { id: 2, firstName: 'Savo', lastName: 'Garovic' }, userId: 2, parkingSpotNumber: 2, isLoggedInUser: false},
 ];
 
 export const Mocks = {

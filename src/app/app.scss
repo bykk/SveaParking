@@ -36,6 +36,27 @@
     } 
 }
 
+.warrningToastr {
+    .toast-message {
+        background: color($colors, primary);
+        text-align: center;
+    }
+}
+
+.text {
+    font-size: 15px;
+}
+
+.navText {
+    font-size: 22px;
+}
+
+.navTextLogout {
+    font-size: 22px;
+    color: color($colors, light);
+    background-color: color($colors, primary);
+}
+
 ion-icon {
     font-size: 25px; //Preferred size here
 }

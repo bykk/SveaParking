@@ -7,13 +7,13 @@
     <ion-content>
         <ion-list>
             <button *ngFor="let page of pages" (click)="openPage(page)" ion-item menuClose>
-                <ion-icon name="{{page.iconCss}}" color="primary"></ion-icon>&nbsp;
-                <span>{{ page.title }}</span>
+                <ion-icon name="{{page.iconCss}}" color="primary" style="zoom: 1.0;"></ion-icon>&nbsp;
+                <span class="navText">{{ page.title }}</span>
             </button>
 
-            <button (click)="onLogout()" ion-item menuClose>
-                <ion-icon ios="ios-log-out" md="md-log-out" color="primary"></ion-icon>&nbsp;
-                Logout
+            <button class="navTextLogout" (click)="onLogout()" ion-item menuClose>
+                <ion-icon ios="ios-log-out" md="md-log-out" color="light" style="zoom: 1.0;"></ion-icon>&nbsp;
+                <span>Logout</span>
             </button>
         </ion-list>
     </ion-content>

@@ -9,4 +9,5 @@ export interface ParkingSpot {
     replaceUser?: User;
     user: User;
     parkingSpotNumber: number;
+    isLoggedInUser: boolean;
 }

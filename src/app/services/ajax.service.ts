@@ -9,7 +9,6 @@ import { Mocks } from './../model/mock-objects';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/map';
-import _ from "lodash";
 
 import { UserCredentials } from './../model/user-credentials';
 import { User } from './../model/user';
@@ -17,7 +16,7 @@ import { User } from './../model/user';
 @Injectable()
 export class AjaxService {
     private domain = 'http://sveaparkingapi.azurewebsites.net'
-    // private domain = 'http://localhost:61962';
+    //private domain = 'http://localhost:61962/';
     private isMock = false;
 
     constructor(public httpService: Http) { }

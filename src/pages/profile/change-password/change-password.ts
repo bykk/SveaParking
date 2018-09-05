@@ -22,15 +22,17 @@ export class ChangePasswordPage {
     }
 
     onSubmit() {
-        let result = this.changePasswordForm.value;        
+        // let result = this.changePasswordForm.value;        
+        this.showWarningMessage('Not implemented yet :(');    
+    };
 
+    showWarningMessage(message: string): void {
         let toastr = this.toastCtrl.create({
-            message: 'You changed password successfully',
+            message: message,
             duration: 3000,
             position: 'bottom',
-            cssClass: 'normalToast'
+            cssClass: 'warrningToastr'
         });
         toastr.present();
-
-    }
+    };
 }

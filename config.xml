@@ -84,6 +84,7 @@
     <plugin name="cordova-plugin-advanced-http" spec="^1.11.1" />
     <plugin name="cordova-sqlite-storage" spec="^2.3.3" />
     <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
+    <plugin name="cordova-sms-plugin" spec="^0.1.13" />
     <engine name="browser" spec="^5.0.4" />
     <engine name="android" spec="^7.1.1" />
 </widget>

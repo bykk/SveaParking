@@ -11,9 +11,10 @@ page-home {
     }
     
     .parkingTaken {
-        color: color($colors, danger);        
-        padding: 5px;
+        color: color($colors, danger);                
         font-weight: bold;
+        font-size: 15px;
+        text-decoration: underline;
     }
     
     .currentParkingSpot {
@@ -25,4 +26,5 @@ page-home {
     .noParkingAvailable {
         color: color($colors, danger);
     }
+
 }

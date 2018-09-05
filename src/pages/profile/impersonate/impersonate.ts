@@ -14,18 +14,18 @@ export class ImpersonatePage {
     segmentOptions: string = 'others';
     users: Array<User>;
     releaseParkingForm: FormGroup;
-    listOfImpersonatedByUser: Array<User>;     
+    listOfImpersonatedByUser: Array<User>;
     impersonatedUsers: Array<User>;
 
     constructor(private ajaxService: AjaxService, private toastCtrl: ToastController, private storage: Storage) {
-        this.users = new Array<User>();        
+        this.users = new Array<User>();
 
-        this.storage.get('loggedInUser').then(loggedInUser => {            
+        this.storage.get('loggedInUser').then(loggedInUser => {
             this.loggedInUser = loggedInUser;
-          }).catch(error => {
+        }).catch(error => {
             this.loggedInUser.firstName = 'Unknown';
             this.loggedInUser.lastName = 'Unknown';
-          });
+        });
 
         this.releaseParkingForm = new FormGroup({
             user: new FormControl(''),
@@ -60,12 +60,22 @@ export class ImpersonatePage {
             });
             toastr.present();
         }
-        console.log(selectedColleguesIDs);
     }
 
     onSubmit() {
         let result = this.releaseParkingForm.value;
-        console.log(result);
+        this.showWarningMessage('Not implemented yet :(');
+
     }
+
+    showWarningMessage(message: string): void {
+        let toastr = this.toastCtrl.create({
+            message: message,
+            duration: 3000,
+            position: 'bottom',
+            cssClass: 'warrningToastr'
+        });
+        toastr.present();
+    };
 
 }

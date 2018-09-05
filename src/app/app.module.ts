@@ -1,5 +1,3 @@
-import { CallNumber } from '@ionic-native/call-number';
-import { ModalContentPage } from './../components/modal-content-page.components';
 import { HTTP } from '@ionic-native/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -16,6 +14,8 @@ import { AboutPage } from './../pages/about/about';
 import { DashboardPage } from './../pages/dashboard/dashboard';
 import { HallOfFamePage } from './../pages/hall-of-fame/hall-of-fame';
 import { UsersPage } from './../pages/users/users';
+import { HeaderComponent } from './../components/header/header';
+import { ModalContentPage } from './../components/modal-content-page.components';
 
 // modules 
 import { HttpModule } from '../../node_modules/@angular/http';
@@ -25,11 +25,15 @@ import { ProfileModule } from './../pages/profile/profile.module';
 
 // services
 import { AjaxService } from './services/ajax.service';
+import { CallNumber } from '@ionic-native/call-number';
+import { SMS } from '@ionic-native/sms';
+
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
+    HeaderComponent,
     LoginPage,
     DashboardPage,
     AboutPage,
@@ -53,6 +57,7 @@ import { AjaxService } from './services/ajax.service';
   entryComponents: [
     MyApp,
     HomePage,
+    HeaderComponent,
     LoginPage,
     DashboardPage,
     AboutPage,
@@ -68,7 +73,8 @@ import { AjaxService } from './services/ajax.service';
     {provide: ErrorHandler, useClass: IonicErrorHandler},    
     HTTP, 
     AjaxService,
-    CallNumber
+    CallNumber,
+    SMS
   ]
 })
 export class AppModule {}

@@ -87,6 +87,9 @@ $colors: (
 @import "roboto";
 @import "noto-sans";
 
-h1, h2, h3, h4, p, small, i {
+h1, h2, h3, h4, small, i {
   color: #00325c;  
 }
+
+
+$menu-width: 200px;

@@ -17,60 +17,66 @@
       <ion-card-header class="parking-spot-header">
         Available parking spots (Today):
       </ion-card-header>
-      <ion-card-content padding>
-        <ion-list>
-          <ion-item *ngFor="let parkingSpot of availableParkingSpotsToday">
-            <p>{{ parkingSpot.user?.firstName }} {{ parkingSpot.user?.lastName }}</p>
-            <ion-note item-end>
-              <div *ngIf="parkingSpot.userIdReplace == null; else parkingTaken">
-                <button ion-button color="secondary" (click)="takeParkingSpotToday(parkingSpot.user)" block full small> Take </button>
-              </div>
 
-              <ng-template #parkingTaken>
-                <i class="parkingTaken"> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }}                     
-                </i>
-              </ng-template>
-            </ion-note>
-          </ion-item>
-        </ion-list>
-      </ion-card-content>
+      <ion-list *ngIf="availableParkingSpotsToday?.length > 0; else noAvailableParkingSpotsForToday">
+        <ion-item *ngFor="let parkingSpot of availableParkingSpotsToday">
+          <span class="text">{{ parkingSpot.user?.firstName }} {{ parkingSpot.user?.lastName }}</span>
+          <ion-note item-end>
+            <div *ngIf="parkingSpot.userIdReplace == 0; else parkingTaken">
+              <button ion-button color="secondary" (click)="takeParkingSpotToday(parkingSpot)" block full medium> Take</button>
+            </div>
+
+            <ng-template #parkingTaken padding>
+              <i class="parkingTaken" (click)="openModal({id: parkingSpot.replaceUser.id})"> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }}</i>
+              &nbsp;
+              <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotToday()">X</span>
+            </ng-template>
+          </ion-note>
+        </ion-item>
+      </ion-list>
+      <ng-template #noAvailableParkingSpotsForToday text-center padding>
+        <p class="noParkingAvailable"> No available parking spots </p>
+      </ng-template>
+
     </ion-card>
     <br>
     <ion-card>
       <ion-card-header class="parking-spot-header">
         Available parking spots (Tomorrow):
       </ion-card-header>
-      <ion-card-content padding>
-        <ion-list *ngIf="availableParkingSpotsTomorrow?.length > 0; else noAvailableParkingSpotsForTomorrow">
-            <ion-item *ngFor="let parkingSpot of availableParkingSpotsTomorrow">
-              <p>{{ parkingSpot.user?.firstName }} {{ parkingSpot.user?.lastName }}</p>
-              <ion-note item-end>
-                <div *ngIf="parkingSpot.userIdReplace == null; else parkingTaken">
-                  <button ion-button color="secondary" (click)="takeParkingSpotTomorrow(parkingSpot.user)" block full small> Take </button>
-                </div>
-  
-                <ng-template #parkingTaken>
-                  <i class="parkingTaken"> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }}                       
-                  </i>
-                </ng-template>
-              </ion-note>
-            </ion-item>            
-          </ion-list>
-          <ng-template #noAvailableParkingSpotsForTomorrow text-center padding>
-            <p class="noParkingAvailable"> No available parking spots </p>
-          </ng-template>
-      </ion-card-content>
+
+      <ion-list *ngIf="availableParkingSpotsTomorrow?.length > 0; else noAvailableParkingSpotsForTomorrow">
+        <ion-item *ngFor="let parkingSpot of availableParkingSpotsTomorrow">
+          <span class="text">{{ parkingSpot.user?.firstName }} {{ parkingSpot.user?.lastName }}</span>
+          <ion-note item-end>
+            <div *ngIf="parkingSpot.userIdReplace == 0; else parkingTaken">
+              <button ion-button color="secondary" (click)="takeParkingSpotTomorrow(parkingSpot)" block full medium> Take
+              </button>
+            </div>
+
+            <ng-template #parkingTaken>
+              <i class="parkingTaken"> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }}</i>              
+            </ng-template>
+          </ion-note>
+        </ion-item>
+      </ion-list>
+      <ng-template #noAvailableParkingSpotsForTomorrow text-center padding>
+        <p class="noParkingAvailable"> No available parking spots </p>
+      </ng-template>
+
     </ion-card>
   </div>
   <ng-template #noParkingRightNow>
-    <div class="currentParkingSpot"  *ngIf="hasParkingSpot" padding text-center>
+    <div class="currentParkingSpot" *ngIf="hasParkingSpot" padding text-center>
       <h1>Parking spot:</h1>
       <span> {{ userParkingSpot.parkingSpotNumber }} </span>
     </div>
     <ion-item-divider></ion-item-divider>
     <h3>Not coming:</h3>
-    <button ion-button color="primary" [disabled]="isWeekend('today') || disableTodayButton" (click)="releaseParkingSpotToday()" large block full> Today </button>
-    <button ion-button color="secondary" [disabled]="isWeekend('tomorrow') || disableTomorrowButton" (click)="releaseParkingSpotTomorrow()" large block full> Tomorrow </button>
+    <button ion-button color="primary" [disabled]="isWeekend('today') || disableTodayButton" (click)="releaseParkingSpotToday()"
+      large block full> Today </button>
+    <button ion-button color="secondary" [disabled]="isWeekend('tomorrow') || disableTomorrowButton" (click)="releaseParkingSpotTomorrow()"
+      large block full> Tomorrow </button>
   </ng-template>
 
 </ion-content>
