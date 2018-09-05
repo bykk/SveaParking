@@ -63,7 +63,7 @@ import { SMS } from '@ionic-native/sms';
       
     </ion-list>
     <div padding>
-      <button ion-button color="secondary" (click)="sendSMS()" block full large> Send SMS </button>
+      <button ion-button color="secondary" [disabled]="messageToSend?.length < 1" (click)="sendSMS()" block full large> Send SMS </button>
       <button ion-button color="primary"  (click)="sendEmail()" block full large> Send email </button>          
     </div>
   </ion-content>
