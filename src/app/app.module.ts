@@ -27,6 +27,8 @@ import { ProfileModule } from './../pages/profile/profile.module';
 import { AjaxService } from './services/ajax.service';
 import { CallNumber } from '@ionic-native/call-number';
 import { SMS } from '@ionic-native/sms';
+import { Network } from '@ionic-native/network';
+
 
 
 @NgModule({
@@ -74,7 +76,8 @@ import { SMS } from '@ionic-native/sms';
     HTTP, 
     AjaxService,
     CallNumber,
-    SMS
+    SMS,
+    Network
   ]
 })
 export class AppModule {}

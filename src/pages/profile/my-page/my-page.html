@@ -10,41 +10,23 @@
 </ion-header>
 
 
-<ion-content padding>
-    <ion-card>
-        <ion-card-header class="parking-spot-header">
-            <ion-title color="light">
-                <ion-icon name="help-circle" color="light"></ion-icon>&nbsp; 
-                <span>Parking info</span>
-            </ion-title>
-        </ion-card-header>
-        <ion-card-content>
-            <ion-grid>
-                <ion-row>
-                    <ion-col col-5>
-                        <span class="text">Parking type: </span>
-                    </ion-col>
-                    <ion-col col-7>
-                        <span>{{ userParkingSpot?.parkingType }}</span>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col col-5>
-                        <span class="text">Parking period: </span>
-                    </ion-col>
-                    <ion-col col-7>
-                        <span>{{ userParkingSpot?.parkingPeriod }}</span>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col col-5>
-                        <span class="text">Days left: </span>
-                    </ion-col>
-                    <ion-col col-7>
-                        <span>{{ userParkingSpot?.daysLeft }}</span>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-card-content>
-    </ion-card>
+<ion-content text-center padding>
+    <h1>Parking info</h1>    
+    <ion-item-divider></ion-item-divider>
+    <ion-list>
+        <ion-item>
+            Parking type:
+            <span item-end> {{ userParkingSpot?.parkingType }} </span>
+        </ion-item>
+
+        <ion-item>
+            Parking period:
+            <span item-end> {{ userParkingSpot?.parkingPeriod }} </span>
+        </ion-item>
+
+        <ion-item>
+            Days left:
+            <span item-end> {{ userParkingSpot?.daysLeft }} </span>
+        </ion-item>
+    </ion-list>
 </ion-content>

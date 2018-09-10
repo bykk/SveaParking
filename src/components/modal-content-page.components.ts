@@ -83,8 +83,7 @@ export class ModalContentPage {
     public alertCtrl: AlertController,
     private toastr: ToastController,
     private sms: SMS) {
-    this.ajaxService.getUserById(this.params.get('id')).subscribe(res => {
-      console.log(res);
+    this.ajaxService.getUserById(this.params.get('id')).subscribe(res => {      
       this.user = res;
     });
   }

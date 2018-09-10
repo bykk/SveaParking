@@ -15,27 +15,29 @@ import _ from 'lodash';
 export class LoginPage {
   loading: Loading
   userCredentials: UserCredentials = { email: '', password: '' };
+  passwordType: string = 'password';
+  passwordShown: boolean = false;
 
   constructor(
-    public navCtrl: NavController, 
-    private ajaxService: AjaxService, 
-    private loadingCtrl: LoadingController, 
+    public navCtrl: NavController,
+    private ajaxService: AjaxService,
+    private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private storage: Storage) {
   }
 
-  login() {    
+  login() {
     this.showLoading();
-   
-    this.ajaxService.signIn(this.userCredentials).subscribe(userData => {  
+
+    this.ajaxService.signIn(this.userCredentials).subscribe(userData => {
       if (!_.isEmpty(userData)) {
-        let response = userData;      
-        let loggedInUser: LoggedInUser = { 
-          id: response.registerUserModel.id, 
-          firstName: response.registerUserModel.firstName, 
-          lastName:  response.registerUserModel.lastName 
+        let response = userData;
+        let loggedInUser: LoggedInUser = {
+          id: response.registerUserModel.id,
+          firstName: response.registerUserModel.firstName,
+          lastName: response.registerUserModel.lastName
         };
-                
+
         this.storage.set('authenticated', true);
         this.storage.set('loggedInUser', loggedInUser);
         this.navCtrl.setRoot(HomePage);
@@ -46,7 +48,17 @@ export class LoginPage {
       this.loading.dismiss();
       this.showError(error);
     });
-  }
+  };
+
+  togglePassword() {
+    if(this.passwordShown) {
+      this.passwordShown = false;
+      this.passwordType = 'password';
+    } else {
+      this.passwordShown = true;
+      this.passwordType = 'text';
+    }
+  };
 
   showLoading() {
     this.loading = this.loadingCtrl.create({
@@ -54,12 +66,12 @@ export class LoginPage {
       dismissOnPageChange: true
     });
     this.loading.present();
-  }
+  };
 
   showError(errorMessage) {
     this.loading.dismiss();
     this.presentToast(errorMessage);
-  }
+  };
 
   presentToast(message: string) {
     this.loading.dismiss();
@@ -72,5 +84,5 @@ export class LoginPage {
     });
 
     toast.present();
-  }
+  };
 }

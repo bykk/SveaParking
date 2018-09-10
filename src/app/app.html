@@ -1,19 +1,21 @@
-<ion-menu [content]="content">
+<ion-menu [content]="content" >
     <ion-header>
-        <ion-navbar text-center>            
-            <ion-title> <ion-icon name="car" color="primary"></ion-icon>&nbsp; Menu</ion-title>            
+        <ion-navbar text-center>
+            <ion-title>
+                Menu
+            </ion-title>
         </ion-navbar>
     </ion-header>
     <ion-content>
         <ion-list>
             <button *ngFor="let page of pages" (click)="openPage(page)" ion-item menuClose>
-                <ion-icon name="{{page.iconCss}}" color="primary" style="zoom: 1.0;"></ion-icon>&nbsp;
+                <ion-icon name="{{page.iconCss}}" color="primary" style="zoom: 1.0;" item-end></ion-icon>&nbsp;
                 <span class="navText">{{ page.title }}</span>
             </button>
 
-            <button class="navTextLogout" (click)="onLogout()" ion-item menuClose>
-                <ion-icon ios="ios-log-out" md="md-log-out" color="light" style="zoom: 1.0;"></ion-icon>&nbsp;
-                <span>Logout</span>
+            <button (click)="onLogout()" ion-item menuClose>
+                <ion-icon ios="ios-log-out" md="md-log-out" color="primary" style="zoom: 1.0;" item-end></ion-icon>&nbsp;
+                <span class="navText">Logout</span>
             </button>
         </ion-list>
     </ion-content>

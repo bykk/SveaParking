@@ -1,13 +1,6 @@
 page-login {
-      ion-content {
-        background-image: url('../../assets/imgs/parking_background.jpg');          
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-attachment: fixed;                
-      }
-
     .login-content {
-    
+      background-color: color($colors, primary);
         .logo-row {
           padding-top: 10px;
           padding-bottom: 10px;

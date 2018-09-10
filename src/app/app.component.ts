@@ -1,16 +1,13 @@
-import { UsersPage } from './../pages/users/users';
 import { HomePage } from './../pages/home/home';
 import { ProfilePage } from './../pages/profile/profile';
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav, ToastController } from 'ionic-angular';
+import { Platform, Nav, ToastController, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
-
-import { ParkingPlanPage } from './../pages/parking-plan/parking-plan';
 import { LoginPage } from './../pages/login/login';
 import { AboutPage } from './../pages/about/about';
-import { HallOfFamePage } from '../pages/hall-of-fame/hall-of-fame';
+import { Network } from '@ionic-native/network';
 
 @Component({
   templateUrl: 'app.html'
@@ -20,40 +17,54 @@ export class MyApp {
   pages: Array<{ title: string, component: any, iconCss: any }>;
   rootPage: any = LoginPage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private storage: Storage, private toastCtrl: ToastController) {
-    platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
-      splashScreen.hide();
+  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastCtrl: ToastController, private _network: Network, private _alertCtrl: AlertController) {
+    if (!this.isConnected()) {
+      let alert = this._alertCtrl.create({
+        title: 'No network',
+        message: 'Check your internet connection',
+        buttons: [{
+          text: 'Ok',
+          handler: () => { platform.exitApp(); }
+        }]
+      })
+      alert.present();
+    } else {
+      platform.ready().then(() => {
+        status.styleDefault();
+        splashScreen.hide();
 
-      this.storage.get('authenticated').then(isAuthenticated => {
-        isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
-      }).catch(error => {
-        this.nav.setRoot(LoginPage);
+        this._storage.get('authenticated').then(isAuthenticated => {
+          isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
+        }).catch(error => {
+          this.nav.setRoot(LoginPage);
 
-        let toast = this.toastCtrl.create({
-          message: 'Please enter your credentials',
-          duration: 3000,
-          position: 'bottom'
+          let toast = this._toastCtrl.create({
+            message: 'Please enter your credentials',
+            duration: 3000,
+            position: 'bottom'
+          });
+
+          toast.present();
         });
 
-        toast.present();
       });
+    }
 
-    });
+
 
     this.pages = [
       { title: 'Home', component: HomePage, iconCss: 'home' },
-      { title: 'Profile', component: ProfilePage, iconCss: 'contact' },      
-      //{ title: 'Your parking plan', component: ParkingPlanPage },
-      //{ title: 'Hall of fame', component: HallOfFamePage },
-      //{ title: 'Users', component: UsersPage },
+      { title: 'Profile', component: ProfilePage, iconCss: 'contact' },
       { title: 'About', component: AboutPage, iconCss: 'help-circle' }
     ];
   }
 
-  openPage(page) {        
+  isConnected(): boolean {
+    let connType = this._network.type;
+    return connType && connType !== 'unknown' && connType !== 'none';
+  }
+
+  openPage(page) {
     if (page.title == "Home")
       this.nav.setRoot(page.component);
     else
@@ -61,8 +72,8 @@ export class MyApp {
   }
 
   onLogout() {
-    this.storage.remove('authenticated');
-    this.storage.remove('loggedInUser');
+    this._storage.remove('authenticated');
+    this._storage.remove('loggedInUser');
     this.nav.setRoot(LoginPage);
   }
 }

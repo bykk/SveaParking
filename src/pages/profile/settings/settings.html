@@ -10,8 +10,9 @@
 </ion-header>
 
 
-<ion-content text-center>
+<ion-content text-center padding>
     <h1> Settings </h1>
+    <ion-item-divider></ion-item-divider>
     <ion-item>
         <ion-label>Get Email notifications?</ion-label>
         <ion-toggle [(ngModel)]="emailNotificationEnabled" (ionChange)='updateEmailNotification($event)'></ion-toggle>

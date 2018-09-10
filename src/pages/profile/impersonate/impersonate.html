@@ -11,18 +11,17 @@
 
 
 <ion-content padding>
-    <div padding>
-        <h1 text-center>Impersonate</h1>
-        <ion-item-divider></ion-item-divider>
-        <ion-segment [(ngModel)]="segmentOptions">
-            <ion-segment-button value="others">
-                others
-            </ion-segment-button>
-            <ion-segment-button value="behalf">
-                on behalf
-            </ion-segment-button>
-        </ion-segment>
-    </div>
+    <h1 text-center>Impersonate</h1>
+    <ion-item-divider></ion-item-divider>
+    <ion-segment [(ngModel)]="segmentOptions">
+        <ion-segment-button value="others">
+            others
+        </ion-segment-button>
+        <ion-segment-button value="behalf">
+            on behalf
+        </ion-segment-button>
+    </ion-segment>
+
 
     <div [ngSwitch]="segmentOptions">
         <ion-list *ngSwitchCase="'others'">

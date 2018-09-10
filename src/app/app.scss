@@ -49,14 +49,13 @@
 
 .navText {
     font-size: 22px;
-}
-
-.navTextLogout {
-    font-size: 22px;
-    color: color($colors, light);
-    background-color: color($colors, primary);
+    color: color($colors, dark);
 }
 
 ion-icon {
     font-size: 25px; //Preferred size here
+}
+
+.menuTitle {
+    background-color: color($colors, primary);
 }

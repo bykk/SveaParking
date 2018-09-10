@@ -15,18 +15,18 @@
                 <ion-icon ios="ios-contact" md="md-contact"></ion-icon>
               </ion-label>
               <ion-input type="email" placeholder="User Name" name="email" [(ngModel)]="userCredentials.email" required></ion-input>
-
             </ion-item>
 
             <ion-item>
               <ion-label>
                 <ion-icon ios="ios-key" md="md-key"></ion-icon>
               </ion-label>
-              <ion-input #input type="password" placeholder="Password" name="password" [(ngModel)]="userCredentials.password"   required></ion-input>              
+              <ion-input #input [type]="passwordType" placeholder="Password" name="password" [(ngModel)]="userCredentials.password"   required></ion-input>              
+              <ion-icon name="eye" [color]="passwordShown === true ? 'dark' : 'light'" (click)="togglePassword()" item-end></ion-icon>
             </ion-item>
 
             <br>
-            <button ion-button type="submit" [disabled]="!loginForm.form.valid" color="primary" round block large> Login </button>
+            <button ion-button type="submit" [disabled]="!loginForm.form.valid" color="dark" round block large> Login </button>
           </ion-list>
         </ion-col>
       </ion-row>
