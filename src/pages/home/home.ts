@@ -91,8 +91,7 @@ export class HomePage {
         },
         {
           text: 'Agree',
-          handler: () => {
-            debugger;
+          handler: () => {            
             this.presentLoading();
             this.ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
               this.loading.dismiss();
@@ -139,8 +138,7 @@ export class HomePage {
     this.presentLoading();
     var user = this.loggedInUser;
 
-    this.ajaxService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {
-      debugger;
+    this.ajaxService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {      
       this.storage.get('loggedInUser').then((loggedInUser) => {
         this.availableParkingSpotsToday.forEach(parkingSpot => {
           if (parkingSpot.id == userParkingSpot.id) {

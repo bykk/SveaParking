@@ -9,4 +9,6 @@ export interface User {
     isAdmin?: boolean;
     activated?: boolean;
     active?: boolean;    
+    hasFixedSpot?: boolean;
+    toggleSlide?: boolean;
 }

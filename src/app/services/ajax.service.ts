@@ -26,8 +26,7 @@ export class AjaxService {
     }
 
     getAllUsers() {
-        return this.isMock ?
-            Observable.of(Mocks.collegues).delay(200) : this.ajaxHandler<Array<User>>('api/users', HttpMethod.GET);
+        return this.ajaxHandler<Array<User>>('api/account/GetAllUsers', HttpMethod.GET);
     }
 
     getUserById(id: number) {
@@ -54,6 +53,10 @@ export class AjaxService {
 
     getSharedSpotInfo(userId: number) {
         return this.isMock ? Observable.of(true).delay(200) : this.ajaxHandler<Array<object>>(`api/parking/GetSharedSpotInfo/${userId}`, HttpMethod.GET);
+    }
+
+    getFixedSpotInfo(userId: number) {
+        return this.ajaxHandler<Array<ParkingSpot>>(`api/parking/GetFixedSpotInfo/${userId}`, HttpMethod.GET);
     }
 
     releaseParkingSpot(userId: number, day: number) {

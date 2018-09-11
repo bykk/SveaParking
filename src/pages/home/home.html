@@ -21,13 +21,13 @@
         {{ parkingSpot.user?.firstName }} {{ parkingSpot.user?.lastName }}
         <div item-end>
           <div *ngIf="parkingSpot.userIdReplace == 0; else parkingTaken">
-            <button ion-button color="secondary" (click)="takeParkingSpotToday(parkingSpot)" block full medium> Take</button>
+            <button ion-button color="secondary" (click)="takeParkingSpotToday(parkingSpot)" block full large> Take</button>
           </div>
 
           <ng-template #parkingTaken padding>
             <i (click)="openModal({id: parkingSpot.replaceUser.id})"> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </i>
             &nbsp;
-            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotToday()">X</span>
+            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotToday()"><ion-icon color="dark" name="close-circle"></ion-icon></span>
           </ng-template>
         </div>
       </ion-item>
@@ -44,13 +44,13 @@
           {{ parkingSpot.user?.firstName }} {{ parkingSpot.user?.lastName }}
           <div item-end>
             <div *ngIf="parkingSpot.userIdReplace == 0; else parkingTaken">
-              <button ion-button color="secondary" (click)="takeParkingSpotTomorrow(parkingSpot)" block full medium> Take</button>
+              <button ion-button color="secondary" (click)="takeParkingSpotTomorrow(parkingSpot)" block full large> Take</button>
             </div>
   
             <ng-template #parkingTaken padding>
               <i (click)="openModal({id: parkingSpot.replaceUser.id})"> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </i>
               &nbsp;
-              <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotTomorrow()">X</span>
+              <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotTomorrow()"><ion-icon color="dark" name="close-circle"></ion-icon></span>
             </ng-template>
           </div>
         </ion-item>

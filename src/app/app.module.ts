@@ -28,6 +28,7 @@ import { AjaxService } from './services/ajax.service';
 import { CallNumber } from '@ionic-native/call-number';
 import { SMS } from '@ionic-native/sms';
 import { Network } from '@ionic-native/network';
+import { ModalMessage } from '../components/modal-message.components';
 
 
 
@@ -43,7 +44,8 @@ import { Network } from '@ionic-native/network';
     ParkingPlanPage, 
     HallOfFamePage,
     UsersPage,
-    ModalContentPage 
+    ModalContentPage,
+    ModalMessage
   ],
   imports: [
     BrowserModule,
@@ -67,7 +69,8 @@ import { Network } from '@ionic-native/network';
     ParkingPlanPage,
     HallOfFamePage,
     UsersPage,
-    ModalContentPage
+    ModalContentPage,
+    ModalMessage
   ],
   providers: [
     StatusBar,
