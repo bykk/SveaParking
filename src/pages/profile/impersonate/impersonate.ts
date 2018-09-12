@@ -14,14 +14,29 @@ export class ImpersonatePage {
     segmentOptions: string = 'others';
     users: Array<User>;
     releaseParkingForm: FormGroup;
-    listOfImpersonatedByUser: Array<User>;
-    impersonatedUsers: Array<User>;
+    impersonatedUsersOnBehalf: Array<User>;
+    impersonatedUsers: Array<string>;    
+    previousValuesOfImpersonatedUsers: Array<string>;
 
-    constructor(private ajaxService: AjaxService, private toastCtrl: ToastController, private storage: Storage) {
+    constructor(private _ajaxService: AjaxService, private _toastCtrl: ToastController, private _storage: Storage) {        
         this.users = new Array<User>();
 
-        this.storage.get('loggedInUser').then(loggedInUser => {
+        this._storage.get('loggedInUser').then(loggedInUser => {
             this.loggedInUser = loggedInUser;
+
+            this._ajaxService.getAllUsers().subscribe(res => {
+                this.users = res;
+
+                this._ajaxService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe(res => {
+                    this.previousValuesOfImpersonatedUsers = res.map((obj) => {return obj.id});
+                    this.impersonatedUsers = res.map((obj) => { return obj.id });
+                });
+            });
+
+            this._ajaxService.getAllImpersonatedOnBehalfByUser(this.loggedInUser.id).subscribe(res => {
+                this.impersonatedUsersOnBehalf = res;
+            });
+
         }).catch(error => {
             this.loggedInUser.firstName = 'Unknown';
             this.loggedInUser.lastName = 'Unknown';
@@ -31,19 +46,15 @@ export class ImpersonatePage {
             user: new FormControl(''),
             date: new FormControl('')
         });
-
-        // this.ajaxService.getAllUsers().subscribe((res) => {
-        //     this.users = res;
-        // });
-
-        // this.ajaxService.getImpersonatedColleguesByUser(this.loggedInUser.id).subscribe(res => {
-        //     this.listOfImpersonatedByUser = res;
-        // });
     }
 
-    updateImpersonateList(selectedColleguesIDs: Array<string>) {
-        if (selectedColleguesIDs.length > 3) {
-            let toast = this.toastCtrl.create({
+
+    updateImpersonateList() {        
+        if(this.previousValuesOfImpersonatedUsers.join() === this.impersonatedUsers.join())
+            return;
+
+        if (this.impersonatedUsers.length > 3) {
+            let toast = this._toastCtrl.create({
                 message: 'You can impersonate only 3 collegues.',
                 duration: 3000,
                 position: 'bottom',
@@ -51,12 +62,12 @@ export class ImpersonatePage {
             });
             toast.present();
         }
-        else if (selectedColleguesIDs.length > 0 && selectedColleguesIDs.length <= 3) {
-            let toastr = this.toastCtrl.create({
-                message: 'You impersonated collegues successfully',
+        else if (this.impersonatedUsers.length > 0 && this.impersonatedUsers.length <= 3) {        
+            let toastr = this._toastCtrl.create({
+                message: 'Not implemented yet :(',
                 duration: 3000,
                 position: 'bottom',
-                cssClass: 'normalToast'
+                cssClass: 'warrningToastr'
             });
             toastr.present();
         }
@@ -69,7 +80,7 @@ export class ImpersonatePage {
     }
 
     showWarningMessage(message: string): void {
-        let toastr = this.toastCtrl.create({
+        let toastr = this._toastCtrl.create({
             message: message,
             duration: 3000,
             position: 'bottom',

@@ -11,4 +11,5 @@ export interface User {
     active?: boolean;    
     hasFixedSpot?: boolean;
     toggleSlide?: boolean;
+    isImpersonated?: boolean;
 }

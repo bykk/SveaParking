@@ -23,7 +23,7 @@ export class HomePage {
   disableTomorrowButton: boolean;
   loading: Loading;
 
-  constructor(private ajaxService: AjaxService, private storage: Storage, private toastr: ToastController, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public modalCtrl: ModalController) {
+  constructor(private _ajaxService: AjaxService, private _storage: Storage, private _toastrCtrl: ToastController, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public modalCtrl: ModalController) {
     this.hasParkingSpot = false;
     this.isPageReady = false;
   }
@@ -31,25 +31,35 @@ export class HomePage {
   ngOnInit() {
     this.presentLoading();
 
-    this.storage.get('loggedInUser').then((loggedInUser) => {
+    this._storage.get('loggedInUser').then((loggedInUser) => {
       this.loggedInUser = loggedInUser;
 
-      this.ajaxService.checkIfUserHasParkingSpot(this.loggedInUser.id).subscribe(res => {
-        let todayDate = new Date();
+      this._ajaxService.getFixedSpotInfo(this.loggedInUser.id).subscribe(res => {        
+        this.hasParkingSpot = res.parkingSpotNumber !== null;        
         this.userParkingSpot = res;
-        this.hasParkingSpot = todayDate > new Date(this.userParkingSpot.startDate) && todayDate < new Date(this.userParkingSpot.endDate);
 
+        // if doesn't have fixed parking spot check if it's his/her turn 
+        if(!this.hasParkingSpot) {
+          this._ajaxService.checkIfUserHasParkingSpot(this.loggedInUser.id).subscribe(res => {
+            let todayDate = new Date();
+            this.userParkingSpot = res;
+            this.hasParkingSpot = todayDate > new Date(this.userParkingSpot.startDate) && todayDate < new Date(this.userParkingSpot.endDate);                          
+          });
+        }
         this.isPageReady = true;
         this.loading.dismiss();
-      });
+      });      
     });
 
-    if (!this.userParkingSpot) {
-      this.ajaxService.getAvailableParkingSpotsToday().subscribe(res => {
+
+    
+    if (!this.userParkingSpot) {    
+
+      this._ajaxService.getAvailableParkingSpotsToday().subscribe(res => {
         this.availableParkingSpotsToday = res;
 
         this.availableParkingSpotsToday.forEach(parkingSpot => {
-          this.ajaxService.getUserById(parkingSpot.userIdReplace).subscribe(res => {
+          this._ajaxService.getUserById(parkingSpot.userIdReplace).subscribe(res => {
             parkingSpot.replaceUser = res;
             if (parkingSpot.userIdReplace == this.loggedInUser.id)
               parkingSpot.isLoggedInUser = true;
@@ -61,11 +71,11 @@ export class HomePage {
 
       });
 
-      this.ajaxService.getAvailableParkingSpotsTomorrow().subscribe(res => {
+      this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(res => {
         this.availableParkingSpotsTomorrow = res;
 
         this.availableParkingSpotsTomorrow.forEach(parkingSpot => {
-          this.ajaxService.getUserById(parkingSpot.userIdReplace).subscribe(res => {
+          this._ajaxService.getUserById(parkingSpot.userIdReplace).subscribe(res => {
             parkingSpot.replaceUser = res;
 
             if (parkingSpot.userIdReplace == this.loggedInUser.id)
@@ -93,7 +103,7 @@ export class HomePage {
           text: 'Agree',
           handler: () => {            
             this.presentLoading();
-            this.ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
+            this._ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
               this.loading.dismiss();
               this.disableTodayButton = true;
               this.showMessage('Parking spot released successfully');
@@ -120,7 +130,7 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             this.presentLoading();
-            this.ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Tomorrow).subscribe(res => {
+            this._ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Tomorrow).subscribe(res => {
               this.loading.dismiss();
               this.disableTomorrowButton = true;
               this.showMessage('Parking spot released successfully');
@@ -138,11 +148,11 @@ export class HomePage {
     this.presentLoading();
     var user = this.loggedInUser;
 
-    this.ajaxService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {      
-      this.storage.get('loggedInUser').then((loggedInUser) => {
+    this._ajaxService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {      
+      this._storage.get('loggedInUser').then((loggedInUser) => {
         this.availableParkingSpotsToday.forEach(parkingSpot => {
           if (parkingSpot.id == userParkingSpot.id) {
-            this.ajaxService.getUserById(loggedInUser.id).subscribe(res => {
+            this._ajaxService.getUserById(loggedInUser.id).subscribe(res => {
               parkingSpot.replaceUser = res;
               parkingSpot.userIdReplace = res.id;
 
@@ -164,10 +174,10 @@ export class HomePage {
   takeParkingSpotTomorrow(userParkingSpot: ParkingSpot): void {
     this.presentLoading();
 
-    this.ajaxService.takeParkingSpot(userParkingSpot.id, this.loggedInUser.id).subscribe(res => {
+    this._ajaxService.takeParkingSpot(userParkingSpot.id, this.loggedInUser.id).subscribe(res => {
       this.availableParkingSpotsTomorrow.forEach(parkingSpot => {
         if (parkingSpot.id == userParkingSpot.id) {
-          this.ajaxService.getUserById(this.loggedInUser.id).subscribe(res => {
+          this._ajaxService.getUserById(this.loggedInUser.id).subscribe(res => {
             parkingSpot.replaceUser = res;
             parkingSpot.userIdReplace = res.id;
 
@@ -214,7 +224,7 @@ export class HomePage {
   }
 
   showErrorMessage(message: string): void {
-    let toast = this.toastr.create({
+    let toast = this._toastrCtrl.create({
       message: message,
       duration: 3000,
       position: 'bottom',
@@ -224,7 +234,7 @@ export class HomePage {
   }
 
   showMessage(message: string): void {
-    let toastr = this.toastr.create({
+    let toastr = this._toastrCtrl.create({
       message: message,
       duration: 3000,
       position: 'bottom',

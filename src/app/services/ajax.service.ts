@@ -26,16 +26,18 @@ export class AjaxService {
     }
 
     getAllUsers() {
-        return this.ajaxHandler<Array<User>>('api/account/GetAllUsers', HttpMethod.GET);
+        return this.ajaxHandler<Array<User>>('api/user/GetAllUsers', HttpMethod.GET);
     }
 
     getUserById(id: number) {
-        return this.isMock ?
-            Observable.of(Mocks.collegues.find((obj) => obj.id == id)).delay(100) : this.ajaxHandler<User>(`api/account/getUserById/${id}`, HttpMethod.GET, id);
+        return this.ajaxHandler<User>(`api/account/getUserById/${id}`, HttpMethod.GET, id);
     }
-    getImpersonatedColleguesByUser(id: number) {
-        return this.isMock ?
-            Observable.of(Mocks.impersonatedCollegues).delay(200) : this.ajaxHandler<Array<User>>('api/users/getImpersonatedByUser', HttpMethod.GET, id);
+    getAllImpersonatedUsersByUser(userId:number) {
+        return this.ajaxHandler<Array<User>>(`api/user/GetAllImpersonatedUsersByUser/${userId}`, HttpMethod.GET);
+    }
+
+    getAllImpersonatedOnBehalfByUser(userId: number){
+        return this.ajaxHandler<Array<User>>(`api/user/GetAllImpersonatedOnBehalfByUser/${userId}`, HttpMethod.GET);
     }
 
     getUserForHallOfFame() {
@@ -69,6 +71,14 @@ export class AjaxService {
 
     takeParkingSpot(parkingSpot: number, replaceUserId: number) {
         return this.ajaxHandler<object>(`api/parking/take/${parkingSpot}/${replaceUserId}`, HttpMethod.GET);
+    }
+
+    addImpersonatedUser(userId: number, impersonatedUserId: number) {
+        return this.ajaxHandler<string>(`api/user/AddImpersonatedUser/${userId}/${impersonatedUserId}`, HttpMethod.POST);
+    }
+
+    removeImpersonatedUser(userId: number, impersonatedUserId: number) {
+        return this.ajaxHandler<string>(`api/user/AddImpersonatedUser/${userId}/${impersonatedUserId}`, HttpMethod.POST);
     }
 
     private toCamelCase(o) {

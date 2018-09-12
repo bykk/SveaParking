@@ -12,9 +12,11 @@ import { CallNumber } from '@ionic-native/call-number';
 })
 export class UsersPage {
   users: Array<User>;
+  filteredUsers: Array<User>;
 
   constructor(private _ajaxService: AjaxService, public _modalCtrl: ModalController, private _callNumber: CallNumber, public _alertCtrl: AlertController) {
     this.users = new Array<User>();
+    this.filteredUsers = new Array<User>();
 
     this._ajaxService.getAllUsers().subscribe(res => {
       this.users = res;
@@ -27,8 +29,11 @@ export class UsersPage {
         else if (x.lastName > y.lastName) return 1;
         else return 0;
       });
+
+      this.filteredUsers = this.users;
     });
-  }
+  };
+
 
   openModalContentPage(id) {
     let modal = this._modalCtrl.create(ModalContentPage, id);
@@ -68,5 +73,13 @@ export class UsersPage {
   onSlideRight(user: any) {
     let res = this.users.find(x=> x.id == user.id);
     res.toggleSlide = false;
+  }
+
+  getItems(event: any) {    
+    const val = event.target.value;
+    
+    this.filteredUsers = this.users.filter((item) => {        
+      return (item.lastName.toLowerCase().indexOf(val.toLowerCase()) > -1);
+    })
   }
 }

@@ -12,11 +12,12 @@
 
 <ion-content padding text-center>
   <h1>Contact collegue</h1>
-  <ion-item-divider></ion-item-divider>
+  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+  
   <ion-list>    
-    <ion-item-sliding *ngFor="let user of users" (swipeLeft)="onSlideLeft(user)" (swipeRight)="onSlideRight(user)" #item>
+    <ion-item-sliding *ngFor="let user of filteredUsers" (swipeLeft)="onSlideLeft(user)" (swipeRight)="onSlideRight(user)" #item>
       <ion-item (click)="openModalContentPage({ id: user.id })">
-        <span style="font-size: 25px;">{{ user.lastName }} {{ user.firstName }}</span>
+        <span style="font-size: 22px;">{{ user.lastName }} {{ user.firstName }}</span>
         <span item-end>
           <ion-icon *ngIf="!user.toggleSlide" color="primary" name="arrow-dropleft-circle"></ion-icon>
           <ion-icon *ngIf="user.toggleSlide" color="primary" name="arrow-dropright-circle"></ion-icon>
