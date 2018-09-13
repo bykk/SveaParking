@@ -4,6 +4,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Component } from '@angular/core';
 import { User } from '../../../app/model/user';
 import { Storage } from '@ionic/storage';
+import _ from 'lodash';
+import { iterateListLike } from '@angular/core/src/change_detection/change_detection_util';
 
 @Component({
     selector: 'impersonate',
@@ -27,7 +29,12 @@ export class ImpersonatePage {
             this._ajaxService.getAllUsers().subscribe(res => {
                 this.users = res;
 
-                this._ajaxService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe(res => {
+                this._ajaxService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe(res => {                    
+                    if(_.isEmpty(res)) {
+                        this.previousValuesOfImpersonatedUsers = null;
+                        this.impersonatedUsers = null;
+                        return;
+                    }                        
                     this.previousValuesOfImpersonatedUsers = res.map((obj) => {return obj.id});
                     this.impersonatedUsers = res.map((obj) => { return obj.id });
                 });
@@ -50,7 +57,10 @@ export class ImpersonatePage {
 
 
     updateImpersonateList() {        
-        if(this.previousValuesOfImpersonatedUsers.join() === this.impersonatedUsers.join())
+        if(this.previousValuesOfImpersonatedUsers != null && this.impersonatedUsers != null && this.previousValuesOfImpersonatedUsers.join() === this.impersonatedUsers.join())
+            return;
+
+        if(this.previousValuesOfImpersonatedUsers == null)
             return;
 
         if (this.impersonatedUsers.length > 3) {

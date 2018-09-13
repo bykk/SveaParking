@@ -34,11 +34,11 @@ $app-direction: ltr;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #1c8da0,
+  primary:    #00ACC7,
   secondary:  #32db64,
   danger:     #ff0033,
-  light:      #f4f4f4,
-  dark:       #00325c
+  light:      #02E0FF,
+  dark:       #007E90
 );
 
 
@@ -88,8 +88,12 @@ $colors: (
 @import "noto-sans";
 
 h1, h2, h3, h4, small, i {
-  color: #00325c;  
+  color: color($colors, dark);
 }
 
 
 $menu-width: 250px;
+$loading-ios-background: transparent;
+$loading-md-background: $loading-ios-background;
+$loading-wp-background: $loading-ios-background;
+$loading-md-box-shadow: none;

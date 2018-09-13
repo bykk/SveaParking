@@ -28,6 +28,7 @@ export class MyPage {
       this.loggedInUser = loggedInUser;
 
       this.ajaxService.checkIfUserHasParkingSpot(this.loggedInUser.id).subscribe(res => {
+        console.log(JSON.stringify(res, null, 2));
         this.userParkingSpot = res;
         var oneDay = 24 * 60 * 60 * 1000;
         var startDate = new Date(this.userParkingSpot.startDate);
@@ -55,7 +56,9 @@ export class MyPage {
 
   presentLoading(): void {
     this.loading = this.loadingCtrl.create({
-      content: 'Please wait...'
+      spinner: 'bubbles',
+      content: '',      
+      cssClass: 'loadingBackdrop'      
     });
     this.loading.present();
   };

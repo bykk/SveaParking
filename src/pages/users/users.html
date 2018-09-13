@@ -12,7 +12,7 @@
 
 <ion-content padding text-center>
   <h1>Contact collegue</h1>
-  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+  <ion-searchbar (ionInput)="onInput($event)"></ion-searchbar>
   
   <ion-list>    
     <ion-item-sliding *ngFor="let user of filteredUsers" (swipeLeft)="onSlideLeft(user)" (swipeRight)="onSlideRight(user)" #item>

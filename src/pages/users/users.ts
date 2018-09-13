@@ -3,7 +3,7 @@ import { ModalContentPage } from './../../components/modal-content-page.componen
 import { AjaxService } from './../../app/services/ajax.service';
 import { User } from './../../app/model/user';
 import { Component } from '@angular/core';
-import { ModalController, AlertController } from 'ionic-angular';
+import { ModalController, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { CallNumber } from '@ionic-native/call-number';
 
 @Component({
@@ -13,15 +13,17 @@ import { CallNumber } from '@ionic-native/call-number';
 export class UsersPage {
   users: Array<User>;
   filteredUsers: Array<User>;
+  loading: Loading;
 
-  constructor(private _ajaxService: AjaxService, public _modalCtrl: ModalController, private _callNumber: CallNumber, public _alertCtrl: AlertController) {
+  constructor(private _ajaxService: AjaxService, public _modalCtrl: ModalController, private _callNumber: CallNumber, public _alertCtrl: AlertController, private _loadingCtrl: LoadingController) {
     this.users = new Array<User>();
     this.filteredUsers = new Array<User>();
+    this.presentLoading();
 
     this._ajaxService.getAllUsers().subscribe(res => {
       this.users = res;
-      
-      this.users.forEach( x=> {
+
+      this.users.forEach(x => {
         x.toggleSlide = false;
       });
       this.users.sort((x, y) => {
@@ -31,6 +33,7 @@ export class UsersPage {
       });
 
       this.filteredUsers = this.users;
+      this.loading.dismiss();
     });
   };
 
@@ -67,19 +70,34 @@ export class UsersPage {
   };
 
   onSlideLeft(user: any) {
-    let res = this.users.find(x=> x.id == user.id);
+    let res = this.users.find(x => x.id == user.id);
     res.toggleSlide = true;
   }
   onSlideRight(user: any) {
-    let res = this.users.find(x=> x.id == user.id);
+    let res = this.users.find(x => x.id == user.id);
     res.toggleSlide = false;
   }
 
-  getItems(event: any) {    
+  onInput(event: any) {    
     const val = event.target.value;
     
-    this.filteredUsers = this.users.filter((item) => {        
-      return (item.lastName.toLowerCase().indexOf(val.toLowerCase()) > -1);
+    if (val == undefined || val == null){
+      this.filteredUsers = this.users;
+      return;
+    }      
+
+    this.filteredUsers = this.users.filter((item) => {
+      let fullName: string = `${item.firstName} ${item.lastName}`.toLocaleLowerCase();
+      return fullName.includes(val.toLocaleLowerCase());
     })
   }
+
+  presentLoading(): void {
+    this.loading = this._loadingCtrl.create({
+      spinner: 'bubbles',
+      content: '',
+      cssClass: 'loadingBackdrop'
+    });
+    this.loading.present();
+  };
 }

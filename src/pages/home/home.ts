@@ -1,9 +1,10 @@
+import { ParkingSpots } from './../../app/model/const/parking-spots';
 import { ModalContentPage } from './../../components/modal-content-page.components';
 import { ParkingSpot } from './../../app/model/parking-spot';
 import { ReleaseParkingSpotDay } from './../../app/model/enum/release-parking-spot-day';
 import { UserParkingSpot } from './../../app/model/user-parking-spot';
 import { AjaxService } from './../../app/services/ajax.service';
-import { Component, Output, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ToastController, LoadingController, Loading, AlertController, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { LoggedInUser } from '../../app/model/register-user';
@@ -28,33 +29,38 @@ export class HomePage {
     this.isPageReady = false;
   }
 
-  ngOnInit() {
+  ionViewDidLoad() {
     this.presentLoading();
 
     this._storage.get('loggedInUser').then((loggedInUser) => {
       this.loggedInUser = loggedInUser;
 
-      this._ajaxService.getFixedSpotInfo(this.loggedInUser.id).subscribe(res => {        
-        this.hasParkingSpot = res.parkingSpotNumber !== null;        
+      // if doesn't have fixed parking spot check if it's his/her turn 
+      // if (!this.hasParkingSpot) {
+      this._ajaxService.checkIfUserHasParkingSpot(this.loggedInUser.id).subscribe(res => {
         this.userParkingSpot = res;
 
-        // if doesn't have fixed parking spot check if it's his/her turn 
-        if(!this.hasParkingSpot) {
-          this._ajaxService.checkIfUserHasParkingSpot(this.loggedInUser.id).subscribe(res => {
-            let todayDate = new Date();
-            this.userParkingSpot = res;
-            this.hasParkingSpot = todayDate > new Date(this.userParkingSpot.startDate) && todayDate < new Date(this.userParkingSpot.endDate);                          
-          });
-        }
-        this.isPageReady = true;
-        this.loading.dismiss();
-      });      
+        let todayDate = new Date();
+        var oneDay = 24 * 60 * 60 * 1000;
+        var startDate = new Date(this.userParkingSpot.startDate);
+        var endDate = new Date(this.userParkingSpot.endDate);
+        var dateFormatOptions = { month: 'long', day: 'numeric' };
+
+
+        this.hasParkingSpot = this.userParkingSpot.parkingSpotNumber !== null;
+
+        this.userParkingSpot.parkingType = ParkingSpots.Fixed.indexOf(Number(this.userParkingSpot.parkingSpotNumber)) != -1 ? 'Fixed' : 'Shared';
+        this.hasParkingSpot = todayDate > new Date(this.userParkingSpot.startDate) && todayDate < new Date(this.userParkingSpot.endDate);
+        this.userParkingSpot.parkingPeriod = `${startDate.toLocaleDateString('en-US', dateFormatOptions)} - ${endDate.toLocaleDateString('en-US', dateFormatOptions)}`;
+        this.userParkingSpot.daysLeft = Math.round(Math.abs((new Date().getTime() - endDate.getTime()) / (oneDay)));
+      });
+      this.isPageReady = true;
+      this.loading.dismiss();
+      // }
     });
 
 
-    
-    if (!this.userParkingSpot) {    
-
+    if (this.userParkingSpot != undefined || !this.userParkingSpot) {
       this._ajaxService.getAvailableParkingSpotsToday().subscribe(res => {
         this.availableParkingSpotsToday = res;
 
@@ -66,6 +72,7 @@ export class HomePage {
 
             if (parkingSpot.user.id == this.loggedInUser.id)
               this.disableTodayButton = true;
+
           });
         });
 
@@ -84,10 +91,12 @@ export class HomePage {
             if (parkingSpot.user.id == this.loggedInUser.id)
               this.disableTomorrowButton = true;
 
+            this.isPageReady = true;
           });
         });
       });
     }
+
   };
 
   releaseParkingSpotToday(): void {
@@ -101,7 +110,7 @@ export class HomePage {
         },
         {
           text: 'Agree',
-          handler: () => {            
+          handler: () => {
             this.presentLoading();
             this._ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
               this.loading.dismiss();
@@ -148,7 +157,7 @@ export class HomePage {
     this.presentLoading();
     var user = this.loggedInUser;
 
-    this._ajaxService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {      
+    this._ajaxService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {
       this._storage.get('loggedInUser').then((loggedInUser) => {
         this.availableParkingSpotsToday.forEach(parkingSpot => {
           if (parkingSpot.id == userParkingSpot.id) {
@@ -196,7 +205,9 @@ export class HomePage {
 
   presentLoading(): void {
     this.loading = this.loadingCtrl.create({
-      content: 'Please wait...'
+      spinner: 'bubbles',
+      content: '',
+      cssClass: 'loadingBackdrop'
     });
     this.loading.present();
   };
@@ -215,10 +226,10 @@ export class HomePage {
     return false;
   }
 
-  openModal(user) {       
-    if(this.loggedInUser.id == user.id) 
+  openModal(user) {
+    if (this.loggedInUser.id == user.id)
       return;
-    
+
     let modal = this.modalCtrl.create(ModalContentPage, user);
     modal.present();
   }

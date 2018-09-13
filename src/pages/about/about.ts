@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: 'about.html',
 })
 export class AboutPage {
-
   constructor() {
   }
+
 }

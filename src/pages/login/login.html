@@ -22,7 +22,7 @@
                 <ion-icon ios="ios-key" md="md-key"></ion-icon>
               </ion-label>
               <ion-input #input [type]="passwordType" placeholder="Password" name="password" [(ngModel)]="userCredentials.password"   required></ion-input>              
-              <ion-icon name="eye" [color]="passwordShown === true ? 'dark' : 'light'" (click)="togglePassword()" item-end></ion-icon>
+              <ion-icon name="eye" [color]="passwordShown === true ? 'light' : 'dark'" (click)="togglePassword()" item-end></ion-icon>
             </ion-item>
 
             <br>

@@ -72,7 +72,7 @@ export class ModalContentPage {
     public alertCtrl: AlertController,
     private _toastr: ToastController,
     public loadingCtrl: LoadingController) {
-    
+
     this.presentLoading();
     this._ajaxService.getUserById(this.params.get('id')).subscribe(res => {
       this.user = res;
@@ -107,7 +107,9 @@ export class ModalContentPage {
 
   presentLoading(): void {
     this.loading = this.loadingCtrl.create({
-      content: 'Please wait...'
+      spinner: 'bubbles',
+      content: '',
+      cssClass: 'loadingBackdrop'
     });
     this.loading.present();
   };
