@@ -12,7 +12,7 @@
 <ion-content [hidden]="!isPageReady" padding>
   <h1 text-center> Welcome, {{ loggedInUser?.firstName }} {{ loggedInUser?.lastName }}</h1>
   <br>
-  <div *ngIf="!hasParkingSpot; else noParkingRightNow">
+  <div *ngIf="!hasParkingSpot; else hasParkingRightNow">
     <ion-list *ngIf="availableParkingSpotsToday?.length > 0; else noAvailableParkingSpotsForToday">
       <ion-list-header>
         Available parking spots (Today):
@@ -25,7 +25,7 @@
           </div>
 
           <ng-template #parkingTaken padding>
-            <i (click)="openModal({id: parkingSpot.replaceUser.id})"> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName
+            <i> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName
               }} </i>
             &nbsp;
             <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotToday()"><ion-icon color="dark"
@@ -57,7 +57,7 @@
           </div>
 
           <ng-template #parkingTaken padding>
-            <i (click)="openModal({id: parkingSpot.replaceUser.id})"> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName
+            <i> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName
               }} </i>
             &nbsp;
             <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotTomorrow()"><ion-icon color="dark"
@@ -78,7 +78,7 @@
     </ng-template>
   </div>
 
-  <ng-template #noParkingRightNow>
+  <ng-template #hasParkingRightNow>
     <div class="currentParkingSpot" *ngIf="hasParkingSpot" padding text-center>
       <h1>Parking spot:</h1>
       <span> {{ userParkingSpot?.parkingSpotNumber }} </span>

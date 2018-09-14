@@ -15,9 +15,7 @@ import { User } from './../model/user';
 
 @Injectable()
 export class AjaxService {
-    private domain = 'http://sveaparkingapi.azurewebsites.net'
-    //private domain = 'http://localhost:61962/';
-    private isMock = false;
+    private domain = 'http://sveaparkingapi.azurewebsites.net';
 
     constructor(public httpService: Http) { }
 
@@ -32,6 +30,7 @@ export class AjaxService {
     getUserById(id: number) {
         return this.ajaxHandler<User>(`api/account/getUserById/${id}`, HttpMethod.GET, id);
     }
+
     getAllImpersonatedUsersByUser(userId:number) {
         return this.ajaxHandler<Array<User>>(`api/user/GetAllImpersonatedUsersByUser/${userId}`, HttpMethod.GET);
     }
@@ -40,21 +39,16 @@ export class AjaxService {
         return this.ajaxHandler<Array<User>>(`api/user/GetAllImpersonatedOnBehalfByUser/${userId}`, HttpMethod.GET);
     }
 
-    getUserForHallOfFame() {
-        return this.isMock ?
-            Observable.of(Mocks.hallOfFameUsers).delay(200) : this.ajaxHandler<Array<UserHallOfFame>>('api/users/getUsersMostParkingTook', HttpMethod.GET);
-    }
-
     getAvailableParkingSpotsToday() {
-        return this.isMock ? Observable.of(Mocks.availableParkingSpotsToday).delay(200) : this.ajaxHandler<Array<ParkingSpot>>('api/parking/GetFreeParkingSpotsToday', HttpMethod.GET);
+        return this.ajaxHandler<Array<ParkingSpot>>('api/parking/GetFreeParkingSpotsToday', HttpMethod.GET);
     }
 
     getAvailableParkingSpotsTomorrow() {
-        return this.isMock ? Observable.of(Mocks.availableParkingSpotsTomorrow).delay(200) : this.ajaxHandler<Array<ParkingSpot>>('api/parking/GetFreeParkingSpotsTomorrow', HttpMethod.GET);
+        return this.ajaxHandler<Array<ParkingSpot>>('api/parking/GetFreeParkingSpotsTomorrow', HttpMethod.GET);
     }
 
     getSharedSpotInfo(userId: number) {
-        return this.isMock ? Observable.of(true).delay(200) : this.ajaxHandler<Array<object>>(`api/parking/GetSharedSpotInfo/${userId}`, HttpMethod.GET);
+        return this.ajaxHandler<Array<object>>(`api/parking/GetSharedSpotInfo/${userId}`, HttpMethod.GET);
     }
 
     getFixedSpotInfo(userId: number) {
@@ -65,8 +59,8 @@ export class AjaxService {
         return this.ajaxHandler<object>(`api/parking/NotComing/${userId}/${day}`, HttpMethod.GET);
     }
 
-    checkIfUserHasParkingSpot(userId: number) {
-        return this.isMock ? Observable.of(true).delay(200) : this.ajaxHandler<UserParkingSpot>(`api/parking/CheckIfUserHasSharedParkingSpotRighNow/${userId}`, HttpMethod.GET);
+    checkIfUserHasSharedParkingSpot(userId: number) {
+        return this.ajaxHandler<UserParkingSpot>(`api/parking/CheckIfUserHasSharedParkingSpotRighNow/${userId}`, HttpMethod.GET);
     }
 
     takeParkingSpot(parkingSpot: number, replaceUserId: number) {
@@ -74,11 +68,11 @@ export class AjaxService {
     }
 
     addImpersonatedUser(userId: number, impersonatedUserId: number) {
-        return this.ajaxHandler<string>(`api/user/AddImpersonatedUser/${userId}/${impersonatedUserId}`, HttpMethod.POST);
+        return this.ajaxHandler<boolean>(`api/user/AddImpersonatedUser/${userId}/${impersonatedUserId}`, HttpMethod.POST);
     }
 
     removeImpersonatedUser(userId: number, impersonatedUserId: number) {
-        return this.ajaxHandler<string>(`api/user/AddImpersonatedUser/${userId}/${impersonatedUserId}`, HttpMethod.POST);
+        return this.ajaxHandler<boolean>(`api/user/RemoveImpersonatedUser/${userId}/${impersonatedUserId}`, HttpMethod.POST);
     }
 
     private toCamelCase(o) {

@@ -10,14 +10,7 @@ export class HallOfFamePage {
   items: Array<UserHallOfFame>;
 
   constructor(private ajaxService: AjaxService) {
-    this.items = new Array<UserHallOfFame>();
-
-    this.ajaxService.getUserForHallOfFame().subscribe(res=> {
-      this.items = res;
-      this.items.sort((x, y) => {
-        return y.tookParkingCounter-x.tookParkingCounter;
-      });
-    });
+    this.items = new Array<UserHallOfFame>();    
     
   }
 }

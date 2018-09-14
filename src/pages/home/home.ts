@@ -24,7 +24,13 @@ export class HomePage {
   disableTomorrowButton: boolean;
   loading: Loading;
 
-  constructor(private _ajaxService: AjaxService, private _storage: Storage, private _toastrCtrl: ToastController, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public modalCtrl: ModalController) {
+  constructor(
+    private _ajaxService: AjaxService,
+    private _storage: Storage,
+    private _toastrCtrl: ToastController,
+    private _loadingCtrl: LoadingController,
+    private _alertCtrl: AlertController,
+    private _modalCtrl: ModalController) {
     this.hasParkingSpot = false;
     this.isPageReady = false;
   }
@@ -32,75 +38,87 @@ export class HomePage {
   ionViewDidLoad() {
     this.presentLoading();
 
-    this._storage.get('loggedInUser').then((loggedInUser) => {
+    this._storage.get('loggedInUser').then(loggedInUser => {
       this.loggedInUser = loggedInUser;
 
-      // if doesn't have fixed parking spot check if it's his/her turn 
-      // if (!this.hasParkingSpot) {
-      this._ajaxService.checkIfUserHasParkingSpot(this.loggedInUser.id).subscribe(res => {
-        this.userParkingSpot = res;
+      // check if user has fixed parking spot
+      this._ajaxService.getFixedSpotInfo(this.loggedInUser.id).subscribe(parkingSpot => {
+        this.userParkingSpot = parkingSpot;
 
-        let todayDate = new Date();
-        var oneDay = 24 * 60 * 60 * 1000;
-        var startDate = new Date(this.userParkingSpot.startDate);
-        var endDate = new Date(this.userParkingSpot.endDate);
-        var dateFormatOptions = { month: 'long', day: 'numeric' };
+        this.hasParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
 
+        if (this.hasParkingSpot) {
+          this.userParkingSpot.parkingType = 'Fixed';
+          this.userParkingSpot.parkingPeriod = '-';
+          this.userParkingSpot.daysLeft = '-';
 
-        this.hasParkingSpot = this.userParkingSpot.parkingSpotNumber !== null;
+          this.isPageReady = true;
+          this.loading.dismiss();
+        } else {
+          // check if user have share parking spot
+          this._ajaxService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe(parkingSpot => {
+            this.userParkingSpot = parkingSpot;
+            var todayDate = new Date();
+            var oneDay = 24 * 60 * 60 * 1000;
+            var startDate = new Date(this.userParkingSpot.startDate);
+            var endDate = new Date(this.userParkingSpot.endDate);
+            var dateFormatOptions = { month: 'long', day: 'numeric' };
+            this.hasParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
 
-        this.userParkingSpot.parkingType = ParkingSpots.Fixed.indexOf(Number(this.userParkingSpot.parkingSpotNumber)) != -1 ? 'Fixed' : 'Shared';
-        this.hasParkingSpot = todayDate > new Date(this.userParkingSpot.startDate) && todayDate < new Date(this.userParkingSpot.endDate);
-        this.userParkingSpot.parkingPeriod = `${startDate.toLocaleDateString('en-US', dateFormatOptions)} - ${endDate.toLocaleDateString('en-US', dateFormatOptions)}`;
-        this.userParkingSpot.daysLeft = Math.round(Math.abs((new Date().getTime() - endDate.getTime()) / (oneDay)));
+            if (this.hasParkingSpot) {
+              this.userParkingSpot.parkingType = 'Shared';
+              this.userParkingSpot.parkingPeriod = `${startDate.toLocaleDateString('en-US', dateFormatOptions)} - ${endDate.toLocaleDateString('en-US', dateFormatOptions)}`;
+              this.userParkingSpot.parkingType == 'Shared' ?
+                this.userParkingSpot.daysLeft = Math.round(Math.abs((new Date().getTime() - endDate.getTime()) / (oneDay))) : '-';
+
+              this.disableTodayButton = true; //TODO: get this information with ajax call
+              this.isPageReady = true;
+              this.loading.dismiss();
+            } else {
+              // user has no parking spot currently              
+              this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpotsToday => {
+                this.availableParkingSpotsToday = availableParkingSpotsToday;
+                // console.log(JSON.stringify(availableParkingSpotsToday, null, 2));
+                this.availableParkingSpotsToday.forEach(parking => {
+                  this._ajaxService.getUserById(parking.userIdReplace).subscribe(user => {
+                    parking.replaceUser = user;
+
+                    if (parkingSpot.userIdReplace == this.loggedInUser.id)
+                      parkingSpot.isLoggedInUser = true;
+
+                    // if (parkingSpot.user.id == this.loggedInUser.id)
+                    //   this.disableTodayButton = true;
+                  });
+                })
+              });
+
+              this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpotsTomorrow => {
+                this.availableParkingSpotsTomorrow = availableParkingSpotsTomorrow;
+                // console.log(JSON.stringify(availableParkingSpotsTomorrow, null, 2));
+                this.availableParkingSpotsTomorrow.forEach(parking => {
+                  this._ajaxService.getUserById(parking.userIdReplace).subscribe(user => {
+                    parking.replaceUser = user;
+
+                    if (parkingSpot.userIdReplace == this.loggedInUser.id)
+                      parkingSpot.isLoggedInUser = true;
+
+                    // if (parkingSpot.user.id == this.loggedInUser.id)
+                    //   this.disableTomorrowButton = true;
+                  });
+                });
+              });
+              this.loading.dismiss();
+              this.isPageReady = true;
+            }
+          });
+        }
       });
-      this.isPageReady = true;
-      this.loading.dismiss();
-      // }
     });
-
-
-    if (this.userParkingSpot != undefined || !this.userParkingSpot) {
-      this._ajaxService.getAvailableParkingSpotsToday().subscribe(res => {
-        this.availableParkingSpotsToday = res;
-
-        this.availableParkingSpotsToday.forEach(parkingSpot => {
-          this._ajaxService.getUserById(parkingSpot.userIdReplace).subscribe(res => {
-            parkingSpot.replaceUser = res;
-            if (parkingSpot.userIdReplace == this.loggedInUser.id)
-              parkingSpot.isLoggedInUser = true;
-
-            if (parkingSpot.user.id == this.loggedInUser.id)
-              this.disableTodayButton = true;
-
-          });
-        });
-
-      });
-
-      this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(res => {
-        this.availableParkingSpotsTomorrow = res;
-
-        this.availableParkingSpotsTomorrow.forEach(parkingSpot => {
-          this._ajaxService.getUserById(parkingSpot.userIdReplace).subscribe(res => {
-            parkingSpot.replaceUser = res;
-
-            if (parkingSpot.userIdReplace == this.loggedInUser.id)
-              parkingSpot.isLoggedInUser = true;
-
-            if (parkingSpot.user.id == this.loggedInUser.id)
-              this.disableTomorrowButton = true;
-
-            this.isPageReady = true;
-          });
-        });
-      });
-    }
 
   };
 
   releaseParkingSpotToday(): void {
-    const confirmDialog = this.alertCtrl.create({
+    const confirmDialog = this._alertCtrl.create({
       title: 'Release parking spot',
       message: `Are you sure you want to release parking spot for today?`,
       buttons: [
@@ -115,7 +133,7 @@ export class HomePage {
             this._ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
               this.loading.dismiss();
               this.disableTodayButton = true;
-              this.showMessage('Parking spot released successfully');
+              this.showSuccessMessage('Parking spot released successfully');
             }, error => {
               this.showErrorMessage('Parking not released');
             });
@@ -127,7 +145,7 @@ export class HomePage {
   }
 
   releaseParkingSpotTomorrow(): void {
-    const confirmDialog = this.alertCtrl.create({
+    const confirmDialog = this._alertCtrl.create({
       title: 'Release parking spot',
       message: `Are you sure you want to release parking spot for tomorrow?`,
       buttons: [
@@ -142,7 +160,7 @@ export class HomePage {
             this._ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Tomorrow).subscribe(res => {
               this.loading.dismiss();
               this.disableTomorrowButton = true;
-              this.showMessage('Parking spot released successfully');
+              this.showSuccessMessage('Parking spot released successfully');
             }, error => {
               this.showErrorMessage('Parking not released');
             });
@@ -173,9 +191,9 @@ export class HomePage {
       });
 
       this.loading.dismiss();
-      this.showMessage('Parking spot taken successfully');
+      this.showSuccessMessage('Parking spot taken successfully');
     }, error => {
-      this.showErrorMessage('Parking not taken, you were late :(');
+      this.showErrorMessage('Parking not taken, something went wrong :(');
     });
 
   }
@@ -197,14 +215,14 @@ export class HomePage {
         }
       });
       this.loading.dismiss();
-      this.showMessage('Parking spot taken successfully');
+      this.showSuccessMessage('Parking spot taken successfully');
     }, error => {
-      this.showErrorMessage('Parking not taken, you were late :( ');
+      this.showErrorMessage('Parking not taken, something went wrong :( ');
     });
   };
 
   presentLoading(): void {
-    this.loading = this.loadingCtrl.create({
+    this.loading = this._loadingCtrl.create({
       spinner: 'bubbles',
       content: '',
       cssClass: 'loadingBackdrop'
@@ -230,7 +248,7 @@ export class HomePage {
     if (this.loggedInUser.id == user.id)
       return;
 
-    let modal = this.modalCtrl.create(ModalContentPage, user);
+    let modal = this._modalCtrl.create(ModalContentPage, user);
     modal.present();
   }
 
@@ -244,7 +262,7 @@ export class HomePage {
     toast.present();
   }
 
-  showMessage(message: string): void {
+  showSuccessMessage(message: string): void {
     let toastr = this._toastrCtrl.create({
       message: message,
       duration: 3000,
