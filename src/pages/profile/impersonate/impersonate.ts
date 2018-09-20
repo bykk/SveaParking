@@ -31,6 +31,20 @@ export class ImpersonatePage {
         this._storage.get('loggedInUser').then(loggedInUser => {
             this.loggedInUser = loggedInUser;
 
+            this._ajaxService.getAllImpersonatedOnBehalfByUser(this.loggedInUser.id).subscribe(res => {
+                if (_.isEmpty(res)) {
+                    this.impersonatedUsersOnBehalf = null;
+                    this.showMessageForNoImpersonatedOnBehalf = true;
+                    return;
+                }
+                this.showMessageForNoImpersonatedOnBehalf = false;
+                this.impersonatedUsersOnBehalf = res;
+
+                if (this.impersonatedUsersOnBehalf.length > 0) {
+                    this.releaseParkingForm.enable();
+                }
+            });
+
             this._ajaxService.getAllUsers().subscribe(res => {
                 this.users = res;
 
@@ -45,20 +59,7 @@ export class ImpersonatePage {
                 });
             });
 
-            this._ajaxService.getAllImpersonatedOnBehalfByUser(this.loggedInUser.id).subscribe(res => {
-                if (_.isEmpty(res)) {
-                    debugger;
-                    this.impersonatedUsersOnBehalf = null;
-                    this.showMessageForNoImpersonatedOnBehalf = true;
-                    return;
-                }
-                this.showMessageForNoImpersonatedOnBehalf = false;
-                this.impersonatedUsersOnBehalf = res;
 
-                if (this.impersonatedUsersOnBehalf.length > 0) {
-                    this.releaseParkingForm.enable();
-                }
-            });
 
         }).catch(error => {
             this.loggedInUser.firstName = 'Unknown';
@@ -68,38 +69,42 @@ export class ImpersonatePage {
 
     }
 
-
-    updateImpersonateList() {
-        if (this.previousValuesOfImpersonatedUsers != null && this.impersonatedUsers != null && this.previousValuesOfImpersonatedUsers.join() === this.impersonatedUsers.join())
-            return;
-
-        if (this.impersonatedUsers != null && this.impersonatedUsers.length > 3)
-            this.showErrorMessage('You can impersonate only 3 collegues.');
-
-        // delete previous users
-        if (this.previousValuesOfImpersonatedUsers != null && this.previousValuesOfImpersonatedUsers.length > 0) {
-            this.previousValuesOfImpersonatedUsers.forEach((userId) => {
-                this._ajaxService.removeImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
-
-                });
-            });
-        }
-
+    impersonateNewUsers() {
         // impersonate new users
         var itemsProcessed = 0;
         this.impersonatedUsers.forEach((userId) => {
-
             this._ajaxService.addImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
                 itemsProcessed++;
                 this.previousValuesOfImpersonatedUsers = this.impersonatedUsers;
                 if (itemsProcessed === this.impersonatedUsers.length) {
-
                     this.showSuccessMessage('Saved successfully');
                 }
-
             });
         });
 
+    }
+
+    updateImpersonateList() {        
+        if (this.previousValuesOfImpersonatedUsers != null && this.impersonatedUsers != null && this.previousValuesOfImpersonatedUsers.join() === this.impersonatedUsers.join())
+            return;
+
+        if (this.impersonatedUsers != null && this.impersonatedUsers.length > 3) {
+            this.showErrorMessage('You can impersonate only 3 collegues.');
+            return;
+        }
+
+        // delete previous users
+        var itemsDeleted = 0;
+        if (this.previousValuesOfImpersonatedUsers != null && this.previousValuesOfImpersonatedUsers.length > 0) {
+            this.previousValuesOfImpersonatedUsers.forEach((userId) => {
+                this._ajaxService.removeImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
+                    itemsDeleted++;
+                    if (itemsDeleted == this.previousValuesOfImpersonatedUsers.length) {                        
+                        this.impersonateNewUsers();
+                    }
+                });
+            });
+        }
     }
 
     onSubmit() {
@@ -136,6 +141,6 @@ export class ImpersonatePage {
             cssClass: 'errorToast'
         });
         toast.present();
-    }
+    };
 
 }

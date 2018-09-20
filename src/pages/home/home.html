@@ -25,11 +25,9 @@
           </div>
 
           <ng-template #parkingTaken padding>
-            <i> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName
-              }} </i>
+            <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>
             &nbsp;
-            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotToday()"><ion-icon color="dark"
-                name="close-circle"></ion-icon></span>
+            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotToday()"><ion-icon color="dark" name="refresh"></ion-icon></span>
           </ng-template>
         </div>
       </ion-item>
@@ -57,11 +55,9 @@
           </div>
 
           <ng-template #parkingTaken padding>
-            <i> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName
-              }} </i>
+            <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>
             &nbsp;
-            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotTomorrow()"><ion-icon color="dark"
-                name="close-circle"></ion-icon></span>
+            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="releaseParkingSpotTomorrow()"><ion-icon color="dark" name="refresh"></ion-icon></span>
           </ng-template>
         </div>
       </ion-item>

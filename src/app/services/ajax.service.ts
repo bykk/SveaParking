@@ -75,6 +75,14 @@ export class AjaxService {
         return this.ajaxHandler<boolean>(`api/user/RemoveImpersonatedUser/${userId}/${impersonatedUserId}`, HttpMethod.POST);
     }
 
+    updatePassword(userId: number, newPassword: string) {
+        return this.ajaxHandler<string>(`api/user/UpdatePassword/${userId}/${newPassword}`, HttpMethod.GET);
+    }
+
+    checkIfParkingSpotIsReleased(userId: number, date: Date) {
+        return this.ajaxHandler<boolean>(`api/parking/CheckIfParkingSpotIsReleased/${userId}/${date}`, HttpMethod.GET);
+    }
+
     private toCamelCase(o) {
         var newO, origKey, newKey, value
         if (o instanceof Array) {

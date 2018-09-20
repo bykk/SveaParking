@@ -16,9 +16,15 @@
 // automatically applied to the <body> element in the app.
 
 .loadingBackdrop {
-    background-color: color($colors, primary);
-    margin-top:13.7%;    
+    background: transparent;
+    // background-color: color($colors, primary);
+    // margin-top:13.7%;    
     opacity: 0.5;
+}
+
+ion-spinner {
+    width: 40px !important;
+    height: 40px !important;
 }
 
 .title-image {

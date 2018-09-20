@@ -30,12 +30,14 @@ export class LoginPage {
     this.showLoading();
 
     this.ajaxService.signIn(this.userCredentials).subscribe(userData => {
+      
       if (!_.isEmpty(userData)) {
         let response = userData;
         let loggedInUser: LoggedInUser = {
           id: response.registerUserModel.id,
           firstName: response.registerUserModel.firstName,
-          lastName: response.registerUserModel.lastName
+          lastName: response.registerUserModel.lastName,
+          password: response.registerUserModel.password
         };
 
         this.storage.set('authenticated', true);
@@ -51,7 +53,7 @@ export class LoginPage {
   };
 
   togglePassword() {
-    if(this.passwordShown) {
+    if (this.passwordShown) {
       this.passwordShown = false;
       this.passwordType = 'password';
     } else {
@@ -62,7 +64,9 @@ export class LoginPage {
 
   showLoading() {
     this.loading = this.loadingCtrl.create({
-      content: 'Please wait...',
+      spinner: 'bubbles',
+      content: '',
+      cssClass: 'loadingBackdrop',
       dismissOnPageChange: true
     });
     this.loading.present();

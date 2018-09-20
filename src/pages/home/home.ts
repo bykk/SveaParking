@@ -58,8 +58,10 @@ export class HomePage {
           // check if user have share parking spot
           this._ajaxService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe(parkingSpot => {
             this.userParkingSpot = parkingSpot;
-            var todayDate = new Date();
             var oneDay = 24 * 60 * 60 * 1000;
+            var todayDay = new Date();
+            var tomorrowDay = new Date(todayDay);
+            tomorrowDay.setDate(todayDay.getDate() + 1);
             var startDate = new Date(this.userParkingSpot.startDate);
             var endDate = new Date(this.userParkingSpot.endDate);
             var dateFormatOptions = { month: 'long', day: 'numeric' };
@@ -71,39 +73,42 @@ export class HomePage {
               this.userParkingSpot.parkingType == 'Shared' ?
                 this.userParkingSpot.daysLeft = Math.round(Math.abs((new Date().getTime() - endDate.getTime()) / (oneDay))) : '-';
 
-              this.disableTodayButton = true; //TODO: get this information with ajax call
+              // this._ajaxService.checkIfParkingSpotIsReleased(this.loggedInUser.id, todayDay).subscribe(res => {                
+              //   this.disableTodayButton = res;
+              // });
+
+              // this._ajaxService.checkIfParkingSpotIsReleased(this.loggedInUser.id, tomorrowDay).subscribe(res => {
+              //   this.disableTomorrowButton = res;
+              // });
+
               this.isPageReady = true;
               this.loading.dismiss();
             } else {
               // user has no parking spot currently              
               this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpotsToday => {
                 this.availableParkingSpotsToday = availableParkingSpotsToday;
-                // console.log(JSON.stringify(availableParkingSpotsToday, null, 2));
+
                 this.availableParkingSpotsToday.forEach(parking => {
                   this._ajaxService.getUserById(parking.userIdReplace).subscribe(user => {
                     parking.replaceUser = user;
+                    
+                    if (parking.userIdReplace == this.loggedInUser.id)
+                      parking.isLoggedInUser = true;
 
-                    if (parkingSpot.userIdReplace == this.loggedInUser.id)
-                      parkingSpot.isLoggedInUser = true;
-
-                    // if (parkingSpot.user.id == this.loggedInUser.id)
-                    //   this.disableTodayButton = true;
                   });
-                })
+                });
               });
 
               this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpotsTomorrow => {
                 this.availableParkingSpotsTomorrow = availableParkingSpotsTomorrow;
-                // console.log(JSON.stringify(availableParkingSpotsTomorrow, null, 2));
+
                 this.availableParkingSpotsTomorrow.forEach(parking => {
                   this._ajaxService.getUserById(parking.userIdReplace).subscribe(user => {
                     parking.replaceUser = user;
 
-                    if (parkingSpot.userIdReplace == this.loggedInUser.id)
-                      parkingSpot.isLoggedInUser = true;
+                    if (parking.userIdReplace == this.loggedInUser.id)
+                      parking.isLoggedInUser = true;
 
-                    // if (parkingSpot.user.id == this.loggedInUser.id)
-                    //   this.disableTomorrowButton = true;
                   });
                 });
               });
