@@ -1,11 +1,9 @@
 import { UserParkingSpot } from './../model/user-parking-spot';
 import { ParkingSpot } from '../model/parking-spot';
-import { UserHallOfFame } from './../model/user-hall-of-fame';
 import { Headers, Http, Response } from '@angular/http';
 import { Injectable } from "../../../node_modules/@angular/core";
 import { HttpMethod } from './../model/enum/http-method.enum';
 import { Observable } from 'rxjs/Observable';
-import { Mocks } from './../model/mock-objects';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/map';
@@ -79,9 +77,9 @@ export class AjaxService {
         return this.ajaxHandler<string>(`api/user/UpdatePassword/${userId}/${newPassword}`, HttpMethod.GET);
     }
 
-    checkIfParkingSpotIsReleased(userId: number, date: Date) {
-        return this.ajaxHandler<boolean>(`api/parking/CheckIfParkingSpotIsReleased/${userId}/${date}`, HttpMethod.GET);
-    }
+    // checkIfParkingSpotIsReleased(userId: number, date: Date) {        
+    //     return this.ajaxHandler<boolean>(`api/parking/CheckIfParkingSpotIsReleased/${userId}/${date}`, HttpMethod.GET);        
+    // }
 
     private toCamelCase(o) {
         var newO, origKey, newKey, value

@@ -28,5 +28,10 @@ page-home {
         border: 1px solid color($colors, danger);
         padding: 10px;
     }
+    .parking-spot-number {
+        color: color($colors, primary);
+        font-weight: bold;
+        padding-right: 15px;        
+    }
 
 }

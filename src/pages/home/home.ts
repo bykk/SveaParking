@@ -1,4 +1,3 @@
-import { ParkingSpots } from './../../app/model/const/parking-spots';
 import { ModalContentPage } from './../../components/modal-content-page.components';
 import { ParkingSpot } from './../../app/model/parking-spot';
 import { ReleaseParkingSpotDay } from './../../app/model/enum/release-parking-spot-day';
@@ -22,6 +21,8 @@ export class HomePage {
   hasParkingSpot: boolean;
   disableTodayButton: boolean;
   disableTomorrowButton: boolean;
+  userAlreadyHasParkingSpotToday: boolean = false;
+  userAlreadyHasParkingSpotTomorrow: boolean = false;
   loading: Loading;
 
   constructor(
@@ -43,14 +44,32 @@ export class HomePage {
 
       // check if user has fixed parking spot
       this._ajaxService.getFixedSpotInfo(this.loggedInUser.id).subscribe(parkingSpot => {
+        var todayDay = new Date();
+        var tomorrowDay = new Date(todayDay);
         this.userParkingSpot = parkingSpot;
-
         this.hasParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
 
         if (this.hasParkingSpot) {
           this.userParkingSpot.parkingType = 'Fixed';
           this.userParkingSpot.parkingPeriod = '-';
           this.userParkingSpot.daysLeft = '-';
+
+          this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpots => {
+            if (availableParkingSpots.length > 0) {
+              var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
+              if (res != undefined || res != null)
+                this.disableTodayButton = true;
+            }
+          });
+
+
+          this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
+            if (availableParkingSpots.length > 0) {
+              var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
+              if (res != undefined || res != null)
+                this.disableTomorrowButton = true;
+            }
+          });
 
           this.isPageReady = true;
           this.loading.dismiss();
@@ -59,8 +78,7 @@ export class HomePage {
           this._ajaxService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe(parkingSpot => {
             this.userParkingSpot = parkingSpot;
             var oneDay = 24 * 60 * 60 * 1000;
-            var todayDay = new Date();
-            var tomorrowDay = new Date(todayDay);
+
             tomorrowDay.setDate(todayDay.getDate() + 1);
             var startDate = new Date(this.userParkingSpot.startDate);
             var endDate = new Date(this.userParkingSpot.endDate);
@@ -72,14 +90,20 @@ export class HomePage {
               this.userParkingSpot.parkingPeriod = `${startDate.toLocaleDateString('en-US', dateFormatOptions)} - ${endDate.toLocaleDateString('en-US', dateFormatOptions)}`;
               this.userParkingSpot.parkingType == 'Shared' ?
                 this.userParkingSpot.daysLeft = Math.round(Math.abs((new Date().getTime() - endDate.getTime()) / (oneDay))) : '-';
+              
+              this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpots => {                
+                var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
+                if (res != undefined || res != null)
+                  this.disableTodayButton = true;
+              });
 
-              // this._ajaxService.checkIfParkingSpotIsReleased(this.loggedInUser.id, todayDay).subscribe(res => {                
-              //   this.disableTodayButton = res;
-              // });
-
-              // this._ajaxService.checkIfParkingSpotIsReleased(this.loggedInUser.id, tomorrowDay).subscribe(res => {
-              //   this.disableTomorrowButton = res;
-              // });
+              this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
+                if (availableParkingSpots.length > 0) {
+                  var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
+                  if (res != undefined || res != null)
+                    this.disableTomorrowButton = true;
+                }
+              });
 
               this.isPageReady = true;
               this.loading.dismiss();
@@ -91,29 +115,32 @@ export class HomePage {
                 this.availableParkingSpotsToday.forEach(parking => {
                   this._ajaxService.getUserById(parking.userIdReplace).subscribe(user => {
                     parking.replaceUser = user;
-                    
-                    if (parking.userIdReplace == this.loggedInUser.id)
-                      parking.isLoggedInUser = true;
 
+                    if (parking.userIdReplace == this.loggedInUser.id) {
+                      parking.isLoggedInUser = true;
+                      this.userAlreadyHasParkingSpotToday = true;
+                    }                      
                   });
                 });
-              });
 
-              this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpotsTomorrow => {
-                this.availableParkingSpotsTomorrow = availableParkingSpotsTomorrow;
+                this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpotsTomorrow => {
+                  this.availableParkingSpotsTomorrow = availableParkingSpotsTomorrow;
 
-                this.availableParkingSpotsTomorrow.forEach(parking => {
-                  this._ajaxService.getUserById(parking.userIdReplace).subscribe(user => {
-                    parking.replaceUser = user;
+                  this.availableParkingSpotsTomorrow.forEach(parking => {
+                    this._ajaxService.getUserById(parking.userIdReplace).subscribe(user => {
+                      parking.replaceUser = user;
 
-                    if (parking.userIdReplace == this.loggedInUser.id)
-                      parking.isLoggedInUser = true;
-
+                      if (parking.userIdReplace == this.loggedInUser.id) {
+                        parking.isLoggedInUser = true;
+                        this.userAlreadyHasParkingSpotTomorrow = true;
+                      }                        
+                    });
                   });
+
+                  this.loading.dismiss();
+                  this.isPageReady = true;
                 });
               });
-              this.loading.dismiss();
-              this.isPageReady = true;
             }
           });
         }
@@ -138,6 +165,7 @@ export class HomePage {
             this._ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
               this.loading.dismiss();
               this.disableTodayButton = true;
+              this.userAlreadyHasParkingSpotToday = false;
               this.showSuccessMessage('Parking spot released successfully');
             }, error => {
               this.showErrorMessage('Parking not released');
@@ -165,6 +193,7 @@ export class HomePage {
             this._ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Tomorrow).subscribe(res => {
               this.loading.dismiss();
               this.disableTomorrowButton = true;
+              this.userAlreadyHasParkingSpotTomorrow = false;
               this.showSuccessMessage('Parking spot released successfully');
             }, error => {
               this.showErrorMessage('Parking not released');
@@ -188,8 +217,11 @@ export class HomePage {
               parkingSpot.replaceUser = res;
               parkingSpot.userIdReplace = res.id;
 
-              if (parkingSpot.userIdReplace == this.loggedInUser.id)
+              if (parkingSpot.userIdReplace == this.loggedInUser.id){
+                this.userAlreadyHasParkingSpotToday = true;
                 parkingSpot.isLoggedInUser = true;
+              }
+                
             });
           }
         });
@@ -213,8 +245,10 @@ export class HomePage {
             parkingSpot.replaceUser = res;
             parkingSpot.userIdReplace = res.id;
 
-            if (parkingSpot.userIdReplace == this.loggedInUser.id)
+            if (parkingSpot.userIdReplace == this.loggedInUser.id) {
               parkingSpot.isLoggedInUser = true;
+              this.userAlreadyHasParkingSpotTomorrow = true;
+            }
 
           });
         }
@@ -225,6 +259,32 @@ export class HomePage {
       this.showErrorMessage('Parking not taken, something went wrong :( ');
     });
   };
+
+  returnParkingSpotForToday(parkingSpot: ParkingSpot) {
+    const confirmDialog = this._alertCtrl.create({
+      title: 'Release parking spot',
+      message: `Are you sure you want to release parking spot for today?`,
+      buttons: [
+        {
+          text: 'Disagree',
+          handler: () => { }
+        },
+        {
+          text: 'Agree',
+          handler: () => {
+            confirmDialog.present();
+            this._ajaxService.takeParkingSpot(parkingSpot.id, 0).subscribe(res => {
+              parkingSpot.userIdReplace = 0;
+              parkingSpot.replaceUser = null;
+              this.userAlreadyHasParkingSpotToday = false;
+              this.showSuccessMessage('You returned spot successfully ');
+            });
+          }
+        }
+      ]
+    });
+    confirmDialog.present();
+  }
 
   presentLoading(): void {
     this.loading = this._loadingCtrl.create({
