@@ -60,19 +60,17 @@ export class HomePage {
               if (res != undefined || res != null)
                 this.disableTodayButton = true;
             }
+            this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
+              if (availableParkingSpots.length > 0) {
+                var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
+                if (res != undefined || res != null)
+                  this.disableTomorrowButton = true;               
+              }
+
+              this.isPageReady = true;
+              this.loading.dismiss();
+            });
           });
-
-
-          this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
-            if (availableParkingSpots.length > 0) {
-              var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
-              if (res != undefined || res != null)
-                this.disableTomorrowButton = true;
-            }
-          });
-
-          this.isPageReady = true;
-          this.loading.dismiss();
         } else {
           // check if user have share parking spot
           this._ajaxService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe(parkingSpot => {
@@ -90,23 +88,23 @@ export class HomePage {
               this.userParkingSpot.parkingPeriod = `${startDate.toLocaleDateString('en-US', dateFormatOptions)} - ${endDate.toLocaleDateString('en-US', dateFormatOptions)}`;
               this.userParkingSpot.parkingType == 'Shared' ?
                 this.userParkingSpot.daysLeft = Math.round(Math.abs((new Date().getTime() - endDate.getTime()) / (oneDay))) : '-';
-              
-              this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpots => {                
-                var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
+
+              this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpots => {
+                var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber));
                 if (res != undefined || res != null)
                   this.disableTodayButton = true;
+
+                this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
+                  if (availableParkingSpots.length > 0) {
+                    var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber));
+                    if (res != undefined || res != null)
+                      this.disableTomorrowButton = true;
+                  }
+                  this.isPageReady = true;
+                  this.loading.dismiss();
+                });
               });
 
-              this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
-                if (availableParkingSpots.length > 0) {
-                  var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
-                  if (res != undefined || res != null)
-                    this.disableTomorrowButton = true;
-                }
-              });
-
-              this.isPageReady = true;
-              this.loading.dismiss();
             } else {
               // user has no parking spot currently              
               this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpotsToday => {
@@ -119,7 +117,7 @@ export class HomePage {
                     if (parking.userIdReplace == this.loggedInUser.id) {
                       parking.isLoggedInUser = true;
                       this.userAlreadyHasParkingSpotToday = true;
-                    }                      
+                    }
                   });
                 });
 
@@ -133,7 +131,7 @@ export class HomePage {
                       if (parking.userIdReplace == this.loggedInUser.id) {
                         parking.isLoggedInUser = true;
                         this.userAlreadyHasParkingSpotTomorrow = true;
-                      }                        
+                      }
                     });
                   });
 
@@ -217,11 +215,11 @@ export class HomePage {
               parkingSpot.replaceUser = res;
               parkingSpot.userIdReplace = res.id;
 
-              if (parkingSpot.userIdReplace == this.loggedInUser.id){
+              if (parkingSpot.userIdReplace == this.loggedInUser.id) {
                 this.userAlreadyHasParkingSpotToday = true;
                 parkingSpot.isLoggedInUser = true;
               }
-                
+
             });
           }
         });

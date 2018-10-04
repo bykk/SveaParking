@@ -16,7 +16,7 @@ import { Network } from '@ionic-native/network';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
   pages: Array<{ title: string, component: any, iconCss: any }>;
-  rootPage: any = LoginPage;
+  rootPage: any;
 
   constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastCtrl: ToastController, private _network: Network, private _alertCtrl: AlertController) {
     // if (!this.isConnected()) {
