@@ -1,10 +1,11 @@
+import { ToastService } from './../../app/services/toast.service';
 import { ModalContentPage } from './../../components/modal-content-page.components';
 import { ParkingSpot } from './../../app/model/parking-spot';
 import { ReleaseParkingSpotDay } from './../../app/model/enum/release-parking-spot-day';
 import { UserParkingSpot } from './../../app/model/user-parking-spot';
-import { AjaxService } from './../../app/services/ajax.service';
+import { FacadeService } from '../../app/services/facade.service';
 import { Component } from '@angular/core';
-import { ToastController, LoadingController, Loading, AlertController, ModalController } from 'ionic-angular';
+import { LoadingController, Loading, AlertController, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { LoggedInUser } from '../../app/model/register-user';
 
@@ -26,9 +27,9 @@ export class HomePage {
   loading: Loading;
 
   constructor(
-    private _ajaxService: AjaxService,
+    private _facadeService: FacadeService,
     private _storage: Storage,
-    private _toastrCtrl: ToastController,
+    private _toastService: ToastService,
     private _loadingCtrl: LoadingController,
     private _alertCtrl: AlertController,
     private _modalCtrl: ModalController) {
@@ -43,7 +44,7 @@ export class HomePage {
       this.loggedInUser = loggedInUser;
 
       // check if user has fixed parking spot
-      this._ajaxService.getFixedSpotInfo(this.loggedInUser.id).subscribe(parkingSpot => {
+      this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe(parkingSpot => {
         var todayDay = new Date();
         var tomorrowDay = new Date(todayDay);
         this.userParkingSpot = parkingSpot;
@@ -54,13 +55,13 @@ export class HomePage {
           this.userParkingSpot.parkingPeriod = '-';
           this.userParkingSpot.daysLeft = '-';
 
-          this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpots => {
+          this._facadeService.getAvailableParkingSpotsToday().subscribe(availableParkingSpots => {
             if (availableParkingSpots.length > 0) {
               var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
               if (res != undefined || res != null)
                 this.disableTodayButton = true;
             }
-            this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
+            this._facadeService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
               if (availableParkingSpots.length > 0) {
                 var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
                 if (res != undefined || res != null)
@@ -73,7 +74,7 @@ export class HomePage {
           });
         } else {
           // check if user have share parking spot
-          this._ajaxService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe(parkingSpot => {
+          this._facadeService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe(parkingSpot => {
             this.userParkingSpot = parkingSpot;
             var oneDay = 24 * 60 * 60 * 1000;
 
@@ -89,12 +90,12 @@ export class HomePage {
               this.userParkingSpot.parkingType == 'Shared' ?
                 this.userParkingSpot.daysLeft = Math.round(Math.abs((new Date().getTime() - endDate.getTime()) / (oneDay))) : '-';
 
-              this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpots => {
+              this._facadeService.getAvailableParkingSpotsToday().subscribe(availableParkingSpots => {
                 var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber));
                 if (res != undefined || res != null)
                   this.disableTodayButton = true;
 
-                this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
+                this._facadeService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
                   if (availableParkingSpots.length > 0) {
                     var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber));
                     if (res != undefined || res != null)
@@ -107,11 +108,11 @@ export class HomePage {
 
             } else {
               // user has no parking spot currently              
-              this._ajaxService.getAvailableParkingSpotsToday().subscribe(availableParkingSpotsToday => {
+              this._facadeService.getAvailableParkingSpotsToday().subscribe(availableParkingSpotsToday => {
                 this.availableParkingSpotsToday = availableParkingSpotsToday;
 
                 this.availableParkingSpotsToday.forEach(parking => {
-                  this._ajaxService.getUserById(parking.userIdReplace).subscribe(user => {
+                  this._facadeService.getUserById(parking.userIdReplace).subscribe(user => {
                     parking.replaceUser = user;
 
                     if (parking.userIdReplace == this.loggedInUser.id) {
@@ -121,11 +122,11 @@ export class HomePage {
                   });
                 });
 
-                this._ajaxService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpotsTomorrow => {
+                this._facadeService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpotsTomorrow => {
                   this.availableParkingSpotsTomorrow = availableParkingSpotsTomorrow;
 
                   this.availableParkingSpotsTomorrow.forEach(parking => {
-                    this._ajaxService.getUserById(parking.userIdReplace).subscribe(user => {
+                    this._facadeService.getUserById(parking.userIdReplace).subscribe(user => {
                       parking.replaceUser = user;
 
                       if (parking.userIdReplace == this.loggedInUser.id) {
@@ -160,13 +161,13 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             this.presentLoading();
-            this._ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
+            this._facadeService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
               this.loading.dismiss();
               this.disableTodayButton = true;
               this.userAlreadyHasParkingSpotToday = false;
-              this.showSuccessMessage('Parking spot released successfully');
-            }, error => {
-              this.showErrorMessage('Parking not released');
+              this._toastService.onSuccess('Parking spot released successfully');              
+            }, () => {
+              this._toastService.onError('Parking not released');
             });
           }
         }
@@ -188,13 +189,13 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             this.presentLoading();
-            this._ajaxService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Tomorrow).subscribe(res => {
+            this._facadeService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Tomorrow).subscribe(res => {
               this.loading.dismiss();
               this.disableTomorrowButton = true;
               this.userAlreadyHasParkingSpotTomorrow = false;
-              this.showSuccessMessage('Parking spot released successfully');
-            }, error => {
-              this.showErrorMessage('Parking not released');
+              this._toastService.onSuccess('Parking spot released successfully');
+            }, () => {
+              this._toastService.onError('Parking not released');
             });
           }
         }
@@ -207,11 +208,11 @@ export class HomePage {
     this.presentLoading();
     var user = this.loggedInUser;
 
-    this._ajaxService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {
+    this._facadeService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {
       this._storage.get('loggedInUser').then((loggedInUser) => {
         this.availableParkingSpotsToday.forEach(parkingSpot => {
           if (parkingSpot.id == userParkingSpot.id) {
-            this._ajaxService.getUserById(loggedInUser.id).subscribe(res => {
+            this._facadeService.getUserById(loggedInUser.id).subscribe(res => {
               parkingSpot.replaceUser = res;
               parkingSpot.userIdReplace = res.id;
 
@@ -226,9 +227,9 @@ export class HomePage {
       });
 
       this.loading.dismiss();
-      this.showSuccessMessage('Parking spot taken successfully');
-    }, error => {
-      this.showErrorMessage('Parking not taken, something went wrong :(');
+      this._toastService.onSuccess('Parking spot taken successfully');
+    }, () => {
+      this._toastService.onError('Parking not taken, something went wrong :(');
     });
 
   }
@@ -236,10 +237,10 @@ export class HomePage {
   takeParkingSpotTomorrow(userParkingSpot: ParkingSpot): void {
     this.presentLoading();
 
-    this._ajaxService.takeParkingSpot(userParkingSpot.id, this.loggedInUser.id).subscribe(res => {
+    this._facadeService.takeParkingSpot(userParkingSpot.id, this.loggedInUser.id).subscribe(res => {
       this.availableParkingSpotsTomorrow.forEach(parkingSpot => {
         if (parkingSpot.id == userParkingSpot.id) {
-          this._ajaxService.getUserById(this.loggedInUser.id).subscribe(res => {
+          this._facadeService.getUserById(this.loggedInUser.id).subscribe(res => {
             parkingSpot.replaceUser = res;
             parkingSpot.userIdReplace = res.id;
 
@@ -252,9 +253,9 @@ export class HomePage {
         }
       });
       this.loading.dismiss();
-      this.showSuccessMessage('Parking spot taken successfully');
-    }, error => {
-      this.showErrorMessage('Parking not taken, something went wrong :( ');
+      this._toastService.onSuccess('Parking spot taken successfully');
+    }, () => {
+      this._toastService.onError('Parking not taken, something went wrong :( ');
     });
   };
 
@@ -271,11 +272,11 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             confirmDialog.present();
-            this._ajaxService.takeParkingSpot(parkingSpot.id, 0).subscribe(res => {
+            this._facadeService.takeParkingSpot(parkingSpot.id, 0).subscribe(res => {
               parkingSpot.userIdReplace = 0;
               parkingSpot.replaceUser = null;
               this.userAlreadyHasParkingSpotToday = false;
-              this.showSuccessMessage('You returned spot successfully ');
+              this._toastService.onSuccess('You returned spot successfully ');
             });
           }
         }
@@ -313,25 +314,5 @@ export class HomePage {
 
     let modal = this._modalCtrl.create(ModalContentPage, user);
     modal.present();
-  }
-
-  showErrorMessage(message: string): void {
-    let toast = this._toastrCtrl.create({
-      message: message,
-      duration: 3000,
-      position: 'bottom',
-      cssClass: 'errorToast'
-    });
-    toast.present();
-  }
-
-  showSuccessMessage(message: string): void {
-    let toastr = this._toastrCtrl.create({
-      message: message,
-      duration: 3000,
-      position: 'bottom',
-      cssClass: 'normalToast'
-    });
-    toastr.present();
   }
 }

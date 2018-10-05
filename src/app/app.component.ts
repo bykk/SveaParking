@@ -1,8 +1,9 @@
+import { ToastService } from './services/toast.service';
 import { UsersPage } from './../pages/users/users';
 import { HomePage } from './../pages/home/home';
 import { ProfilePage } from './../pages/profile/profile';
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav, ToastController, AlertController } from 'ionic-angular';
+import { Platform, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
@@ -18,7 +19,7 @@ export class MyApp {
   pages: Array<{ title: string, component: any, iconCss: any }>;
   rootPage: any;
 
-  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastCtrl: ToastController, private _network: Network, private _alertCtrl: AlertController) {
+  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network) {
     // if (!this.isConnected()) {
     //   let alert = this._alertCtrl.create({
     //     title: 'No network',
@@ -38,16 +39,9 @@ export class MyApp {
 
       this._storage.get('authenticated').then(isAuthenticated => {
         isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
-      }).catch(error => {
+      }).catch(() => {
         this.nav.setRoot(LoginPage);
-
-        let toast = this._toastCtrl.create({
-          message: 'Please enter your credentials',
-          duration: 3000,
-          position: 'bottom'
-        });
-
-        toast.present();
+        this._toastService.onError('Please enter your credentials');
       });
 
     });

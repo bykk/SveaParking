@@ -1,5 +1,7 @@
-import { AjaxService } from './../../../app/services/ajax.service';
-import { ToastController } from 'ionic-angular';
+import { LoadingController } from 'ionic-angular';
+import { Loading } from 'ionic-angular';
+import { ToastService } from '../../../app/services/toast.service';
+import { FacadeService } from '../../../app/services/facade.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
 import { User } from '../../../app/model/user';
@@ -11,6 +13,8 @@ import _ from 'lodash';
     templateUrl: 'impersonate.html',
 })
 export class ImpersonatePage {
+    isPageReady: boolean;
+    loading: Loading;
     loggedInUser: User;
     segmentOptions: string = 'others';
     users: Array<User>;
@@ -20,7 +24,7 @@ export class ImpersonatePage {
     previousValuesOfImpersonatedUsers: Array<string>;
     showMessageForNoImpersonatedOnBehalf: boolean = false;
 
-    constructor(private _ajaxService: AjaxService, private _toastCtrl: ToastController, private _storage: Storage) {
+    constructor(private _facadeService: FacadeService, private _toastService: ToastService, private _storage: Storage, private _loadingCtrl: LoadingController) {
         this.users = new Array<User>();
         this.releaseParkingForm = new FormGroup({
             user: new FormControl('', Validators.required),
@@ -30,8 +34,9 @@ export class ImpersonatePage {
 
         this._storage.get('loggedInUser').then(loggedInUser => {
             this.loggedInUser = loggedInUser;
-
-            this._ajaxService.getAllImpersonatedOnBehalfByUser(this.loggedInUser.id).subscribe(res => {
+            this.presentLoading();
+            
+            this._facadeService.getAllImpersonatedOnBehalfByUser(this.loggedInUser.id).subscribe(res => {
                 if (_.isEmpty(res)) {
                     this.impersonatedUsersOnBehalf = null;
                     this.showMessageForNoImpersonatedOnBehalf = true;
@@ -45,10 +50,10 @@ export class ImpersonatePage {
                 }
             });
 
-            this._ajaxService.getAllUsers().subscribe(res => {
+            this._facadeService.getAllUsers().subscribe(res => {
                 this.users = res;
 
-                this._ajaxService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe(res => {
+                this._facadeService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe(res => {
                     if (_.isEmpty(res)) {
                         this.previousValuesOfImpersonatedUsers = null;
                         this.impersonatedUsers = null;
@@ -59,9 +64,8 @@ export class ImpersonatePage {
                 });
             });
 
-
-
-        }).catch(error => {
+            this.loading.dismiss();
+        }).catch(() => {
             this.loggedInUser.firstName = 'Unknown';
             this.loggedInUser.lastName = 'Unknown';
         });
@@ -73,11 +77,11 @@ export class ImpersonatePage {
         // impersonate new users
         var itemsProcessed = 0;
         this.impersonatedUsers.forEach((userId) => {
-            this._ajaxService.addImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
+            this._facadeService.addImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
                 itemsProcessed++;
                 this.previousValuesOfImpersonatedUsers = this.impersonatedUsers;
                 if (itemsProcessed === this.impersonatedUsers.length) {
-                    this.showSuccessMessage('Saved successfully');
+                    this._toastService.onSuccess('Saved successfully');
                 }
             });
         });
@@ -89,7 +93,7 @@ export class ImpersonatePage {
             return;
 
         if (this.impersonatedUsers != null && this.impersonatedUsers.length > 3) {
-            this.showErrorMessage('You can impersonate only 3 collegues.');
+            this._toastService.onError('You can impersonate only 3 collegues.');
             return;
         }
 
@@ -97,7 +101,7 @@ export class ImpersonatePage {
         var itemsDeleted = 0;
         if (this.previousValuesOfImpersonatedUsers != null && this.previousValuesOfImpersonatedUsers.length > 0) {
             this.previousValuesOfImpersonatedUsers.forEach((userId) => {
-                this._ajaxService.removeImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
+                this._facadeService.removeImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
                     itemsDeleted++;
                     if (itemsDeleted == this.previousValuesOfImpersonatedUsers.length) {                        
                         this.impersonateNewUsers();
@@ -107,40 +111,18 @@ export class ImpersonatePage {
         }
     }
 
+
+    presentLoading(): void {
+        this.loading = this._loadingCtrl.create({
+            spinner: 'bubbles',
+            content: '',
+            cssClass: 'loadingBackdrop'
+        });
+        this.loading.present();
+    };
+
     onSubmit() {
         let result = this.releaseParkingForm.value;
-        this.showWarningMessage('Not implemented yet :(');
-
+        this._toastService.onWarning('Not implemented yet :(');
     }
-
-    showSuccessMessage(message: string): void {
-        let toastr = this._toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'bottom',
-            cssClass: 'normalToast'
-        });
-        toastr.present();
-    }
-
-    showWarningMessage(message: string): void {
-        let toastr = this._toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'bottom',
-            cssClass: 'warrningToastr'
-        });
-        toastr.present();
-    };
-
-    showErrorMessage(message: string): void {
-        let toast = this._toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'bottom',
-            cssClass: 'errorToast'
-        });
-        toast.present();
-    };
-
 }

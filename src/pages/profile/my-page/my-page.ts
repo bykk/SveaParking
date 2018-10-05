@@ -19,9 +19,7 @@ export class MyPage {
   ngOnInit() {
 
     this._storage.get('loggedInUser').then((loggedInUser) => {
-      this.loggedInUser = loggedInUser;
-
-   
+      this.loggedInUser = loggedInUser;   
     });
   }
 }

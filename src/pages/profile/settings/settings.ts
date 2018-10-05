@@ -1,5 +1,5 @@
+import { ToastService } from '../../../app/services/toast.service';
 import { Component } from '@angular/core';
-import { ToastController } from 'ionic-angular';
 
 @Component({
     selector: 'settings',
@@ -8,23 +8,13 @@ import { ToastController } from 'ionic-angular';
 export class SettingsPage {
     emailNotificationEnabled: boolean;
 
-    constructor(private toastCtrl: ToastController) {
+    constructor(private _toastService: ToastService) {
         // write an ajax call to get current status of email notifications for user
         this.emailNotificationEnabled = false;
      }
 
      updateEmailNotification(event) {
         // let emailNotificationEnabled: boolean = event.value;        
-        this.showWarningMessage('Not implemented yet :(');    
+        this._toastService.onWarning('Not implemented yet :(');    
     }
-
-    showWarningMessage(message: string): void {
-        let toastr = this.toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'bottom',
-            cssClass: 'warrningToastr'
-        });
-        toastr.present();
-    };
 }

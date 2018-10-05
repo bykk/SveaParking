@@ -1,6 +1,6 @@
 import { ModalMessage } from './../../components/modal-message.components';
 import { ModalContentPage } from './../../components/modal-content-page.components';
-import { AjaxService } from './../../app/services/ajax.service';
+import { FacadeService } from '../../app/services/facade.service';
 import { User } from './../../app/model/user';
 import { Component } from '@angular/core';
 import { ModalController, AlertController, LoadingController, Loading } from 'ionic-angular';
@@ -15,12 +15,12 @@ export class UsersPage {
   filteredUsers: Array<User>;
   loading: Loading;
 
-  constructor(private _ajaxService: AjaxService, public _modalCtrl: ModalController, private _callNumber: CallNumber, public _alertCtrl: AlertController, private _loadingCtrl: LoadingController) {
+  constructor(private _facadeService: FacadeService, public _modalCtrl: ModalController, private _callNumber: CallNumber, public _alertCtrl: AlertController, private _loadingCtrl: LoadingController) {
     this.users = new Array<User>();
     this.filteredUsers = new Array<User>();
     this.presentLoading();
 
-    this._ajaxService.getAllUsers().subscribe(res => {
+    this._facadeService.getAllUsers().subscribe(res => {
       this.users = res;
 
       this.users.forEach(x => {

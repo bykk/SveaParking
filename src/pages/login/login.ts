@@ -1,9 +1,10 @@
+import { ToastService } from '../../app/services/toast.service';
 import { Component } from '@angular/core';
-import { NavController, Loading, LoadingController, ToastController } from 'ionic-angular';
+import { NavController, Loading, LoadingController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 import { UserCredentials } from './../../app/model/user-credentials';
-import { AjaxService } from './../../app/services/ajax.service';
+import { FacadeService } from '../../app/services/facade.service';
 import { LoggedInUser } from './../../app/model/register-user';
 import { HomePage } from './../home/home';
 import _ from 'lodash';
@@ -20,17 +21,16 @@ export class LoginPage {
 
   constructor(
     public navCtrl: NavController,
-    private ajaxService: AjaxService,
+    private _facadeService: FacadeService,
     private loadingCtrl: LoadingController,
-    private toastCtrl: ToastController,
+    private _toastService: ToastService,
     private storage: Storage) {
   }
 
   login() {
     this.showLoading();
 
-    this.ajaxService.signIn(this.userCredentials).subscribe(userData => {
-      
+    this._facadeService.signIn(this.userCredentials).subscribe(userData => {      
       if (!_.isEmpty(userData)) {
         let response = userData;
         let loggedInUser: LoggedInUser = {
@@ -44,11 +44,11 @@ export class LoginPage {
         this.storage.set('loggedInUser', loggedInUser);
         this.navCtrl.setRoot(HomePage);
       } else {
-        this.presentToast('Access denied')
+        this._toastService.onError('Access denied')
+        this.loading.dismiss();        
       }
     }, (error) => {
-      this.loading.dismiss();
-      this.showError(error);
+      this.loading.dismiss();      
     });
   };
 
@@ -70,23 +70,5 @@ export class LoginPage {
       dismissOnPageChange: true
     });
     this.loading.present();
-  };
-
-  showError(errorMessage) {
-    this.loading.dismiss();
-    this.presentToast(errorMessage);
-  };
-
-  presentToast(message: string) {
-    this.loading.dismiss();
-
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 3000,
-      position: 'bottom',
-      cssClass: 'errorToast'
-    });
-
-    toast.present();
   };
 }

@@ -1,11 +1,12 @@
+import { ToastService } from '../../../app/services/toast.service';
 import { PasswordValidation } from './change-password-validator';
 import { LoggedInUser } from './../../../app/model/register-user';
-import { ToastController, LoadingController, Loading } from 'ionic-angular';
+import { LoadingController, Loading } from 'ionic-angular';
 import { ChangePassword } from './../../../app/model/change-password';
 import { Component } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '../../../../node_modules/@angular/forms';
 import { Storage } from '@ionic/storage';
-import { AjaxService } from './../../../app/services/ajax.service';
+import { FacadeService } from '../../../app/services/facade.service';
 
 
 @Component({
@@ -18,12 +19,12 @@ export class ChangePasswordPage {
     changePasswordForm: FormGroup;
     changePassword: ChangePassword = {};
 
-    constructor(private _fb: FormBuilder, private _ajaxService: AjaxService, private _toastCtrl: ToastController, private _storage: Storage, private _loadingCtrl: LoadingController) {
+    constructor(private _formBuilder: FormBuilder, private _facadeService: FacadeService, private _toastService: ToastService, private _storage: Storage, private _loadingCtrl: LoadingController) {
         this._storage.get('loggedInUser').then(loggedInUser => {
             this.loggedInUser = loggedInUser;
         });
 
-        this.changePasswordForm = _fb.group({
+        this.changePasswordForm = _formBuilder.group({
             newPassword: ['', Validators.required],
             confirmPassword: ['', Validators.required]
         }, { 
@@ -34,12 +35,12 @@ export class ChangePasswordPage {
     onSubmit() {
         let result: ChangePassword = this.changePasswordForm.value;
         this.presentLoading();
-        this._ajaxService.updatePassword(this.loggedInUser.id, result.newPassword).subscribe(res => {
+        this._facadeService.updatePassword(this.loggedInUser.id, result.newPassword).subscribe(res => {
             this.changePasswordForm.reset();
             this.loading.dismiss();
-            this.showSuccessMessage('Password changed');
+            this._toastService.onSuccess('Password changed');
         }, () => {
-            this.showErrorMessage('Something went wrong');
+            this._toastService.onError('Something went wrong');
         });
     };
 
@@ -50,35 +51,5 @@ export class ChangePasswordPage {
             cssClass: 'loadingBackdrop'
         });
         this.loading.present();
-    };
-
-    showWarningMessage(message: string): void {
-        let toastr = this._toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'bottom',
-            cssClass: 'warrningToastr'
-        });
-        toastr.present();
-    };
-
-    showSuccessMessage(message: string): void {
-        let toastr = this._toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'bottom',
-            cssClass: 'normalToast'
-        });
-        toastr.present();
-    };
-
-    showErrorMessage(message: string): void {
-        let toast = this._toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'bottom',
-            cssClass: 'errorToast'
-        });
-        toast.present();
     };
 }

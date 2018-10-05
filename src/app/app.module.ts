@@ -1,4 +1,3 @@
-import { HTTP } from '@ionic-native/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -24,11 +23,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ProfileModule } from './../pages/profile/profile.module';
 
 // services
-import { AjaxService } from './services/ajax.service';
 import { CallNumber } from '@ionic-native/call-number';
 import { SMS } from '@ionic-native/sms';
 import { Network } from '@ionic-native/network';
 import { ModalMessage } from '../components/modal-message.components';
+import { ServicesModule } from './services/services.module';
 
 
 
@@ -55,7 +54,8 @@ import { ModalMessage } from '../components/modal-message.components';
       autoFocusAssist: false
     }),
     IonicStorageModule.forRoot(),
-    ProfileModule    
+    ProfileModule,
+    ServicesModule    
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -75,9 +75,7 @@ import { ModalMessage } from '../components/modal-message.components';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},    
-    HTTP, 
-    AjaxService,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},         
     CallNumber,
     SMS,
     Network

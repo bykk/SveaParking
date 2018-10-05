@@ -1,7 +1,6 @@
-import { UserParkingSpot } from './../app/model/user-parking-spot';
-import { AjaxService } from './../app/services/ajax.service';
+import { FacadeService } from '../app/services/facade.service';
 import { User } from './../app/model/user';
-import { Platform, NavParams, ViewController, AlertController, ToastController, Loading, LoadingController } from 'ionic-angular';
+import { Platform, NavParams, ViewController, AlertController, Loading, LoadingController } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { CallNumber } from '@ionic-native/call-number';
 
@@ -67,16 +66,15 @@ export class ModalContentPage {
     public platform: Platform,
     public params: NavParams,
     public viewCtrl: ViewController,
-    private _ajaxService: AjaxService,
+    private _facadeService: FacadeService,
     private _callNumber: CallNumber,
-    public alertCtrl: AlertController,
-    private _toastr: ToastController,
+    public alertCtrl: AlertController,    
     public loadingCtrl: LoadingController) {
 
     this.presentLoading();
-    this._ajaxService.getUserById(this.params.get('id')).subscribe(res => {
+    this._facadeService.getUserById(this.params.get('id')).subscribe(res => {
       this.user = res;
-      this._ajaxService.getFixedSpotInfo(this.user.id).subscribe(res => {
+      this._facadeService.getFixedSpotInfo(this.user.id).subscribe(res => {
         this.user.hasFixedSpot = res.parkingSpotNumber !== null;
         this.loading.dismiss();
       });
@@ -113,16 +111,6 @@ export class ModalContentPage {
     });
     this.loading.present();
   };
-
-  showMessage(message: string): void {
-    let toastr = this._toastr.create({
-      message: message,
-      duration: 3000,
-      position: 'bottom',
-      cssClass: 'warrningToastr'
-    });
-    toastr.present();
-  }
 
   dismiss() {
     this.viewCtrl.dismiss();

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { Platform, NavParams, ViewController, AlertController, ToastController } from "ionic-angular";
-import { AjaxService } from "../app/services/ajax.service";
+import { FacadeService } from "../app/services/facade.service";
 import { SMS } from "@ionic-native/sms";
 import { User } from "../app/model/user";
 
@@ -35,9 +35,9 @@ export class ModalMessage {
     user: User = { id: null, firstName: '', lastName: '' };
     messageToSend: string;
 
-    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, private _ajaxService: AjaxService, public alertCtrl: AlertController, private _toastCtrl: ToastController, private _smsService: SMS) {
+    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, private _facadeService: FacadeService, public alertCtrl: AlertController, private _toastCtrl: ToastController, private _smsService: SMS) {
 
-        this._ajaxService.getUserById(this.params.get('id')).subscribe(res => {
+        this._facadeService.getUserById(this.params.get('id')).subscribe(res => {
             this.user = res;
         });
 

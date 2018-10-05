@@ -32,8 +32,7 @@
                     <span text-center><ion-icon ios="ios-apps" md="md-apps"></ion-icon>&nbsp;&nbsp; Collegues</span>
                 </ion-label>
                 <ion-select [(ngModel)]="impersonatedUsers" okText="Save" cancelText="Dismiss" multiple="true" (ionChange)="updateImpersonateList()">
-                    <ion-option *ngFor="let user of users" value="{{ user.id }}" selected="{{ user.isImpersonated }}">{{
-                        user.firstName }} {{ user.lastName }}</ion-option>
+                    <ion-option *ngFor="let user of users" value="{{ user.id }}" selected="{{ user.isImpersonated }}">{{ user.firstName }} {{ user.lastName }}</ion-option>
                 </ion-select>
             </ion-item>
         </ion-list>

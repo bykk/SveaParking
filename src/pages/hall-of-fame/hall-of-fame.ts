@@ -1,4 +1,3 @@
-import { AjaxService } from './../../app/services/ajax.service';
 import { UserHallOfFame } from './../../app/model/user-hall-of-fame';
 import { Component } from '@angular/core';
 
@@ -9,8 +8,7 @@ import { Component } from '@angular/core';
 export class HallOfFamePage {
   items: Array<UserHallOfFame>;
 
-  constructor(private ajaxService: AjaxService) {
-    this.items = new Array<UserHallOfFame>();    
-    
+  constructor() {
+    this.items = new Array<UserHallOfFame>();        
   }
 }
