@@ -73,7 +73,7 @@ export class ImpersonatePage {
 
     }
 
-    impersonateNewUsers() {
+    impersonateNewUsers() {        
         // impersonate new users
         var itemsProcessed = 0;
         this.impersonatedUsers.forEach((userId) => {
@@ -88,7 +88,7 @@ export class ImpersonatePage {
 
     }
 
-    updateImpersonateList() {        
+    updateImpersonateList() {               
         if (this.previousValuesOfImpersonatedUsers != null && this.impersonatedUsers != null && this.previousValuesOfImpersonatedUsers.join() === this.impersonatedUsers.join())
             return;
 
@@ -108,9 +108,11 @@ export class ImpersonatePage {
                     }
                 });
             });
+        } else if (this.previousValuesOfImpersonatedUsers == null && this.impersonatedUsers != null && this.impersonatedUsers.length > 0) {
+            this.impersonateNewUsers();
         }
+        
     }
-
 
     presentLoading(): void {
         this.loading = this._loadingCtrl.create({
@@ -122,7 +124,16 @@ export class ImpersonatePage {
     };
 
     onSubmit() {
-        let result = this.releaseParkingForm.value;
-        this._toastService.onWarning('Not implemented yet :(');
+        let result: { user: number, date: string } = this.releaseParkingForm.value;        
+        let date = new Date(result.date).toISOString().substring(0,10);
+
+        this._facadeService.releaseParkingSpotForUser(result.user, date, false, this.loggedInUser.id).subscribe((res) => {            
+            if(res == "true") {
+                this._toastService.onSuccess('You released parking spot sucessfully');
+                this.releaseParkingForm.reset();
+            }
+            this._toastService.onError('Something went wrong');
+                
+        });        
     }
 }

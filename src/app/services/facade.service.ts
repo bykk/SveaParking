@@ -66,6 +66,10 @@ export class FacadeService {
         return this.parkingService.checkIfUserHasSharedParkingSpot(userId, this.config);
     }
 
+    releaseParkingSpotForUser(userId: number, date: string, sendEmail: boolean, releaseUserId: number) {
+        return this.parkingService.releaseParkingSpotForUser(userId, date, sendEmail, releaseUserId, this.config);
+    }
+
     ////////////// USER SERVICES /////////////////
     signIn(user: UserCredentials) {
         return this.userService.signIn(user, this.config);
