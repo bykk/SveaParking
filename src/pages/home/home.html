@@ -109,4 +109,12 @@
     </ion-item>
   </ion-list>
 
+
+  <ion-refresher (ionRefresh)="reloadPage($event)">
+      <ion-refresher-content          
+        refreshingSpinner="bubbles"
+        refreshingText="Refreshing...">
+      </ion-refresher-content>
+    </ion-refresher>
+
 </ion-content>

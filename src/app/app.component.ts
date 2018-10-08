@@ -1,3 +1,4 @@
+import { AlertController } from 'ionic-angular';
 import { ToastService } from './services/toast.service';
 import { UsersPage } from './../pages/users/users';
 import { HomePage } from './../pages/home/home';
@@ -19,20 +20,21 @@ export class MyApp {
   pages: Array<{ title: string, component: any, iconCss: any }>;
   rootPage: any;
 
-  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network) {
-    // if (!this.isConnected()) {
-    //   let alert = this._alertCtrl.create({
-    //     title: 'No network',
-    //     message: 'Check your internet connection',
-    //     buttons: [{
-    //       text: 'Ok',
-    //       handler: () => { platform.exitApp(); }
-    //     }]
-    //   })
-    //   alert.present();
-    // } else {
+  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network, private _alertCtrl: AlertController) {
+    debugger;
+    if (this.isConnected()) {
+      let alert = this._alertCtrl.create({
+        title: 'No network',
+        message: 'Check your internet connection',
+        buttons: [{
+          text: 'Ok',
+          handler: () => { debugger; platform.exitApp(); }
+        }]
+      })
+      alert.present();
+    } else {
      
-    // }
+    }
     platform.ready().then(() => {
       status.styleDefault();
       splashScreen.hide();

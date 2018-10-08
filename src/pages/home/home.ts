@@ -68,7 +68,7 @@ export class HomePage {
                   this.disableTomorrowButton = true;               
               }
 
-              this.isPageReady = true;
+              this.isPageReady = true;              
               this.loading.dismiss();
             });
           });
@@ -134,9 +134,8 @@ export class HomePage {
                         this.userAlreadyHasParkingSpotTomorrow = true;
                       }
                     });
-                  });
-
-                  this.loading.dismiss();
+                  });                  
+                  this.loading.dismiss();                  
                   this.isPageReady = true;
                 });
               });
@@ -314,5 +313,10 @@ export class HomePage {
 
     let modal = this._modalCtrl.create(ModalContentPage, user);
     modal.present();
+  }
+
+  reloadPage(refresher) {    
+    this.ionViewDidLoad();
+    refresher.complete();
   }
 }
