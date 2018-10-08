@@ -22,39 +22,39 @@ export class MyApp {
 
   constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network, private _alertCtrl: AlertController) {
     debugger;
-    if (this.isConnected()) {
+    if (!this.isConnected()) {
       let alert = this._alertCtrl.create({
-        title: 'No network',
-        message: 'Check your internet connection',
+        title: 'No internet connection',
+        message: 'Check your internet connection or try again later',
         buttons: [{
           text: 'Ok',
-          handler: () => { debugger; platform.exitApp(); }
+          handler: () => { platform.exitApp(); }
         }]
       })
       alert.present();
     } else {
-     
-    }
-    platform.ready().then(() => {
-      status.styleDefault();
-      splashScreen.hide();
+      platform.ready().then(() => {
+        status.styleDefault();
+        splashScreen.hide();
 
-      this._storage.get('authenticated').then(isAuthenticated => {
-        isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
-      }).catch(() => {
-        this.nav.setRoot(LoginPage);
-        this._toastService.onError('Please enter your credentials');
+        this._storage.get('authenticated').then(isAuthenticated => {
+          isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
+        }).catch(() => {
+          this.nav.setRoot(LoginPage);
+          this._toastService.onError('Please enter your credentials');
+        });
+
       });
 
-    });
 
+      this.pages = [
+        { title: 'Home', component: HomePage, iconCss: 'home' },
+        { title: 'Profile', component: ProfilePage, iconCss: 'contact' },
+        { title: 'Users', component: UsersPage, iconCss: 'contacts' },
+        { title: 'About', component: AboutPage, iconCss: 'help-circle' }
+      ];
+    }
 
-    this.pages = [
-      { title: 'Home', component: HomePage, iconCss: 'home' },
-      { title: 'Profile', component: ProfilePage, iconCss: 'contact' },
-      { title: 'Users', component: UsersPage, iconCss: 'contacts' },
-      { title: 'About', component: AboutPage, iconCss: 'help-circle' }
-    ];
   }
 
   isConnected(): boolean {
