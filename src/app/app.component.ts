@@ -1,4 +1,3 @@
-import { AlertController } from 'ionic-angular';
 import { ToastService } from './services/toast.service';
 import { UsersPage } from './../pages/users/users';
 import { HomePage } from './../pages/home/home';
@@ -20,40 +19,40 @@ export class MyApp {
   pages: Array<{ title: string, component: any, iconCss: any }>;
   rootPage: any;
 
-  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network, private _alertCtrl: AlertController) {    
-    if (this.isConnected()) {
-      let alert = this._alertCtrl.create({
-        title: 'No internet connection',
-        message: 'Check your internet connection or try again later',
-        buttons: [{
-          text: 'Ok',
-          handler: () => { platform.exitApp(); }
-        }]
-      })
-      alert.present();
-    } else {
-      platform.ready().then(() => {
-        status.styleDefault();
-        splashScreen.hide();
+  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network) {
+    // if (!this.isConnected()) {
+    //   let alert = this._alertCtrl.create({
+    //     title: 'No network',
+    //     message: 'Check your internet connection',
+    //     buttons: [{
+    //       text: 'Ok',
+    //       handler: () => { platform.exitApp(); }
+    //     }]
+    //   })
+    //   alert.present();
+    // } else {
+     
+    // }
+    platform.ready().then(() => {
+      status.styleDefault();
+      splashScreen.hide();
 
-        this._storage.get('authenticated').then(isAuthenticated => {
-          isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
-        }).catch(() => {
-          this.nav.setRoot(LoginPage);
-          this._toastService.onError('Please enter your credentials');
-        });
-
+      this._storage.get('authenticated').then(isAuthenticated => {
+        isAuthenticated != null ? this.nav.setRoot(HomePage) : this.nav.setRoot(LoginPage);
+      }).catch(() => {
+        this.nav.setRoot(LoginPage);
+        this._toastService.onError('Please enter your credentials');
       });
 
+    });
 
-      this.pages = [
-        { title: 'Home', component: HomePage, iconCss: 'home' },
-        { title: 'Profile', component: ProfilePage, iconCss: 'contact' },
-        { title: 'Users', component: UsersPage, iconCss: 'contacts' },
-        { title: 'About', component: AboutPage, iconCss: 'help-circle' }
-      ];
-    }
 
+    this.pages = [
+      { title: 'Home', component: HomePage, iconCss: 'home' },
+      { title: 'Profile', component: ProfilePage, iconCss: 'contact' },
+      { title: 'Users', component: UsersPage, iconCss: 'contacts' },
+      { title: 'About', component: AboutPage, iconCss: 'help-circle' }
+    ];
   }
 
   isConnected(): boolean {
