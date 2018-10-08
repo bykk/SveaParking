@@ -20,9 +20,8 @@ export class MyApp {
   pages: Array<{ title: string, component: any, iconCss: any }>;
   rootPage: any;
 
-  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network, private _alertCtrl: AlertController) {
-    debugger;
-    if (!this.isConnected()) {
+  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network, private _alertCtrl: AlertController) {    
+    if (this.isConnected()) {
       let alert = this._alertCtrl.create({
         title: 'No internet connection',
         message: 'Check your internet connection or try again later',
