@@ -37,13 +37,14 @@
         <ion-list-header>
           Available parking spots (Today):
         </ion-list-header>
-        <ion-item text-center>
-          <p class="noParkingAvailable"> No available parking spots </p>
+        <ion-item text-center>          
+          <img class="no-parking-logo" src="../../assets/imgs/no-parking.png" alt="No available parking spots" />
+          <p> No available parking spots </p> 
         </ion-item>
       </ion-list>
     </ng-template>
     <br>
-    <ion-list *ngIf="availableParkingSpotsTomorrow?.length > 0; else noAvailableParkingSpotsForTomorrow">
+    <ion-list *ngIf="availableParkingSpotsTomorrow?.length > 0; else noAvailableParkingSpotsForTomorrow;">
       <ion-list-header>
         Available parking spots (Today):
       </ion-list-header>
@@ -55,9 +56,7 @@
           </div>
 
           <ng-template #parkingTaken padding>
-            <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>
-            <!-- &nbsp;
-            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="returnParkingSpotForTomorrow()"><ion-icon color="dark" name="refresh"></ion-icon></span> -->
+            <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>            
           </ng-template>
         </div>
       </ion-item>
@@ -68,10 +67,12 @@
           Available parking spots (Tomorrow):
         </ion-list-header>
         <ion-item text-center>
-          <p class="noParkingAvailable"> No available parking spots </p>
+          <img class="no-parking-logo" src="../../assets/imgs/no-parking.png" alt="No available parking spots" />
+          <p> No available parking spots </p> 
         </ion-item>
       </ion-list>
     </ng-template>
+    <ion-item-divider></ion-item-divider>
   </div>
 
   <ng-template #hasParkingRightNow>
