@@ -20,19 +20,6 @@ export class MyApp {
   rootPage: any;
 
   constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network) {
-    // if (!this.isConnected()) {
-    //   let alert = this._alertCtrl.create({
-    //     title: 'No network',
-    //     message: 'Check your internet connection',
-    //     buttons: [{
-    //       text: 'Ok',
-    //       handler: () => { platform.exitApp(); }
-    //     }]
-    //   })
-    //   alert.present();
-    // } else {
-     
-    // }
     platform.ready().then(() => {
       status.styleDefault();
       splashScreen.hide();
