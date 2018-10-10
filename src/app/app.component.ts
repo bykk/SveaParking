@@ -19,25 +19,7 @@ export class MyApp {
   pages: Array<{ title: string, component: any, iconCss: any }>;
   rootPage: any;
 
-<<<<<<< HEAD
-  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network) {
-=======
   constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network, private _alertCtrl: AlertController) {
-    debugger;
-    if (this.isConnected()) {
-      let alert = this._alertCtrl.create({
-        title: 'No network',
-        message: 'Check your internet connection',
-        buttons: [{
-          text: 'Ok',
-          handler: () => { debugger; platform.exitApp(); }
-        }]
-      })
-      alert.present();
-    } else {
-     
-    }
->>>>>>> parent of 59eed9c... handle no internet connection case
     platform.ready().then(() => {
       status.styleDefault();
       splashScreen.hide();
