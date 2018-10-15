@@ -69,11 +69,10 @@ export class ImpersonatePage {
             this.loggedInUser.firstName = 'Unknown';
             this.loggedInUser.lastName = 'Unknown';
         });
-
-
     }
 
     impersonateNewUsers() {        
+        this.presentLoading();
         // impersonate new users
         var itemsProcessed = 0;
         this.impersonatedUsers.forEach((userId) => {
@@ -82,6 +81,7 @@ export class ImpersonatePage {
                 this.previousValuesOfImpersonatedUsers = this.impersonatedUsers;
                 if (itemsProcessed === this.impersonatedUsers.length) {
                     this._toastService.onSuccess('Saved successfully');
+                    this.loading.dismiss();
                 }
             });
         });

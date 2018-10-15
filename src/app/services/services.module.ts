@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { HTTP } from '@ionic-native/http';
 import { CommonModule } from '@angular/common';
@@ -9,6 +8,7 @@ import { FacadeService } from './facade.service';
 
 import { UtilsService } from './utils.service';
 import { ToastService } from './toast.service';
+import { NetworkProvider } from './network.provider';
 
 @NgModule({
   imports: [
@@ -22,7 +22,8 @@ import { ToastService } from './toast.service';
     UserService,
     FacadeService,
 
-    ToastService
+    ToastService,
+    NetworkProvider
   ]
 })
 export class ServicesModule { }
