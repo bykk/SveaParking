@@ -8,7 +8,6 @@ import { FacadeService } from './facade.service';
 
 import { UtilsService } from './utils.service';
 import { ToastService } from './toast.service';
-import { NetworkProvider } from './network.provider';
 
 @NgModule({
   imports: [
@@ -21,9 +20,8 @@ import { NetworkProvider } from './network.provider';
     ParkingService,  
     UserService,
     FacadeService,
-
-    ToastService,
-    NetworkProvider
+  
+    ToastService
   ]
 })
 export class ServicesModule { }

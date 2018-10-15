@@ -9,8 +9,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
 import { LoginPage } from './../pages/login/login';
 import { AboutPage } from './../pages/about/about';
-import { Network } from '@ionic-native/network';
-import { NetworkProvider } from './services/network.provider';
 
 @Component({
   templateUrl: 'app.html'
@@ -20,19 +18,17 @@ export class MyApp {
   pages: Array<{ title: string, component: any, iconCss: any }>;
   rootPage: any;
 
-  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _network: Network, private _networkProvider: NetworkProvider) {
-    platform.ready().then(() => {     
+  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService) {
+    platform.ready().then(() => {
       status.styleDefault();
       splashScreen.hide();      
 
-      this._storage.get('authenticated').then(isAuthenticated => {
-        this._networkProvider.setSubscriptions();
-
-        if(isAuthenticated != null) {
+      this._storage.get('authenticated').then(isAuthenticated => {        
+        if (isAuthenticated != null) {
           this.nav.setRoot(HomePage)
         } else {
           this.nav.setRoot(LoginPage);
-        }                
+        }
       }).catch(() => {
         this.nav.setRoot(LoginPage);
         this._toastService.onError('Please enter your credentials');
@@ -47,11 +43,6 @@ export class MyApp {
       { title: 'Users', component: UsersPage, iconCss: 'contacts' },
       { title: 'About', component: AboutPage, iconCss: 'help-circle' }
     ];
-  }
-
-  isConnected(): boolean {
-    let connType = this._network.type;
-    return connType && connType !== 'unknown' && connType !== 'none';
   }
 
   openPage(page) {

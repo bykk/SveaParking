@@ -25,11 +25,8 @@ import { ProfileModule } from './../pages/profile/profile.module';
 // services
 import { CallNumber } from '@ionic-native/call-number';
 import { SMS } from '@ionic-native/sms';
-import { Network } from '@ionic-native/network';
 import { ModalMessage } from '../components/modal-message.components';
 import { ServicesModule } from './services/services.module';
-
-
 
 @NgModule({
   declarations: [
@@ -77,8 +74,7 @@ import { ServicesModule } from './services/services.module';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},         
     CallNumber,
-    SMS,
-    Network
+    SMS    
   ]
 })
 export class AppModule {}
