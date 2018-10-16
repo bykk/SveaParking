@@ -35,7 +35,7 @@ export class ImpersonatePage {
         this._storage.get('loggedInUser').then(loggedInUser => {
             this.loggedInUser = loggedInUser;
             this.presentLoading();
-            
+
             this._facadeService.getAllImpersonatedOnBehalfByUser(this.loggedInUser.id).subscribe(res => {
                 if (_.isEmpty(res)) {
                     this.impersonatedUsersOnBehalf = null;
@@ -75,20 +75,24 @@ export class ImpersonatePage {
         this.presentLoading();
         // impersonate new users
         var itemsProcessed = 0;
-        this.impersonatedUsers.forEach((userId) => {
+
+        if(this.impersonatedUsers.length == 0)
+            this.loading.dismiss();
+
+        this.impersonatedUsers.forEach((userId) => {            
             this._facadeService.addImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
                 itemsProcessed++;
                 this.previousValuesOfImpersonatedUsers = this.impersonatedUsers;
+
                 if (itemsProcessed === this.impersonatedUsers.length) {
                     this._toastService.onSuccess('Saved successfully');
                     this.loading.dismiss();
                 }
             });
-        });
-
+        });        
     }
 
-    updateImpersonateList() {               
+    updateImpersonateList() {
         if (this.previousValuesOfImpersonatedUsers != null && this.impersonatedUsers != null && this.previousValuesOfImpersonatedUsers.join() === this.impersonatedUsers.join())
             return;
 
@@ -102,8 +106,9 @@ export class ImpersonatePage {
         if (this.previousValuesOfImpersonatedUsers != null && this.previousValuesOfImpersonatedUsers.length > 0) {
             this.previousValuesOfImpersonatedUsers.forEach((userId) => {
                 this._facadeService.removeImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
-                    itemsDeleted++;
-                    if (itemsDeleted == this.previousValuesOfImpersonatedUsers.length) {                        
+                    itemsDeleted++;                    
+                    if (itemsDeleted == this.previousValuesOfImpersonatedUsers.length) {
+                        this._toastService.onSuccess('Saved successfully');                        
                         this.impersonateNewUsers();
                     }
                 });
@@ -111,12 +116,12 @@ export class ImpersonatePage {
         } else if (this.previousValuesOfImpersonatedUsers == null && this.impersonatedUsers != null && this.impersonatedUsers.length > 0) {
             this.impersonateNewUsers();
         }
-        
+
     }
 
     presentLoading(): void {
         this.loading = this._loadingCtrl.create({
-            spinner: 'bubbles',
+            spinner: 'circles',
             content: '',
             cssClass: 'loadingBackdrop'
         });
@@ -124,16 +129,16 @@ export class ImpersonatePage {
     };
 
     onSubmit() {
-        let result: { user: number, date: string } = this.releaseParkingForm.value;        
-        let date = new Date(result.date).toISOString().substring(0,10);
+        let result: { user: number, date: string } = this.releaseParkingForm.value;
+        let date = new Date(result.date).toISOString().substring(0, 10);
 
-        this._facadeService.releaseParkingSpotForUser(result.user, date, false, this.loggedInUser.id).subscribe((res) => {            
-            if(res == "true") {
+        this._facadeService.releaseParkingSpotForUser(result.user, date, false, this.loggedInUser.id).subscribe((res) => {
+            if (res == "true") {
                 this._toastService.onSuccess('You released parking spot sucessfully');
                 this.releaseParkingForm.reset();
             }
             this._toastService.onError('Something went wrong');
-                
-        });        
+
+        });
     }
 }

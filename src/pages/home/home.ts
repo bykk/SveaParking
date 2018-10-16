@@ -286,7 +286,7 @@ export class HomePage {
 
   presentLoading(): void {
     this.loading = this._loadingCtrl.create({
-      spinner: 'bubbles',
+      spinner: 'circles',
       content: '',
       cssClass: 'loadingBackdrop'
     });
