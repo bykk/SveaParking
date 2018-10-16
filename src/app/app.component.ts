@@ -1,3 +1,4 @@
+import { NetworkProvider } from './services/network.provider';
 import { ToastService } from './services/toast.service';
 import { UsersPage } from './../pages/users/users';
 import { HomePage } from './../pages/home/home';
@@ -19,10 +20,12 @@ export class MyApp {
   pages: Array<{ title: string, component: any, iconCss: string }>;
   rootPage: any;
 
-  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService) {
+  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _networkProvider: NetworkProvider) {
     platform.ready().then(() => {
       status.styleDefault();
       splashScreen.hide();      
+
+      this._networkProvider.setSubscriptions();
 
       this._storage.get('authenticated').then(isAuthenticated => {        
         if (isAuthenticated != null) {
