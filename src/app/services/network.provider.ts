@@ -3,6 +3,7 @@ import { Network } from "@ionic-native/network";
 import { Platform, AlertController } from "ionic-angular";
 import { BehaviorSubject } from "rxjs/Rx";
 import { ToastService } from "./toast.service";
+import { getAllDebugNodes } from "@angular/core/src/debug/debug_node";
 
 
 @Injectable()
@@ -22,14 +23,14 @@ export class NetworkProvider {
             }
 
             this._network.onConnect().subscribe((val) => {
-                this.connected.next(true);                
+                this.connected.next(true);                    
             });
             this._network.onchange().subscribe((val) => {
 
             });
             this._network.onDisconnect().subscribe((val) => {
                 this.connected.next(false);
-                this.showAlert();                
+                this.showAlert();                                
             });
         }
     }

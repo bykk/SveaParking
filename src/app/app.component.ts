@@ -24,12 +24,12 @@ export class MyApp {
   constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _networkProvider: NetworkProvider, private _network: Network) {
     platform.ready().then(() => {
       status.styleDefault();
-      splashScreen.hide();      
-      
+      splashScreen.hide();
+
       this._networkProvider.setSubscriptions();
 
-      this._network.onConnect().subscribe(() => {
-        this._storage.get('authenticated').then(isAuthenticated => {        
+      if(this._network.type !== 'none') {
+        this._storage.get('authenticated').then(isAuthenticated => {
           if (isAuthenticated != null) {
             this.nav.setRoot(HomePage)
           } else {
@@ -38,8 +38,8 @@ export class MyApp {
         }).catch(() => {
           this.nav.setRoot(LoginPage);
           this._toastService.onError('Please enter your credentials');
-        });  
-      });    
+        });
+      }      
     });
 
 
