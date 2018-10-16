@@ -25,8 +25,7 @@
           </div>
 
           <ng-template #parkingTaken padding>
-            <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>
-            &nbsp;
+            <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>            
             <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="returnParkingSpotForToday(parkingSpot)"><ion-icon color="dark" name="refresh"></ion-icon></span>
           </ng-template>
         </div>
@@ -46,10 +45,10 @@
     <br>
     <ion-list *ngIf="availableParkingSpotsTomorrow?.length > 0; else noAvailableParkingSpotsForTomorrow;">
       <ion-list-header>
-        Available parking spots (Today):
+        Available parking spots (Tomorrow):
       </ion-list-header>
       <ion-item *ngFor="let parkingSpot of availableParkingSpotsTomorrow">
-        <span color="danger">{{ parkingSpot.parkingSpotNumber }} </span> {{ parkingSpot.user?.firstName }} {{ parkingSpot.user?.lastName }}
+        <span class="parking-spot-number">{{ parkingSpot.parkingSpotNumber }} </span> {{ parkingSpot.user?.firstName }} {{ parkingSpot.user?.lastName }}
         <div item-end>
           <div *ngIf="parkingSpot.userIdReplace == 0; else parkingTaken">
             <button style="width: 125px;"  ion-button color="secondary" [disabled]="userAlreadyHasParkingSpotTomorrow" (click)="takeParkingSpotTomorrow(parkingSpot)" medium round> Take</button>

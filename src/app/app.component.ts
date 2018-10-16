@@ -10,12 +10,13 @@ import { Storage } from '@ionic/storage';
 import { LoginPage } from './../pages/login/login';
 import { AboutPage } from './../pages/about/about';
 
+
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-  pages: Array<{ title: string, component: any, iconCss: any }>;
+  pages: Array<{ title: string, component: any, iconCss: string }>;
   rootPage: any;
 
   constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService) {
