@@ -1,3 +1,4 @@
+import { Network } from '@ionic-native/network';
 import { NetworkProvider } from './services/network.provider';
 import { ToastService } from './services/toast.service';
 import { UsersPage } from './../pages/users/users';
@@ -20,24 +21,25 @@ export class MyApp {
   pages: Array<{ title: string, component: any, iconCss: string }>;
   rootPage: any;
 
-  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _networkProvider: NetworkProvider) {
+  constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _networkProvider: NetworkProvider, private _network: Network) {
     platform.ready().then(() => {
       status.styleDefault();
       splashScreen.hide();      
-
+      
       this._networkProvider.setSubscriptions();
 
-      this._storage.get('authenticated').then(isAuthenticated => {        
-        if (isAuthenticated != null) {
-          this.nav.setRoot(HomePage)
-        } else {
+      this._network.onConnect().subscribe(() => {
+        this._storage.get('authenticated').then(isAuthenticated => {        
+          if (isAuthenticated != null) {
+            this.nav.setRoot(HomePage)
+          } else {
+            this.nav.setRoot(LoginPage);
+          }
+        }).catch(() => {
           this.nav.setRoot(LoginPage);
-        }
-      }).catch(() => {
-        this.nav.setRoot(LoginPage);
-        this._toastService.onError('Please enter your credentials');
-      });
-
+          this._toastService.onError('Please enter your credentials');
+        });  
+      });    
     });
 
 

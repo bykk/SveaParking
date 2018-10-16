@@ -22,26 +22,27 @@ export class NetworkProvider {
             }
 
             this._network.onConnect().subscribe((val) => {
-                this.connected.next(true);
-                this._toast.onSuccess('You are back online');
+                this.connected.next(true);                
             });
             this._network.onchange().subscribe((val) => {
 
             });
             this._network.onDisconnect().subscribe((val) => {
                 this.connected.next(false);
-                this.showAlert();
+                this.showAlert();                
             });
         }
     }
 
-    private showAlert() {
+    private showAlert() {        
         let alert = this._alertCtrl.create({
             title: "You aren't connected to the internet",
             message: 'Check your internet connection',
             buttons: [{
                 text: 'Ok',
-                handler: () => { this._platform.exitApp(); }
+                handler: () => { 
+                    this._platform.exitApp(); 
+                }
             }]
         })
         alert.present();
