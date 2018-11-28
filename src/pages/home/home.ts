@@ -45,6 +45,7 @@ export class HomePage {
 
       // check if user has fixed parking spot
       this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe(parkingSpot => {
+        debugger;
         var todayDay = new Date();
         var tomorrowDay = new Date(todayDay);
         this.userParkingSpot = parkingSpot;
@@ -54,24 +55,22 @@ export class HomePage {
           this.userParkingSpot.parkingType = 'Fixed';
           this.userParkingSpot.parkingPeriod = '-';
           this.userParkingSpot.daysLeft = '-';
-
-          this._facadeService.getAvailableParkingSpotsToday().subscribe(availableParkingSpots => {
-            if (availableParkingSpots.length > 0) {
-              var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
-              if (res != undefined || res != null)
-                this.disableTodayButton = true;
+          
+          this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, '2018-11-28').subscribe((res) => {
+            if (res === 'false') {
+              this.disableTodayButton = true;
             }
-            this._facadeService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpots => {
-              if (availableParkingSpots.length > 0) {
-                var res = availableParkingSpots.find(x => x.parkingSpotNumber == Number(this.userParkingSpot.parkingSpotNumber) && x.userIdReplace != 0);
-                if (res != undefined || res != null)
-                  this.disableTomorrowButton = true;               
+            this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, '2018-11-29').subscribe((res) => {
+              if (res === 'false') {
+                this.disableTomorrowButton = true;
               }
 
-              this.isPageReady = true;              
+              this.isPageReady = true;
               this.loading.dismiss();
-            });
+            })
+
           });
+
         } else {
           // check if user have share parking spot
           this._facadeService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe(parkingSpot => {
@@ -134,8 +133,8 @@ export class HomePage {
                         this.userAlreadyHasParkingSpotTomorrow = true;
                       }
                     });
-                  });                  
-                  this.loading.dismiss();                  
+                  });
+                  this.loading.dismiss();
                   this.isPageReady = true;
                 });
               });
@@ -164,7 +163,7 @@ export class HomePage {
               this.loading.dismiss();
               this.disableTodayButton = true;
               this.userAlreadyHasParkingSpotToday = false;
-              this._toastService.onSuccess('Parking spot released successfully');              
+              this._toastService.onSuccess('Parking spot released successfully');
             }, () => {
               this._toastService.onError('Parking not released');
             });
@@ -315,7 +314,7 @@ export class HomePage {
     modal.present();
   }
 
-  reloadPage(refresher) {    
+  reloadPage(refresher) {
     this.ionViewDidLoad();
     refresher.complete();
   }

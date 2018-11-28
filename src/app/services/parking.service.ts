@@ -37,6 +37,10 @@ export class ParkingService {
         return this._http.get(`${config.domain}/api/parking/CheckIfUserHasSharedParkingSpotRighNow/${userId}`, { headers: config.headers }).map((response: Response) => { return this._utilityService.convertToCamelCase(response.json()); });
     }
 
+    checkIfParkingSpotIsReleased(userId: number, date: string, config: HttpConfig) {        
+        return this._http.get(`${config.domain}/api/parking/CheckIfParkingSpotIsReleased/${userId}/${date}`, { headers: config.headers }).map((response: Response) => { return response.json(); });
+    }
+
     releaseParkingSpotForUser(userId: number, date: string, sendEmail: boolean, releaseUserId: number, config: HttpConfig) {        
         return this._http.get(`${config.domain}/api/parking/ReleaseParkingSpot/${userId}/${date}/${sendEmail}/${releaseUserId}`, { headers: config.headers }).map((response: Response) => { return response.json(); });
     }

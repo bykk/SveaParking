@@ -17,4 +17,8 @@
         <ion-label>Get Email notifications?</ion-label>
         <ion-toggle [(ngModel)]="emailNotificationEnabled" (ionChange)='updateEmailNotification($event)'></ion-toggle>
     </ion-item>
+    <ion-item>
+        <ion-label>Push notifications?</ion-label>
+        <ion-toggle [(ngModel)]="pushNotificationsEnabled" (ionChange)='updatePushNotification($event)'></ion-toggle>
+    </ion-item>
 </ion-content>

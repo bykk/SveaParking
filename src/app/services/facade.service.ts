@@ -70,6 +70,10 @@ export class FacadeService {
         return this.parkingService.releaseParkingSpotForUser(userId, date, sendEmail, releaseUserId, this.config);
     }
 
+    checkIfParkingSpotIsReleased(userId: number, date: string) {
+        return this.parkingService.checkIfParkingSpotIsReleased(userId, date, this.config);
+    }
+
     ////////////// USER SERVICES /////////////////
     signIn(user: UserCredentials) {
         return this.userService.signIn(user, this.config);

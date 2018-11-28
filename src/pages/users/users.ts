@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { ModalMessage } from './../../components/modal-message.components';
 import { ModalContentPage } from './../../components/modal-content-page.components';
 import { FacadeService } from '../../app/services/facade.service';
@@ -14,27 +15,33 @@ export class UsersPage {
   users: Array<User>;
   filteredUsers: Array<User>;
   loading: Loading;
+  loggedInUser: User;
 
-  constructor(private _facadeService: FacadeService, public _modalCtrl: ModalController, private _callNumber: CallNumber, public _alertCtrl: AlertController, private _loadingCtrl: LoadingController) {
+  constructor(private _facadeService: FacadeService, public _modalCtrl: ModalController, private _callNumber: CallNumber, public _alertCtrl: AlertController, private _loadingCtrl: LoadingController, private _storage:Storage) {
     this.users = new Array<User>();
     this.filteredUsers = new Array<User>();
     this.presentLoading();
 
-    this._facadeService.getAllUsers().subscribe(res => {
-      this.users = res;
+    this._storage.get('loggedInUser').then(loggedInUser => { 
+      this.loggedInUser = loggedInUser;
 
-      this.users.forEach(x => {
-        x.toggleSlide = false;
+      this._facadeService.getAllUsers().subscribe(res => {
+        this.users = res.filter(x => x.id !== this.loggedInUser.id && x.active === true);
+  
+        this.users.forEach(x => {
+          x.toggleSlide = false;
+        });
+        this.users.sort((x, y) => {
+          if (x.lastName < y.lastName) return -1;
+          else if (x.lastName > y.lastName) return 1;
+          else return 0;
+        });
+  
+        this.filteredUsers = this.users;
+        this.loading.dismiss();
       });
-      this.users.sort((x, y) => {
-        if (x.lastName < y.lastName) return -1;
-        else if (x.lastName > y.lastName) return 1;
-        else return 0;
-      });
-
-      this.filteredUsers = this.users;
-      this.loading.dismiss();
     });
+    
   };
 
 

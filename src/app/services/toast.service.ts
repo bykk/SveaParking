@@ -15,33 +15,33 @@ export class ToastService {
     onSuccess(message: string) {
         this.toast = this._toastCtrl.create({    
             message: message,        
-            duration: 3000,
+            duration: 2000,
             position: 'bottom',
-            cssClass: this._successCssClass         
+            cssClass: this._successCssClass                
         });
 
-        this.toast.present();
+        this.toast.present();        
     }
 
     onError(message: string) {
         this.toast = this._toastCtrl.create({            
             message: message,
-            duration: 3000,
+            duration: 2000,
             position: 'bottom',
             cssClass: this._errorCssClass              
         });
 
-        this.toast.present();
+        this.toast.present();        
     }
 
     onWarning(message: string) {
         this.toast = this._toastCtrl.create({    
             message: message,        
-            duration: 3000,
+            duration: 2000,
             position: 'bottom',
             cssClass: this._warningCssClass         
         });
   
-        this.toast.present();
+        this.toast.present();        
     }
 }

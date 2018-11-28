@@ -20,7 +20,7 @@ import { CallNumber } from '@ionic-native/call-number';
     </ion-toolbar>
   </ion-header>
   <ion-content padding>
-    <ion-list>
+    <ion-list [hidden]="!isPageReady">
         <ion-item>
           <ion-avatar item-start>
             <img src="../assets/imgs/user.png"/>
@@ -61,6 +61,7 @@ export class ModalContentPage {
   loading: Loading;
   user: User = { id: null, firstName: '', lastName: '' };
   messageToSend: string;
+  isPageReady: boolean;
 
   constructor(
     public platform: Platform,
@@ -75,10 +76,13 @@ export class ModalContentPage {
     this._facadeService.getUserById(this.params.get('id')).subscribe(res => {
       this.user = res;
       this._facadeService.getFixedSpotInfo(this.user.id).subscribe(res => {
+        this.isPageReady = true;
         this.user.hasFixedSpot = res.parkingSpotNumber !== null;
         this.loading.dismiss();
+        
       });
     });
+    this.isPageReady = false;
   }
 
   callUser(user: User) {

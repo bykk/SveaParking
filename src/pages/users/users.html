@@ -19,10 +19,15 @@
       <ion-item (click)="openModalContentPage({ id: user.id })">
         <span style="font-size: 22px;">{{ user.lastName }} {{ user.firstName }}</span>
         <span item-end>
-            <ion-icon ios="ios-arrow-back" md="md-arrow-back" color="primary"></ion-icon>
+            <ion-icon ios="ios-code" md="md-code" color="primary"></ion-icon>
         </span>
       </ion-item>
       <ion-item-options side="right">
+        <button ion-button color="secondary" (click)="callUser(user)" small><ion-icon name="call"></ion-icon>Call</button>
+        <button ion-button color="warning" (click)="openModalMessage({ id: user.id })" small><ion-icon name="chatboxes"></ion-icon>Message</button>        
+        <button ion-button color="dark" (click)="openModalContentPage({ id: user.id })" small><ion-icon name="information"></ion-icon>Info</button>                
+      </ion-item-options>
+      <ion-item-options side="left">
         <button ion-button color="secondary" (click)="callUser(user)" small><ion-icon name="call"></ion-icon>Call</button>
         <button ion-button color="warning" (click)="openModalMessage({ id: user.id })" small><ion-icon name="chatboxes"></ion-icon>Message</button>        
         <button ion-button color="dark" (click)="openModalContentPage({ id: user.id })" small><ion-icon name="information"></ion-icon>Info</button>                
