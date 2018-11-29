@@ -11,22 +11,21 @@
 
 
 <ion-content text-center padding>
-    <h1>Parking info</h1>    
-    <ion-item-divider></ion-item-divider>
+    <h1>Parking info</h1>        
     <ion-list>
         <ion-item>
             Parking type:
-            <span item-end> {{ userParkingSpot?.parkingType }} </span>
+            <span item-end> {{ userParkingSpot !== undefined ? userParkingSpot?.parkingType : 'Shared' }} </span>
         </ion-item>
 
         <ion-item>
             Parking period:
-            <span item-end> {{ userParkingSpot?.parkingPeriod }} </span>
+            <span item-end> {{ userParkingSpot !== undefined ? userParkingSpot?.parkingPeriod : '-'}} </span>
         </ion-item>
 
         <ion-item>
             Days left:
-            <span item-end> {{ userParkingSpot?.daysLeft }} </span>
+            <span item-end> {{ userParkingSpot !== undefined ? userParkingSpot?.daysLeft : '-' }} </span>
         </ion-item>
     </ion-list>
 </ion-content>
