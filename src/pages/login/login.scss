@@ -7,15 +7,16 @@ page-login {
         }
      
         .login-box {          
-          padding: 10px 20px 0px 20px;          
+          padding: 10px 10px 0px 20px;                  
         }
      
         ion-row {
            align-items: center;
            text-align: center;
+            
          }
      
-         ion-item {
+         ion-item {            
              border-radius: 30px !important;
              padding-left: 20px !important;
              font-size: 1.1em;
@@ -30,8 +31,9 @@ page-login {
            box-shadow: none !important;
          }    
      
-      }  
-  h1, small, i {
-    color: white;
-  }
+    }  
+    h1, small, i {
+      color: white;
+    }
 }
+

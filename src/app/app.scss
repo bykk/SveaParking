@@ -24,9 +24,14 @@ ion-spinner {
     height: 30px !important;
 }
 
+::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
+}
+
 .title-image {
     display:inline-block;     
-    width: 20%;
+    width: 10%;
     height: 10%;
 }
 

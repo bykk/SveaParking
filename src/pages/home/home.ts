@@ -44,10 +44,10 @@ export class HomePage {
       this.loggedInUser = loggedInUser;
 
       // check if user has fixed parking spot
-      this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe(parkingSpot => {
-        debugger;
+      this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe(parkingSpot => {        
         var todayDay = new Date();
-        var tomorrowDay = new Date(todayDay);
+        var tomorrowDay = new Date(todayDay.getDate() +1)
+        
         this.userParkingSpot = parkingSpot;
         this.hasParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
 
@@ -56,11 +56,11 @@ export class HomePage {
           this.userParkingSpot.parkingPeriod = '-';
           this.userParkingSpot.daysLeft = '-';
           
-          this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, '2018-11-28').subscribe((res) => {
+          this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${todayDay.getUTCFullYear()}-${todayDay.getUTCMonth()+1}-${todayDay.getDate()}`).subscribe((res) => {
             if (res === 'false') {
               this.disableTodayButton = true;
             }
-            this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, '2018-11-29').subscribe((res) => {
+            this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${tomorrowDay.getUTCFullYear()}-${tomorrowDay.getUTCMonth()+1}-${tomorrowDay.getDate()}`).subscribe((res) => {
               if (res === 'false') {
                 this.disableTomorrowButton = true;
               }
@@ -76,8 +76,6 @@ export class HomePage {
           this._facadeService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe(parkingSpot => {
             this.userParkingSpot = parkingSpot;
             var oneDay = 24 * 60 * 60 * 1000;
-
-            tomorrowDay.setDate(todayDay.getDate() + 1);
             var startDate = new Date(this.userParkingSpot.startDate);
             var endDate = new Date(this.userParkingSpot.endDate);
             var dateFormatOptions = { month: 'long', day: 'numeric' };

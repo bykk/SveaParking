@@ -12,7 +12,6 @@
 
 <ion-content padding>
     <h1 text-center>Impersonate</h1>
-    <ion-item-divider></ion-item-divider>
     <ion-segment [(ngModel)]="segmentOptions">
         <ion-segment-button value="others">
             others
@@ -25,18 +24,25 @@
 
     <div [ngSwitch]="segmentOptions">
         <ion-list *ngSwitchCase="'others'" text-center>
-            <p>Authorize other colleagues to manage your parking spot. Select colleagues that can release parking spot instead of you.</p>
+            <br>
+            <p>Authorize other colleagues to manage your parking spot. Select colleagues that can release parking spot
+                instead of you.</p>
             <ion-item>
                 <ion-label>
-                    <span text-center><ion-icon ios="ios-apps" md="md-apps"></ion-icon>&nbsp;&nbsp; Collegues</span>
+                    <span text-center>
+                        <ion-icon ios="ios-apps" md="md-apps"></ion-icon>&nbsp;&nbsp; Collegues
+                    </span>
                 </ion-label>
-                <ion-select [(ngModel)]="impersonatedUsers" okText="Save" cancelText="Dismiss" multiple="true" (ionChange)="updateImpersonateList()">
-                    <ion-option *ngFor="let user of users" value="{{ user.id }}" selected="{{ user.isImpersonated }}">{{ user.firstName }} {{ user.lastName }}</ion-option>
+                <ion-select [(ngModel)]="impersonatedUsers" okText="Save" cancelText="Dismiss" multiple="true"
+                    (ionChange)="updateImpersonateList()">
+                    <ion-option *ngFor="let user of users" value="{{ user.id }}" selected="{{ user.isImpersonated }}">{{
+                        user.firstName }} {{ user.lastName }}</ion-option>
                 </ion-select>
             </ion-item>
         </ion-list>
 
         <ion-list *ngSwitchCase="'behalf'" text-center>
+            <br>
             <p> Release parking spot on behalf of your collegue. </p>
             <form [formGroup]="releaseParkingForm" (ngSubmit)="onSubmit()">
                 <ion-item *ngIf="showMessageForNoImpersonatedOnBehalf">
@@ -46,7 +52,8 @@
                 <ion-item>
                     <ion-label>User</ion-label>
                     <ion-select formControlName="user" [formGroup]="releaseParkingForm">
-                        <ion-option *ngFor="let user of impersonatedUsersOnBehalf" [value]="user.id">{{ user.firstName }}
+                        <ion-option *ngFor="let user of impersonatedUsersOnBehalf" [value]="user.id">{{ user.firstName
+                            }}
                             {{ user.lastName }} </ion-option>
                     </ion-select>
                 </ion-item>
@@ -55,7 +62,8 @@
                     <ion-datetime displayFormat="MM/DD/YYYY" formControlName="date" [formGroup]="releaseParkingForm"></ion-datetime>
                 </ion-item>
                 <div padding>
-                    <button type="submit" [disabled]="!releaseParkingForm.valid" ion-button color="primary" block full large round>Release parking</button>
+                    <button type="submit" [disabled]="!releaseParkingForm.valid" ion-button color="primary" block full
+                        large round>Release parking</button>
                 </div>
             </form>
         </ion-list>
