@@ -27,8 +27,14 @@ export class UtilsService {
         return newO
     }
 
-    convertToCamelCase(response: string) {
-        let responseObj = JSON.parse(response);
+    convertToCamelCase(response: any) {              
+        let responseObj: any;
+        if (response instanceof Array) {
+            responseObj = response;
+        }  else {
+            responseObj = JSON.parse(response);
+        }        
+        
         let resultArrayOfObjects = new Array<object>();
 
         if (responseObj instanceof Array) {

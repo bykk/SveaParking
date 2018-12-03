@@ -2,16 +2,13 @@ import { Injectable } from "@angular/core";
 import { Network } from "@ionic-native/network";
 import { Platform, AlertController } from "ionic-angular";
 import { BehaviorSubject } from "rxjs/Rx";
-import { ToastService } from "./toast.service";
-import { getAllDebugNodes } from "@angular/core/src/debug/debug_node";
-
 
 @Injectable()
 export class NetworkProvider {
     public connected: BehaviorSubject<boolean> = new BehaviorSubject(true);
     private subscribedToNetworkStatus: boolean = false;
 
-    constructor(private _network: Network, private _alertCtrl: AlertController, private _platform: Platform, private _toast: ToastService) {
+    constructor(private _network: Network, private _alertCtrl: AlertController, private _platform: Platform) {
     }
 
     public setSubscriptions() {

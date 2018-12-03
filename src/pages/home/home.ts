@@ -46,8 +46,9 @@ export class HomePage {
       // check if user has fixed parking spot
       this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe(parkingSpot => {        
         var todayDay = new Date();
-        var tomorrowDay = new Date(todayDay.getDate() +1)
-        
+        var tomorrowDay = new Date();
+        tomorrowDay.setDate(todayDay.getDate() + 1);
+                
         this.userParkingSpot = parkingSpot;
         this.hasParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
 
@@ -56,7 +57,7 @@ export class HomePage {
           this.userParkingSpot.parkingPeriod = '-';
           this.userParkingSpot.daysLeft = '-';
           
-          this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${todayDay.getUTCFullYear()}-${todayDay.getUTCMonth()+1}-${todayDay.getDate()}`).subscribe((res) => {
+          this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${todayDay.getUTCFullYear()}-${todayDay.getUTCMonth()+1}-${todayDay.getDate()}`).subscribe((res) => {            
             if (res === 'false') {
               this.disableTodayButton = true;
             }
@@ -157,14 +158,15 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             this.presentLoading();
-            this._facadeService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe(res => {
+            this._facadeService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe((res) => {              
               this.loading.dismiss();
               this.disableTodayButton = true;
               this.userAlreadyHasParkingSpotToday = false;
               this._toastService.onSuccess('Parking spot released successfully');
-            }, () => {
+            }, () => {              
               this._toastService.onError('Parking not released');
-            });
+              this.loading.dismiss();
+            });           
           }
         }
       ]
@@ -183,7 +185,7 @@ export class HomePage {
         },
         {
           text: 'Agree',
-          handler: () => {
+          handler: () => {            
             this.presentLoading();
             this._facadeService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Tomorrow).subscribe(res => {
               this.loading.dismiss();
@@ -192,6 +194,7 @@ export class HomePage {
               this._toastService.onSuccess('Parking spot released successfully');
             }, () => {
               this._toastService.onError('Parking not released');
+              this.loading.dismiss();
             });
           }
         }

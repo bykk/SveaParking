@@ -24,7 +24,7 @@ export class ChangePasswordPage {
             this.loggedInUser = loggedInUser;
         });
 
-        this.changePasswordForm = _formBuilder.group({
+        this.changePasswordForm = this._formBuilder.group({
             newPassword: ['', Validators.required],
             confirmPassword: ['', Validators.required]
         }, { 

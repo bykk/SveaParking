@@ -10,7 +10,7 @@ import { ParkingService } from './parking.service';
 @Injectable()
 export class FacadeService {
     private config: HttpConfig = {
-        domain: 'http://sveaparkingapi.azurewebsites.net',
+        domain: 'http://sveaparkingtestapi.azurewebsites.net',
         headers: new Headers({
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT',
