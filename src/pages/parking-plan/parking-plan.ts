@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FacadeService } from '../../app/services/facade.service';
 
 @Component({
   selector: 'page-parking-plan',
@@ -6,6 +7,14 @@ import { Component } from '@angular/core';
 })
 export class ParkingPlanPage {
 
-  constructor() {
+  constructor(private _facadeService: FacadeService) {
+  }
+
+  getSharedParkingSpots() {
+
+  }
+
+  getFixedParkingSpots() {
+    
   }
 }

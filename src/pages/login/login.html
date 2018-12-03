@@ -21,19 +21,19 @@
               <ion-label>
                 <ion-icon ios="ios-key" md="md-key"></ion-icon>
               </ion-label>
-              <ion-input #input [type]="passwordType" placeholder="Password" name="password" [(ngModel)]="userCredentials.password"   required></ion-input>              
+              <ion-input #input [type]="passwordType" placeholder="Password" name="password" [(ngModel)]="userCredentials.password" required></ion-input>              
               <ion-icon name="eye" [color]="passwordShown === true ? 'light' : 'dark'" (click)="togglePassword()" item-end></ion-icon>
             </ion-item>
 
             <br>
-            <button ion-button type="submit" [disabled]="!loginForm.form.valid" color="secondary" round block large> Login </button>
+            <button ion-button type="submit" [disabled]="!loginForm.form.valid" color="secondary" block large> Login </button>
           </ion-list>
         </ion-col>
       </ion-row>
 
     </form>
   </div>
-  <div style="margin-top: 35%;">
+  <div style="margin-top: 50%;">
     <h1>SVEA Parking application</h1>
     <small>Version: 1.0</small><br>
     <i> by SVEA development team</i>

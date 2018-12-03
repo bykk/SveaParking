@@ -163,7 +163,8 @@ export class HomePage {
               this.disableTodayButton = true;
               this.userAlreadyHasParkingSpotToday = false;
               this._toastService.onSuccess('Parking spot released successfully');
-            }, () => {              
+            }, (error) => { 
+              debugger;             
               this._toastService.onError('Parking not released');
               this.loading.dismiss();
             });           

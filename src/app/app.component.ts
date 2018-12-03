@@ -11,6 +11,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
 import { LoginPage } from './../pages/login/login';
 import { AboutPage } from './../pages/about/about';
+import { ParkingPlanPage } from '../pages/parking-plan/parking-plan';
 
 
 @Component({
@@ -46,6 +47,7 @@ export class MyApp {
     this.pages = [
       { title: 'Home', component: HomePage, iconCss: 'home' },
       { title: 'Profile', component: ProfilePage, iconCss: 'contact' },
+      { title: 'Parking plan', component: ParkingPlanPage, iconCss: 'calendar' },
       { title: 'Users', component: UsersPage, iconCss: 'contacts' },
       { title: 'About', component: AboutPage, iconCss: 'help-circle' }
     ];

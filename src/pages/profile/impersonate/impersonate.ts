@@ -70,6 +70,7 @@ export class ImpersonatePage {
         }).catch(() => {
             this.loggedInUser.firstName = 'Unknown';
             this.loggedInUser.lastName = 'Unknown';
+            this.loading.dismiss();
         });
     }
 
