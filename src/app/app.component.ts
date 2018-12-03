@@ -40,7 +40,17 @@ export class MyApp {
           this.nav.setRoot(LoginPage);
           this._toastService.onError('Please enter your credentials');
         });
-      }      
+      }     
+      
+      var notificationOpenedCallback = function(jsonData) {
+        console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+      };
+  
+      window["plugins"].OneSignal
+        .startInit("57b10e0a-8965-4187-884e-9173e93ecae6", "204542657157")
+        .handleNotificationOpened(notificationOpenedCallback)
+        .endInit();
+    
     });
 
 
