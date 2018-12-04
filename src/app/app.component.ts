@@ -27,6 +27,16 @@ export class MyApp {
       status.styleDefault();
       splashScreen.hide();
 
+      var notificationOpenedCallback = function(jsonData) {
+        this.nav.setRoot(HomePage)
+      };
+
+      window["plugins"].OneSignal
+        .startInit("9f29d961-b784-4d70-9019-b5a498bb9a4c", "204542657157")
+        .handleNotificationOpened(notificationOpenedCallback)
+        .endInit();
+
+
       this._networkProvider.setSubscriptions();
 
       if(this._network.type !== 'none') {
@@ -42,14 +52,7 @@ export class MyApp {
         });
       }     
       
-      var notificationOpenedCallback = function(jsonData) {
-        console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-      };
-  
-      window["plugins"].OneSignal
-        .startInit("9f29d961-b784-4d70-9019-b5a498bb9a4c", "204542657157")
-        .handleNotificationOpened(notificationOpenedCallback)
-        .endInit();
+      
     
     });
 
