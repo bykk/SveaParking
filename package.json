@@ -48,7 +48,6 @@
     "ionicons": "3.0.0",
     "lodash": "^4.17.10",
     "mx.ferreyra.callnumber": "0.0.2",
-    "onesignal-cordova-plugin": "2.4.5",
     "rxjs": "^5.4.2",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.26"
@@ -80,8 +79,7 @@
         "MIN_BACKGROUND_DURATION": "30"
       },
       "cordova-plugin-network-information": {},
-      "call-number": {},
-      "onesignal-cordova-plugin": {}
+      "call-number": {}
     },
     "platforms": [
       "browser",
