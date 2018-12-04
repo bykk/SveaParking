@@ -27,14 +27,14 @@ export class MyApp {
       status.styleDefault();
       splashScreen.hide();
 
-      var notificationOpenedCallback = function(jsonData) {
-        console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-      };
+      // var notificationOpenedCallback = function(jsonData) {
+      //   console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+      // };
 
-      window["plugins"].OneSignal
-        .startInit("9f29d961-b784-4d70-9019-b5a498bb9a4c", "853778047146")
-        .handleNotificationOpened(notificationOpenedCallback)
-        .endInit();
+      // window["plugins"].OneSignal
+      //   .startInit("9f29d961-b784-4d70-9019-b5a498bb9a4c", "853778047146")
+      //   .handleNotificationOpened(notificationOpenedCallback)
+      //   .endInit();
 
 
       this._networkProvider.setSubscriptions();
