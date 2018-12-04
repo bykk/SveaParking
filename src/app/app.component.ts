@@ -47,7 +47,7 @@ export class MyApp {
       };
   
       window["plugins"].OneSignal
-        .startInit("57b10e0a-8965-4187-884e-9173e93ecae6", "204542657157")
+        .startInit("9f29d961-b784-4d70-9019-b5a498bb9a4c", "204542657157")
         .handleNotificationOpened(notificationOpenedCallback)
         .endInit();
     
