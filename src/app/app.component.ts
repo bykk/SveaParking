@@ -28,7 +28,7 @@ export class MyApp {
       splashScreen.hide();
 
       var notificationOpenedCallback = function(jsonData) {
-        this.nav.setRoot(HomePage)
+        console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
       };
 
       window["plugins"].OneSignal
