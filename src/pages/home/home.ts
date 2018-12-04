@@ -163,8 +163,7 @@ export class HomePage {
               this.disableTodayButton = true;
               this.userAlreadyHasParkingSpotToday = false;
               this._toastService.onSuccess('Parking spot released successfully');
-            }, (error) => { 
-              debugger;             
+            }, (error) => {                           
               this._toastService.onError('Parking not released');
               this.loading.dismiss();
             });           
@@ -276,6 +275,38 @@ export class HomePage {
               parkingSpot.userIdReplace = 0;
               parkingSpot.replaceUser = null;
               this.userAlreadyHasParkingSpotToday = false;
+              this._toastService.onSuccess('You returned spot successfully ');
+            });
+          }
+        }
+      ]
+    });
+    confirmDialog.present();
+  }
+
+  returnParkingSpotForTomorrow(parkingSpot: ParkingSpot) {
+    const confirmDialog = this._alertCtrl.create({
+      title: 'Release parking spot',
+      message: `Are you sure you want to release parking spot for tomorrow?`,
+      buttons: [
+        {
+          text: 'Disagree',
+          handler: () => { }
+        },
+        {
+          text: 'Agree',
+          handler: () => {
+            confirmDialog.present();
+            // this._facadeService.takeParkingSpot(parkingSpot.id, 0).subscribe(res => {
+            //   parkingSpot.userIdReplace = 0;
+            //   parkingSpot.replaceUser = null;
+            //   this.userAlreadyHasParkingSpotToday = false;
+            //   this._toastService.onSuccess('You returned spot successfully ');
+            // });
+            this._facadeService.takeParkingSpot(parkingSpot.id, 0).subscribe(res => {
+              parkingSpot.userIdReplace = 0;
+              parkingSpot.replaceUser = null;
+              this.userAlreadyHasParkingSpotTomorrow = false;
               this._toastService.onSuccess('You returned spot successfully ');
             });
           }

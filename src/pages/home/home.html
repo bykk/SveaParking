@@ -55,7 +55,7 @@
 
           <ng-template #parkingTaken>
             <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>    
-            <!-- <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="returnParkingSpotForTomorrow(parkingSpot)"><ion-icon color="dark" name="refresh"></ion-icon></span>         -->
+            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="returnParkingSpotForTomorrow(parkingSpot)"><ion-icon color="dark" name="refresh"></ion-icon></span>        
           </ng-template>
         </div>
       </ion-item>
@@ -92,12 +92,12 @@
   <ion-list *ngIf="hasParkingSpot">    
     <h4>Parking info:</h4>
     <ion-item>
-      Parking type:
+      Type:
       <span item-end> {{ userParkingSpot?.parkingType }} </span>
     </ion-item>
 
     <ion-item>
-      Parking period:
+      Period:
       <span item-end> {{ userParkingSpot?.parkingPeriod }} </span>
     </ion-item>
 

@@ -26,7 +26,7 @@ export class ImpersonatePage {
     previousValuesOfImpersonatedUsers: Array<string>;
     showMessageForNoImpersonatedOnBehalf: boolean = false;
 
-    constructor(private _facadeService: FacadeService, private _toastService: ToastService, private _storage: Storage, private _loadingCtrl: LoadingController, private _alertCtrl: AlertController) {
+    constructor(private _facadeService: FacadeService, private _toastService: ToastService, private _storage: Storage, private _loadingCtrl: LoadingController, private _alertCtrl: AlertController) {        
         this.users = new Array<User>();
         this.releaseParkingForm = new FormGroup({
             user: new FormControl('', Validators.required),
@@ -58,11 +58,11 @@ export class ImpersonatePage {
                 this._facadeService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe(res => {
                     if (_.isEmpty(res)) {
                         this.previousValuesOfImpersonatedUsers = null;
-                        this.impersonatedUsers = null;
+                        this.impersonatedUsers = null;                        
                         return;
                     }
                     this.previousValuesOfImpersonatedUsers = res.map((obj) => { return obj.id });
-                    this.impersonatedUsers = res.map((obj) => { return obj.id });
+                    this.impersonatedUsers = res.map((obj) => { return obj.id });                    
                 });
             });
 
