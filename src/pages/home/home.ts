@@ -65,9 +65,9 @@ export class HomePage {
               if (res === 'false') {
                 this.disableTomorrowButton = true;
               }
-
-              this.isPageReady = true;
+              
               this.loading.dismiss();
+              setTimeout(() => {this.isPageReady = true}, 500);
             })
 
           });
@@ -99,8 +99,9 @@ export class HomePage {
                     if (res != undefined || res != null)
                       this.disableTomorrowButton = true;
                   }
-                  this.isPageReady = true;
+                  
                   this.loading.dismiss();
+                  setTimeout(() => {this.isPageReady = true}, 500);
                 });
               });
 
@@ -134,7 +135,7 @@ export class HomePage {
                     });
                   });
                   this.loading.dismiss();
-                  this.isPageReady = true;
+                  setTimeout(() => {this.isPageReady = true}, 500);
                 });
               });
             }
