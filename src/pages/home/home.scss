@@ -1,4 +1,8 @@
 page-home {
+    ion-list {
+        padding-top: 15px;
+    }
+
     .parking-spot-image {
         height: 100px;
         width: 100px;    
@@ -8,34 +12,22 @@ page-home {
         background-color: #1c8da0;
         color: color($colors, light);        
     }
-    .parkingTaken {
-        color: color($colors, danger);                
-        font-weight: bold;
-        font-size: 15px;
-        text-decoration: underline;
-    }
     
-    .currentParkingSpot {
-        border: 1px solid color($colors, primary);
-        // border-radius: 30px;
+    .current-parking-spot {
+        border: 1px solid color($colors, primary);        
         font-weight: bold;
         color: color($colors, primary);
         font-size: 60px;        
     }
 
-    .noParkingAvailable {
-        color: color($colors, danger);
-        border: 1px solid color($colors, danger);        
-    }
     .parking-spot-number {
         color: color($colors, primary);
         font-weight: bold;
         padding-right: 15px;        
     }
+    
     .no-parking-logo {
         height: 80px;        
     }
-    ion-list {
-        padding-top: 15px;
-    }
+    
 }

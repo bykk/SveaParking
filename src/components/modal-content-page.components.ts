@@ -64,11 +64,11 @@ export class ModalContentPage {
   isPageReady: boolean;
 
   constructor(
-    public platform: Platform,
-    public params: NavParams,
-    public viewCtrl: ViewController,
     private _facadeService: FacadeService,
     private _callNumber: CallNumber,
+    public platform: Platform,
+    public params: NavParams,
+    public viewCtrl: ViewController,   
     public alertCtrl: AlertController,    
     public loadingCtrl: LoadingController) {
 

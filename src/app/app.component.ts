@@ -10,9 +10,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
 import { LoginPage } from './../pages/login/login';
-import { AboutPage } from './../pages/about/about';
-import { ParkingPlanPage } from '../pages/parking-plan/parking-plan';
-
 
 @Component({
   templateUrl: 'app.html'
@@ -23,19 +20,20 @@ export class MyApp {
   rootPage: any;
 
   constructor(platform: Platform, status: StatusBar, splashScreen: SplashScreen, private _storage: Storage, private _toastService: ToastService, private _networkProvider: NetworkProvider, private _network: Network) {
+    
+    this.initApp(platform, status, splashScreen);
+
+    this.pages = [
+      { title: 'Home', component: HomePage, iconCss: 'home' },
+      { title: 'Profile', component: ProfilePage, iconCss: 'contact' },      
+      { title: 'Users', component: UsersPage, iconCss: 'contacts' }      
+    ];
+  }
+
+  initApp(platform: Platform, status: StatusBar, splashScreen: SplashScreen): void {
     platform.ready().then(() => {
       status.styleDefault();
       splashScreen.hide();
-
-      // var notificationOpenedCallback = function(jsonData) {
-      //   console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-      // };
-
-      // window["plugins"].OneSignal
-      //   .startInit("9f29d961-b784-4d70-9019-b5a498bb9a4c", "853778047146")
-      //   .handleNotificationOpened(notificationOpenedCallback)
-      //   .endInit();
-
 
       this._networkProvider.setSubscriptions();
 
@@ -51,29 +49,17 @@ export class MyApp {
           this._toastService.onError('Please enter your credentials');
         });
       }     
-      
-      
-    
     });
-
-
-    this.pages = [
-      { title: 'Home', component: HomePage, iconCss: 'home' },
-      { title: 'Profile', component: ProfilePage, iconCss: 'contact' },
-      { title: 'Parking plan', component: ParkingPlanPage, iconCss: 'calendar' },
-      { title: 'Users', component: UsersPage, iconCss: 'contacts' },
-      { title: 'About', component: AboutPage, iconCss: 'help-circle' }
-    ];
   }
 
-  openPage(page) {
+  openPage(page): void {
     if (page.title == "Home")
       this.nav.setRoot(page.component);
     else
       this.nav.push(page.component);
   }
 
-  onLogout() {
+  onLogout(): void {
     this._storage.remove('authenticated');
     this._storage.remove('loggedInUser');
     this.nav.setRoot(LoginPage);

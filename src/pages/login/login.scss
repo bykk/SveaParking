@@ -16,8 +16,11 @@ page-login {
             
          }
      
-         ion-item {            
-            //  border-radius: 30px !important;
+         ion-icon {
+          color: color($colors, dark);
+         }
+
+         ion-item {                        
              padding-left: 20px !important;
              font-size: 1.1em;
              margin-bottom: 10px;

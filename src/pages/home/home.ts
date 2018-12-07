@@ -20,6 +20,7 @@ export class HomePage {
   availableParkingSpotsTomorrow: ParkingSpot[];
   loggedInUser: LoggedInUser;
   hasParkingSpot: boolean;
+  hasSharedParkingSpot: boolean;
   disableTodayButton: boolean;
   disableTomorrowButton: boolean;
   userAlreadyHasParkingSpotToday: boolean = false;
@@ -81,6 +82,7 @@ export class HomePage {
             var endDate = new Date(this.userParkingSpot.endDate);
             var dateFormatOptions = { month: 'long', day: 'numeric' };
             this.hasParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
+            this.hasSharedParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
 
             if (this.hasParkingSpot) {
               this.userParkingSpot.parkingType = 'Shared';
@@ -134,9 +136,10 @@ export class HomePage {
                       }
                     });
                   });
-                  this.loading.dismiss();
-                  setTimeout(() => {this.isPageReady = true}, 500);
+                  this.loading.dismiss();                 
                 });
+                
+                setTimeout(() => {this.isPageReady = true}, 500);
               });
             }
           });

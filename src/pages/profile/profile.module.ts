@@ -10,7 +10,6 @@ import { MyApp } from './../../app/app.component';
 import { ProfilePage } from './profile';
 import { ImpersonatePage } from './impersonate/impersonate';
 import { SettingsPage } from './settings/settings';
-import { CarsPage } from './cars/cars';
 import { ChangePasswordPage } from './change-password/change-password';
 import { MyPage } from './my-page/my-page';
 
@@ -18,8 +17,7 @@ import { MyPage } from './my-page/my-page';
   declarations: [
     ProfilePage,
     MyPage,
-    ChangePasswordPage,
-    CarsPage, 
+    ChangePasswordPage,    
     SettingsPage,
     ImpersonatePage
   ],
@@ -36,7 +34,6 @@ import { MyPage } from './my-page/my-page';
     ProfilePage,
     MyPage,
     ChangePasswordPage,
-    CarsPage,
     SettingsPage,
     ImpersonatePage
   ],

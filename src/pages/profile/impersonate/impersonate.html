@@ -51,9 +51,7 @@
                 <ion-item>
                     <ion-label>User</ion-label>
                     <ion-select formControlName="user" [formGroup]="releaseParkingForm">
-                        <ion-option *ngFor="let user of impersonatedUsersOnBehalf" [value]="user.id">{{ user.firstName
-                            }}
-                            {{ user.lastName }} </ion-option>
+                        <ion-option *ngFor="let user of impersonatedUsersOnBehalf" [value]="user.id">{{ user.firstName }} {{ user.lastName }} </ion-option>
                     </ion-select>
                 </ion-item>
                 <ion-item>
@@ -61,8 +59,7 @@
                     <ion-datetime displayFormat="MM/DD/YYYY" formControlName="date" [formGroup]="releaseParkingForm"></ion-datetime>
                 </ion-item>
                 <div padding>
-                    <button type="submit" [disabled]="!releaseParkingForm.valid" ion-button color="secondary" block full
-                        large>Release parking</button>
+                    <button type="submit" [disabled]="!releaseParkingForm.valid" ion-button color="secondary" block full large>Release parking</button>
                 </div>
             </form>
         </ion-list>

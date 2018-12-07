@@ -1,4 +1,3 @@
-import { CarsPage } from './cars/cars';
 import { ChangePasswordPage } from './change-password/change-password';
 import { MyPage } from './my-page/my-page';
 import { Component } from '@angular/core';
@@ -11,8 +10,7 @@ import { ImpersonatePage } from './impersonate/impersonate';
 })
 export class ProfilePage {
   myPage = MyPage;
-  changePassword = ChangePasswordPage;
-  cars = CarsPage;
+  changePassword = ChangePasswordPage;  
   settings = SettingsPage;
   impersonate = ImpersonatePage
 

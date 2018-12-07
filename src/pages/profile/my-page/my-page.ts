@@ -12,9 +12,7 @@ export class MyPage {
   loggedInUser: LoggedInUser;
   hasParkingSpotRightNow: boolean;
   
-  constructor(private _storage: Storage) {
-
-  }
+  constructor(private _storage: Storage) { }
 
   ngOnInit() {
 

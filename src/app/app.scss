@@ -29,6 +29,29 @@ ion-spinner {
   display: none;
 }
 
+button > ion-icon {
+    font-size: 20px;
+    zoom: 1.0; 
+    color:white;
+}
+
+.menu-btn-text {
+    font-size: 20px;
+    color: white;
+}
+
+.menu-btn, .menu-content {
+    background-color: color($colors, primary);    
+}
+
+.menu-header-icon {
+    color: color($colors, dark);
+}
+
+.menu-title {
+    background-color: color($colors, primary);
+}
+
 .title-image {
     display:inline-block;     
     width: 10%;
@@ -54,28 +77,4 @@ ion-spinner {
         background: color($colors, warning);
         text-align: center;
     }
-}
-
-.text {
-    font-size: 15px;
-}
-
-.menuBtn, .menuContent {
-    background-color: color($colors, primary);    
-  }
-
-.navText {
-    font-size: 20px;
-    color: white;
-}
-.menuIcon {
-    color: color($colors, dark);
-}
-
-ion-icon {
-    font-size: 20px; //Preferred size here
-}
-
-.menuTitle {
-    background-color: color($colors, primary);
 }
