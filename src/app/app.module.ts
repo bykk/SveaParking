@@ -1,4 +1,3 @@
-import { Push } from '@ionic-native/push';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -64,8 +63,7 @@ import { TokenInterceptor } from './helpers/token.interceptor';
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },    
     CallNumber,
     SMS,
-    AuthService,
-    Push    
+    AuthService
   ]
 })
 export class AppModule {}
