@@ -73,9 +73,9 @@ export class ModalContentPage {
     public loadingCtrl: LoadingController) {
 
     this.presentLoading();
-    this._facadeService.getUserById(this.params.get('id')).subscribe(res => {
+    this._facadeService.getUserById(this.params.get('id')).subscribe((res:any) => {
       this.user = res;
-      this._facadeService.getFixedSpotInfo(this.user.id).subscribe(res => {
+      this._facadeService.getFixedSpotInfo(this.user.id).subscribe((res:any) => {
         this.isPageReady = true;
         this.user.hasFixedSpot = res.parkingSpotNumber !== null;
         this.loading.dismiss();

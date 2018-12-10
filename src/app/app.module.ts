@@ -1,3 +1,5 @@
+import { Push } from '@ionic-native/push';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -12,7 +14,6 @@ import { UsersPage } from './../pages/users/users';
 import { ModalContentPage } from './../components/modal-content-page.components';
 
 // modules 
-import { HttpModule } from '../../node_modules/@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { BrowserModule } from '@angular/platform-browser';
 import { ProfileModule } from './../pages/profile/profile.module';
@@ -22,6 +23,8 @@ import { ServicesModule } from './services/services.module';
 import { CallNumber } from '@ionic-native/call-number';
 import { SMS } from '@ionic-native/sms';
 import { ModalMessage } from '../components/modal-message.components';
+import { AuthService } from './services/auth/auth.service';
+import { TokenInterceptor } from './helpers/token.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,7 @@ import { ModalMessage } from '../components/modal-message.components';
   ],
   imports: [
     BrowserModule,
-    HttpModule,    
+    HttpClientModule,    
     IonicModule.forRoot(MyApp, {
       scrollAssist: false,
       autoFocusAssist: false
@@ -57,9 +60,12 @@ import { ModalMessage } from '../components/modal-message.components';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},         
+    { provide: ErrorHandler, useClass: IonicErrorHandler },         
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },    
     CallNumber,
-    SMS    
+    SMS,
+    AuthService,
+    Push    
   ]
 })
 export class AppModule {}

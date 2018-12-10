@@ -7,7 +7,6 @@ import { UserCredentials } from './../../app/model/user-credentials';
 import { FacadeService } from '../../app/services/facade.service';
 import { LoggedInUser } from './../../app/model/register-user';
 import { HomePage } from './../home/home';
-import _ from 'lodash';
 
 @Component({
   selector: 'page-login',
@@ -30,26 +29,32 @@ export class LoginPage {
   login() {
     this.showLoading();
 
-    this._facadeService.signIn(this.userCredentials).subscribe(userData => {      
-      if (!_.isEmpty(userData)) {
-        let response = userData;
-        let loggedInUser: LoggedInUser = {
-          id: response.registerUserModel.id,
-          firstName: response.registerUserModel.firstName,
-          lastName: response.registerUserModel.lastName,
-          password: response.registerUserModel.password
-        };
-
-        this.storage.set('authenticated', true);
-        this.storage.set('loggedInUser', loggedInUser);
-        this.navCtrl.setRoot(HomePage);
-      } else {
-        this._toastService.onError('Access denied')
-        this.loading.dismiss();        
-      }
-    }, (error) => {
-      this.loading.dismiss();      
-    });
+    this._facadeService.login(this.userCredentials).subscribe((token: any) => {
+      debugger;
+      this.storage.set('token_id', token.access_token).then((res) => {
+     
+        this._facadeService.signIn(this.userCredentials).subscribe((userData: any) => {              
+          if (userData !== null) {
+            let loggedInUser: LoggedInUser = {
+              id: userData.registerUserModel.id,
+              firstName: userData.registerUserModel.firstName,
+              lastName: userData.registerUserModel.lastName,
+              password: userData.registerUserModel.password
+            }
+  
+            this.storage.set('loggedInUser', loggedInUser);
+            this.storage.set('authenticated', true);
+            this.navCtrl.setRoot(HomePage);
+          }
+        }, error => {
+          console.log(error);
+        })
+      });     
+    }, error => {
+      console.log(error);
+      this._toastService.onError('Access denied!');
+      this.loading.dismiss();
+    });   
   };
 
   togglePassword() {

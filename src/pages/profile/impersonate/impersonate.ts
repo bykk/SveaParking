@@ -9,6 +9,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import _ from 'lodash';
+import { ReleaseParkingSpot } from '../../../app/model/release-parking-spot';
+import { ImpersonateUser } from '../../../app/model/impersonate-user';
 
 @Component({
     selector: 'impersonate',
@@ -38,7 +40,7 @@ export class ImpersonatePage {
             this.loggedInUser = loggedInUser;
             this.presentLoading();
 
-            this._facadeService.getAllImpersonatedOnBehalfByUser(this.loggedInUser.id).subscribe(res => {
+            this._facadeService.getAllImpersonatedOnBehalfByUser(this.loggedInUser.id).subscribe((res: any) => {
                 if (_.isEmpty(res)) {
                     this.impersonatedUsersOnBehalf = null;
                     this.showMessageForNoImpersonatedOnBehalf = true;
@@ -52,10 +54,10 @@ export class ImpersonatePage {
                 }
             });
 
-            this._facadeService.getAllUsers().subscribe((res: Array<User>) => {
+            this._facadeService.getAllUsers().subscribe((res: any) => {
                 this.users = res.filter(x => x.id !== this.loggedInUser.id && x.active === true);
 
-                this._facadeService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe(res => {
+                this._facadeService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe((res:any) => {
                     if (_.isEmpty(res)) {
                         this.previousValuesOfImpersonatedUsers = null;
                         this.impersonatedUsers = null;                        
@@ -83,9 +85,12 @@ export class ImpersonatePage {
             this._toastService.onSuccess('Saved successfully');
         }
 
-
         this.impersonatedUsers.forEach((userId) => {
-            this._facadeService.addImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
+            let impersonateUser: ImpersonateUser = {
+                userId: this.loggedInUser.id,
+                impersonateUserId: Number(userId)
+            };
+            this._facadeService.addImpersonatedUser(impersonateUser).subscribe(res => {
                 itemsProcessed++;
                 this.previousValuesOfImpersonatedUsers = this.impersonatedUsers;
 
@@ -109,7 +114,11 @@ export class ImpersonatePage {
         var itemsDeleted = 0;
         if (this.previousValuesOfImpersonatedUsers != null && this.previousValuesOfImpersonatedUsers.length > 0) {
             this.previousValuesOfImpersonatedUsers.forEach((userId) => {
-                this._facadeService.removeImpersonatedUser(this.loggedInUser.id, Number(userId)).subscribe(res => {
+                let impersonateUser: ImpersonateUser = {
+                    userId: this.loggedInUser.id,
+                    impersonateUserId: Number(userId)
+                }
+                this._facadeService.removeImpersonatedUser(impersonateUser).subscribe(res => {
                     itemsDeleted++;
                     if (itemsDeleted == this.previousValuesOfImpersonatedUsers.length) {
                         this.impersonateNewUsers();
@@ -151,14 +160,20 @@ export class ImpersonatePage {
                         this._facadeService.getUserById(result.user).subscribe((res) => {
                             if (ParkingSpots.UsersWithFixedParking.indexOf(result.user) !== -1) {
                                 this._facadeService.getFixedSpotInfo(result.user).subscribe((res) => {
-                                    this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res) => {
-                                        if (res === 'false') {
+                                    this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res:any) => {                                        
+                                        if (res === false) {
                                             this._toastService.onWarning('Parking spot is already released');
                                                 return;
                                         }
                                         else {
-                                            this._facadeService.releaseParkingSpotForUser(result.user, result.date, false, this.loggedInUser.id).subscribe((res) => {
-                                                if (res === "true") {
+                                            let releaseParkingSpot: ReleaseParkingSpot = {
+                                                userId: result.user,
+                                                date: date,
+                                                sendMail: false,
+                                                releaseUserId: this.loggedInUser.id
+                                            }
+                                            this._facadeService.releaseParkingSpotForUser(releaseParkingSpot).subscribe((res:any) => {
+                                                if (res === true) {
                                                     isSuccessfully = true;
                                                     this._toastService.onSuccess('You released parking spot sucessfully');
                                                     this.releaseParkingForm.reset();     
@@ -174,15 +189,21 @@ export class ImpersonatePage {
                                     })
                                 })
                             } else {
-                                this._facadeService.getSharedSpotInfo(result.user).subscribe((res) => {
+                                this._facadeService.getSharedSpotInfo(result.user).subscribe((res:any) => {
                                     if (res.parkingSpotNumber !== null && new Date(result.date) <= new Date(res.endDate) && new Date(result.date) >= new Date(res.startDate)) {
-                                        this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res) => {                                            
-                                            if (res === 'false') {
+                                        this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res:any) => {                                            
+                                            if (res === false) {
                                                 this._toastService.onWarning('Parking spot is already released');
                                                 return;
                                             } else {
-                                                this._facadeService.releaseParkingSpotForUser(result.user, date, false, this.loggedInUser.id).subscribe((res) => {
-                                                    if (res == "true") {
+                                                let releaseParkingSpot: ReleaseParkingSpot = {
+                                                    userId: result.user,
+                                                    date: result.date,
+                                                    sendMail: false,
+                                                    releaseUserId: this.loggedInUser.id
+                                                }
+                                                this._facadeService.releaseParkingSpotForUser(releaseParkingSpot).subscribe((res:any) => {
+                                                    if (res == true) {
                                                         isSuccessfully = true;
                                                         this._toastService.onSuccess('You released parking spot sucessfully');
                                                         this.releaseParkingForm.reset();                                                        

@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '../../../../node_modules/@angular/forms';
 import { Storage } from '@ionic/storage';
 import { FacadeService } from '../../../app/services/facade.service';
+import { UpdatePassword } from '../../../app/model/update-password';
 
 
 @Component({
@@ -35,12 +36,18 @@ export class ChangePasswordPage {
     onSubmit() {
         let result: ChangePassword = this.changePasswordForm.value;
         this.presentLoading();
-        this._facadeService.updatePassword(this.loggedInUser.id, result.newPassword).subscribe(res => {
+
+        let changePassword: UpdatePassword = {
+            userId: this.loggedInUser.id,
+            newPassword: result.newPassword
+        }
+        this._facadeService.updatePassword(changePassword).subscribe(res => {
             this.changePasswordForm.reset();
             this.loading.dismiss();
             this._toastService.onSuccess('Password changed');
         }, () => {
             this._toastService.onError('Something went wrong');
+            this.loading.dismiss();
         });
     };
 

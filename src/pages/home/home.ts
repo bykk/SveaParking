@@ -1,3 +1,4 @@
+import { TakeParking } from './../../app/model/take-parking';
 import { ToastService } from './../../app/services/toast.service';
 import { ModalContentPage } from './../../components/modal-content-page.components';
 import { ParkingSpot } from './../../app/model/parking-spot';
@@ -43,9 +44,8 @@ export class HomePage {
 
     this._storage.get('loggedInUser').then(loggedInUser => {
       this.loggedInUser = loggedInUser;
-
       // check if user has fixed parking spot
-      this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe(parkingSpot => {        
+      this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe((parkingSpot:any) => {               
         var todayDay = new Date();
         var tomorrowDay = new Date();
         tomorrowDay.setDate(todayDay.getDate() + 1);
@@ -58,11 +58,11 @@ export class HomePage {
           this.userParkingSpot.parkingPeriod = '-';
           this.userParkingSpot.daysLeft = '-';
           
-          this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${todayDay.getUTCFullYear()}-${todayDay.getUTCMonth()+1}-${todayDay.getDate()}`).subscribe((res) => {            
+          this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${todayDay.getUTCFullYear()}-${todayDay.getUTCMonth()+1}-${todayDay.getDate()}`).subscribe((res:any) => {            
             if (res === 'false') {
               this.disableTodayButton = true;
             }
-            this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${tomorrowDay.getUTCFullYear()}-${tomorrowDay.getUTCMonth()+1}-${tomorrowDay.getDate()}`).subscribe((res) => {
+            this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${tomorrowDay.getUTCFullYear()}-${tomorrowDay.getUTCMonth()+1}-${tomorrowDay.getDate()}`).subscribe((res:any) => {
               if (res === 'false') {
                 this.disableTomorrowButton = true;
               }
@@ -75,16 +75,16 @@ export class HomePage {
 
         } else {
           // check if user have share parking spot
-          this._facadeService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe(parkingSpot => {
+          this._facadeService.checkIfUserHasSharedParkingSpot(this.loggedInUser.id).subscribe((parkingSpot:any)=> {            
             this.userParkingSpot = parkingSpot;
-            var oneDay = 24 * 60 * 60 * 1000;
-            var startDate = new Date(this.userParkingSpot.startDate);
-            var endDate = new Date(this.userParkingSpot.endDate);
-            var dateFormatOptions = { month: 'long', day: 'numeric' };
-            this.hasParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
-            this.hasSharedParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
+            var oneDay = 24 * 60 * 60 * 1000;          
+            this.hasParkingSpot = this.userParkingSpot != null && this.userParkingSpot.parkingSpotNumber != null;            
 
             if (this.hasParkingSpot) {
+              var startDate = new Date(this.userParkingSpot.startDate);
+              var endDate = new Date(this.userParkingSpot.endDate);
+              var dateFormatOptions = { month: 'long', day: 'numeric' };
+              this.hasSharedParkingSpot = this.userParkingSpot.parkingSpotNumber != null;
               this.userParkingSpot.parkingType = 'Shared';
               this.userParkingSpot.parkingPeriod = `${startDate.toLocaleDateString('en-US', dateFormatOptions)} - ${endDate.toLocaleDateString('en-US', dateFormatOptions)}`;
               this.userParkingSpot.parkingType == 'Shared' ?
@@ -109,11 +109,11 @@ export class HomePage {
 
             } else {
               // user has no parking spot currently              
-              this._facadeService.getAvailableParkingSpotsToday().subscribe(availableParkingSpotsToday => {
+              this._facadeService.getAvailableParkingSpotsToday().subscribe((availableParkingSpotsToday:any) => {
                 this.availableParkingSpotsToday = availableParkingSpotsToday;
-
+                
                 this.availableParkingSpotsToday.forEach(parking => {
-                  this._facadeService.getUserById(parking.userIdReplace).subscribe(user => {
+                  this._facadeService.getUserById(parking.userIdReplace).subscribe((user:any) => {
                     parking.replaceUser = user;
 
                     if (parking.userIdReplace == this.loggedInUser.id) {
@@ -123,11 +123,11 @@ export class HomePage {
                   });
                 });
 
-                this._facadeService.getAvailableParkingSpotsTomorrow().subscribe(availableParkingSpotsTomorrow => {
+                this._facadeService.getAvailableParkingSpotsTomorrow().subscribe((availableParkingSpotsTomorrow:any) => {
                   this.availableParkingSpotsTomorrow = availableParkingSpotsTomorrow;
 
                   this.availableParkingSpotsTomorrow.forEach(parking => {
-                    this._facadeService.getUserById(parking.userIdReplace).subscribe(user => {
+                    this._facadeService.getUserById(parking.userIdReplace).subscribe((user:any) => {
                       parking.replaceUser = user;
 
                       if (parking.userIdReplace == this.loggedInUser.id) {
@@ -209,13 +209,16 @@ export class HomePage {
 
   takeParkingSpotToday(userParkingSpot: ParkingSpot): void {
     this.presentLoading();
-    var user = this.loggedInUser;
-
-    this._facadeService.takeParkingSpot(userParkingSpot.id, user.id).subscribe(res => {
+    debugger; 
+    let takeParking: TakeParking = {
+      spotId: userParkingSpot.id,
+      userIdReplace: this.loggedInUser.id
+    }
+    this._facadeService.takeParkingSpot(takeParking).subscribe((res:any) => {
       this._storage.get('loggedInUser').then((loggedInUser) => {
         this.availableParkingSpotsToday.forEach(parkingSpot => {
           if (parkingSpot.id == userParkingSpot.id) {
-            this._facadeService.getUserById(loggedInUser.id).subscribe(res => {
+            this._facadeService.getUserById(loggedInUser.id).subscribe((res:any) => {
               parkingSpot.replaceUser = res;
               parkingSpot.userIdReplace = res.id;
 
@@ -233,6 +236,7 @@ export class HomePage {
       this._toastService.onSuccess('Parking spot taken successfully');
     }, () => {
       this._toastService.onError('Parking not taken, something went wrong :(');
+      this.loading.dismiss();
     });
 
   }
@@ -240,10 +244,15 @@ export class HomePage {
   takeParkingSpotTomorrow(userParkingSpot: ParkingSpot): void {
     this.presentLoading();
 
-    this._facadeService.takeParkingSpot(userParkingSpot.id, this.loggedInUser.id).subscribe(res => {
+    let takeParking: TakeParking = {
+      spotId: userParkingSpot.id,
+      userIdReplace: this.loggedInUser.id
+    }
+    
+    this._facadeService.takeParkingSpot(takeParking).subscribe(res => {
       this.availableParkingSpotsTomorrow.forEach(parkingSpot => {
         if (parkingSpot.id == userParkingSpot.id) {
-          this._facadeService.getUserById(this.loggedInUser.id).subscribe(res => {
+          this._facadeService.getUserById(this.loggedInUser.id).subscribe((res:any) => {
             parkingSpot.replaceUser = res;
             parkingSpot.userIdReplace = res.id;
 
@@ -259,6 +268,7 @@ export class HomePage {
       this._toastService.onSuccess('Parking spot taken successfully');
     }, () => {
       this._toastService.onError('Parking not taken, something went wrong :( ');
+      this.loading.dismiss();
     });
   };
 
@@ -275,7 +285,12 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             confirmDialog.present();
-            this._facadeService.takeParkingSpot(parkingSpot.id, 0).subscribe(res => {
+            let takeParkingSpot: TakeParking = {
+              spotId: parkingSpot.id,
+              userIdReplace: 0
+            };
+
+            this._facadeService.takeParkingSpot(takeParkingSpot).subscribe(res => {
               parkingSpot.userIdReplace = 0;
               parkingSpot.replaceUser = null;
               this.userAlreadyHasParkingSpotToday = false;
@@ -301,13 +316,12 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             confirmDialog.present();
-            // this._facadeService.takeParkingSpot(parkingSpot.id, 0).subscribe(res => {
-            //   parkingSpot.userIdReplace = 0;
-            //   parkingSpot.replaceUser = null;
-            //   this.userAlreadyHasParkingSpotToday = false;
-            //   this._toastService.onSuccess('You returned spot successfully ');
-            // });
-            this._facadeService.takeParkingSpot(parkingSpot.id, 0).subscribe(res => {
+            let takeParkingSpot: TakeParking = {
+              spotId: parkingSpot.id,
+              userIdReplace: 0
+            };
+
+            this._facadeService.takeParkingSpot(takeParkingSpot).subscribe(res => {
               parkingSpot.userIdReplace = 0;
               parkingSpot.replaceUser = null;
               this.userAlreadyHasParkingSpotTomorrow = false;

@@ -1,11 +1,16 @@
-import { UserService } from './user.service';
+import { TakeParking } from './../model/take-parking';
+import { ChangePassword } from './../model/change-password';
+import { ReleaseParkingSpot } from './../model/release-parking-spot';
+import { UserCredentials } from './../model/user-credentials';
 import { HttpConfig } from '../model/http-config';
 import { Headers } from '@angular/http';
 import { Injectable, Injector } from "@angular/core";
 import 'rxjs/add/operator/map';
 
-import { UserCredentials } from '../model/user-credentials';
 import { ParkingService } from './parking.service';
+import { AuthService } from './auth/auth.service';
+import { UserService } from './user.service';
+import { ImpersonateUser } from '../model/impersonate-user';
 
 @Injectable()
 export class FacadeService {
@@ -20,6 +25,7 @@ export class FacadeService {
 
     private _parkingService: ParkingService;
     private _userService: UserService;
+    private _authService: AuthService;
 
     constructor(private _injector: Injector) { }
 
@@ -36,6 +42,19 @@ export class FacadeService {
         }
         return this._userService;
     }
+
+    public get authService(): AuthService {
+        if(!this._userService) {
+            this._authService = this._injector.get(AuthService);
+        }
+        return this._authService;
+    }
+
+
+    ////////////// AUTH SERVICE     //////////////
+    login(userCredentials: UserCredentials) {
+        return this.authService.login(userCredentials, this.config);
+    }
     
     ////////////// PARKING SERVICES //////////////
     getAvailableParkingSpotsToday() {        
@@ -46,8 +65,8 @@ export class FacadeService {
         return this.parkingService.getAvailableParkingSpotsTomorrow(this.config);
     }
 
-    takeParkingSpot(parkingSpot: number, replaceUserId: number) {        
-        return this.parkingService.takeParkingSpot(parkingSpot, replaceUserId, this.config);
+    takeParkingSpot(takeParking: TakeParking) {        
+        return this.parkingService.takeParkingSpot(takeParking, this.config);
     }
 
     getSharedSpotInfo(userId: number) {
@@ -66,8 +85,8 @@ export class FacadeService {
         return this.parkingService.checkIfUserHasSharedParkingSpot(userId, this.config);
     }
 
-    releaseParkingSpotForUser(userId: number, date: string, sendEmail: boolean, releaseUserId: number) {
-        return this.parkingService.releaseParkingSpotForUser(userId, date, sendEmail, releaseUserId, this.config);
+    releaseParkingSpotForUser(releaseParkingSpot: ReleaseParkingSpot) {
+        return this.parkingService.releaseParkingSpotForUser(releaseParkingSpot, this.config);
     }
 
     checkIfParkingSpotIsReleased(userId: number, date: string) {
@@ -91,16 +110,16 @@ export class FacadeService {
         return this.userService.getAllImpersonatedOnBehalfByUser(userId, this.config);
     }
 
-    addImpersonatedUser(userId: number, impersonatedUserId: number) {
-        return this.userService.addImpersonatedUser(userId, impersonatedUserId, this.config);
+    addImpersonatedUser(impersonateUser: ImpersonateUser) {
+        return this.userService.addImpersonatedUser(impersonateUser, this.config);
     }
 
-    removeImpersonatedUser(userId: number, impersonatedUserId: number) {
-        return this.userService.removeImpersonatedUser(userId, impersonatedUserId, this.config);
+    removeImpersonatedUser(impersonateUser: ImpersonateUser) {
+        return this.userService.removeImpersonatedUser(impersonateUser, this.config);
     }
 
-    updatePassword(userId: number, newPassword: string) {
-        return this.userService.updatePassword(userId, newPassword, this.config);
+    updatePassword(changePassword: ChangePassword) {
+        return this.userService.updatePassword(changePassword, this.config);
     }
 
     getUserById(userId: number) {

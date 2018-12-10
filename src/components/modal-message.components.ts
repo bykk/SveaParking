@@ -37,7 +37,7 @@ export class ModalMessage {
 
     constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, private _facadeService: FacadeService, public alertCtrl: AlertController, private _toastCtrl: ToastController, private _smsService: SMS) {
 
-        this._facadeService.getUserById(this.params.get('id')).subscribe(res => {
+        this._facadeService.getUserById(this.params.get('id')).subscribe((res:any) => {
             this.user = res;
         });
 

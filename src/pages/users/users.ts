@@ -25,7 +25,7 @@ export class UsersPage {
     this._storage.get('loggedInUser').then(loggedInUser => { 
       this.loggedInUser = loggedInUser;
 
-      this._facadeService.getAllUsers().subscribe(res => {
+      this._facadeService.getAllUsers().subscribe((res:any) => {
         this.users = res.filter(x => x.id !== this.loggedInUser.id && x.active === true);
   
         this.users.forEach(x => {
