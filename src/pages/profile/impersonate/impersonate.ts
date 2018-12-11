@@ -64,11 +64,10 @@ export class ImpersonatePage {
                         return;
                     }
                     this.previousValuesOfImpersonatedUsers = res.map((obj) => { return obj.id });
-                    this.impersonatedUsers = res.map((obj) => { return obj.id });                    
+                    this.impersonatedUsers = res.map((obj) => { return obj.id });           
+                    this.loading.dismiss();         
                 });
-            });
-
-            this.loading.dismiss();
+            });            
         }).catch(() => {
             this.loggedInUser.firstName = 'Unknown';
             this.loggedInUser.lastName = 'Unknown';
@@ -76,7 +75,7 @@ export class ImpersonatePage {
         });
     }
 
-    impersonateNewUsers() {
+    impersonateNewUsers() {        
         // impersonate new users
         var itemsProcessed = 0;
 
@@ -95,13 +94,14 @@ export class ImpersonatePage {
                 this.previousValuesOfImpersonatedUsers = this.impersonatedUsers;
 
                 if (itemsProcessed === this.impersonatedUsers.length) {
+                    this.loading.dismiss();
                     this._toastService.onSuccess('Saved successfully');
                 }
             });
         });
     }
 
-    updateImpersonateList() {
+    updateImpersonateList() {        
         if (this.previousValuesOfImpersonatedUsers != null && this.impersonatedUsers != null && this.previousValuesOfImpersonatedUsers.join() === this.impersonatedUsers.join())
             return;
 
@@ -121,11 +121,13 @@ export class ImpersonatePage {
                 this._facadeService.removeImpersonatedUser(impersonateUser).subscribe(res => {
                     itemsDeleted++;
                     if (itemsDeleted == this.previousValuesOfImpersonatedUsers.length) {
+                        this.presentLoading();
                         this.impersonateNewUsers();
                     }
                 });
             });
         } else if (this.previousValuesOfImpersonatedUsers == null && this.impersonatedUsers != null && this.impersonatedUsers.length > 0) {
+            this.presentLoading();
             this.impersonateNewUsers();
         }
 
@@ -191,7 +193,8 @@ export class ImpersonatePage {
                             } else {
                                 this._facadeService.getSharedSpotInfo(result.user).subscribe((res:any) => {
                                     if (res.parkingSpotNumber !== null && new Date(result.date) <= new Date(res.endDate) && new Date(result.date) >= new Date(res.startDate)) {
-                                        this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res:any) => {                                            
+                                        this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res:any) => {   
+                                            debugger;                                         
                                             if (res === false) {
                                                 this._toastService.onWarning('Parking spot is already released');
                                                 return;
@@ -228,6 +231,8 @@ export class ImpersonatePage {
                                     } else {                                        
                                         
                                     }
+                                }, error => {
+                                    this._toastService.onWarning("User doesn\'t have parking spot for choosen date");
                                 })
                             }
                         });                        

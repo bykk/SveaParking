@@ -144,6 +144,8 @@ export class HomePage {
             }
           });
         }
+      }, error => {
+        this.loading.dismiss();
       });
     });
 
