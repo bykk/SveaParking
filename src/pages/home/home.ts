@@ -211,7 +211,7 @@ export class HomePage {
 
   takeParkingSpotToday(userParkingSpot: ParkingSpot): void {
     this.presentLoading();
-    debugger; 
+    
     let takeParking: TakeParking = {
       spotId: userParkingSpot.id,
       userIdReplace: this.loggedInUser.id

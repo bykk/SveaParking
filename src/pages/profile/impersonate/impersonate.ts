@@ -193,8 +193,7 @@ export class ImpersonatePage {
                             } else {
                                 this._facadeService.getSharedSpotInfo(result.user).subscribe((res:any) => {
                                     if (res.parkingSpotNumber !== null && new Date(result.date) <= new Date(res.endDate) && new Date(result.date) >= new Date(res.startDate)) {
-                                        this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res:any) => {   
-                                            debugger;                                         
+                                        this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res:any) => {                                                                                 
                                             if (res === false) {
                                                 this._toastService.onWarning('Parking spot is already released');
                                                 return;

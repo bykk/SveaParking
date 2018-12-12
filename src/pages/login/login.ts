@@ -30,7 +30,7 @@ export class LoginPage {
     this.showLoading();
 
     this._facadeService.login(this.userCredentials).subscribe((token: any) => {
-      debugger;
+      
       this.storage.set('token_id', token.access_token).then((res) => {
      
         this._facadeService.signIn(this.userCredentials).subscribe((userData: any) => {              
