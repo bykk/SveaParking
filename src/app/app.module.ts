@@ -17,6 +17,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { BrowserModule } from '@angular/platform-browser';
 import { ProfileModule } from './../pages/profile/profile.module';
 import { ServicesModule } from './services/services.module';
+import { Push}  from '@ionic-native/push';
 
 // services
 import { CallNumber } from '@ionic-native/call-number';
@@ -63,7 +64,8 @@ import { TokenInterceptor } from './helpers/token.interceptor';
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },    
     CallNumber,
     SMS,
-    AuthService
+    AuthService, 
+    Push
   ]
 })
 export class AppModule {}
