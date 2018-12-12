@@ -24,6 +24,7 @@
     "@ionic-native/core": "~4.10.0",
     "@ionic-native/http": "^4.10.1",
     "@ionic-native/network": "^4.12.2",
+    "@ionic-native/push": "^4.18.0",
     "@ionic-native/sms": "^4.12.2",
     "@ionic-native/splash-screen": "~4.10.0",
     "@ionic-native/status-bar": "~4.10.0",
@@ -80,7 +81,10 @@
         "MIN_BACKGROUND_DURATION": "30"
       },
       "cordova-plugin-network-information": {},
-      "call-number": {}
+      "call-number": {},
+      "phonegap-plugin-push": {
+        "SENDER_ID": "1031685934453"
+      }
     },
     "platforms": [
       "browser",
