@@ -35,9 +35,10 @@ export class HomePage {
 
     this._storage.get('loggedInUser').then(loggedUser => {
       this.loggedInUser = loggedUser;
-      this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe((res: any) => {
+      this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe((res: any) => {        
         if (res.parkingSpotNumber != null) {
           this.loggedUserParkingSpot = res;
+          this.hasParkingSpot = true;
           this.initHasParkingSpot(true);
         }
         else {
@@ -59,16 +60,16 @@ export class HomePage {
     })
   }
 
-  initHasParkingSpot(isFixedParkingSpot: boolean) {
-    debugger;
+  initHasParkingSpot(isFixedParkingSpot: boolean) {    
     var today = new Date();
     var tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-
+    
     if (isFixedParkingSpot) {
       this.loggedUserParkingSpot.parkingType = 'Fixed';
       this.loggedUserParkingSpot.parkingPeriod = '-';
       this.loggedUserParkingSpot.daysLeft = '-';
+      
     } else {
       var startDate = new Date(this.loggedUserParkingSpot.startDate);
       var endDate = new Date(this.loggedUserParkingSpot.endDate);
