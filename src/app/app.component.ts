@@ -36,7 +36,7 @@ export class MyApp {
   initApp(platform: Platform, status: StatusBar, splashScreen: SplashScreen): void {
     platform.ready().then(() => {
       status.styleDefault();
-      splashScreen.hide();
+     
 
       this._networkProvider.setSubscriptions();
       this.pushNotificationSetup();
@@ -53,6 +53,7 @@ export class MyApp {
           this._toastService.onError('Please enter your credentials');
         });
       }
+      splashScreen.hide();
     });
   }
 
