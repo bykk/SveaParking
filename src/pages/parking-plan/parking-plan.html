@@ -13,35 +13,19 @@
 <ion-content class="parking-plan" padding text-center>
   <h4> Current parking plan </h4>
   <ion-list>
-    <ion-list-header>Shared</ion-list-header>
-    <ion-item>
-      <span>Vukasin Jelic </span>
-      <span class="parking-spot-number" item-end>50</span>
-    </ion-item>
-    <ion-item>
-      <span>Savo Garovic </span>
-      <span class="parking-spot-number" item-end>51</span>
-
-    </ion-item>
-    <ion-item>
-      <span>Nenad Mitrovic </span>
-      <span class="parking-spot-number" item-end>52</span>
-    </ion-item>
+    <ion-list-header>Until <small>{{ currentParkingPlanEnds }}</small></ion-list-header>
+    <ion-item *ngFor="let sharedSpot of sharedParkingSpots">
+      <span>{{ sharedSpot.user.firstName }} {{ sharedSpot.user.lastName }}</span>      
+      <span class="parking-spot-number" item-end>{{ sharedSpot.parkingSpotNumber }}</span>
+    </ion-item> 
   </ion-list>
 
   <ion-list>
     <ion-list-header>Fixed</ion-list-header>
-    <ion-item>
-      <span>Svetozar Stojkovic</span>
-      <span class="parking-spot-number" item-end>40</span>
+    <ion-item *ngFor="let fixedSpot of fixedParkingSpots">
+      <span>{{ fixedSpot.user.firstName }} {{ fixedSpot.user.lastName  }}</span>
+      <span class="parking-spot-number" item-end>{{ fixedSpot.parkingSpotNumber }}</span>
     </ion-item>
-    <ion-item>
-      <span>Ermin Husovic</span>
-      <span class="parking-spot-number" item-end>41</span>
-    </ion-item>
-    <ion-item>
-      <span>Djordje Andric</span>
-      <span class="parking-spot-number" item-end>42</span>
-    </ion-item>
+
   </ion-list>
 </ion-content>

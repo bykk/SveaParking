@@ -47,11 +47,11 @@ export class LoginPage {
             this.navCtrl.setRoot(HomePage);
           }
         }, error => {
-          console.log(error);
+          this._toastService.onError('Something went wrong');
+          this.loading.dismiss();
         })
       });     
-    }, error => {
-      console.log(error);
+    }, error => {      
       this._toastService.onError('Access denied!');
       this.loading.dismiss();
     });   
@@ -69,9 +69,9 @@ export class LoginPage {
 
   showLoading() {
     this.loading = this.loadingCtrl.create({
-      spinner: 'circles',
-      content: '',
-      cssClass: 'loadingBackdrop',
+      spinner: 'crescent',
+      content: 'loading...',
+      cssClass: '',
       dismissOnPageChange: true
     });
     this.loading.present();

@@ -28,7 +28,7 @@ export class ImpersonatePage {
     previousValuesOfImpersonatedUsers: Array<string>;
     showMessageForNoImpersonatedOnBehalf: boolean = false;
 
-    constructor(private _facadeService: FacadeService, private _toastService: ToastService, private _storage: Storage, private _loadingCtrl: LoadingController, private _alertCtrl: AlertController) {        
+    constructor(private _facadeService: FacadeService, private _toastService: ToastService, private _storage: Storage, private _loadingCtrl: LoadingController, private _alertCtrl: AlertController) {
         this.users = new Array<User>();
         this.releaseParkingForm = new FormGroup({
             user: new FormControl('', Validators.required),
@@ -38,7 +38,7 @@ export class ImpersonatePage {
 
         this._storage.get('loggedInUser').then(loggedInUser => {
             this.loggedInUser = loggedInUser;
-            this.presentLoading();
+            this.showLoading();
 
             this._facadeService.getAllImpersonatedOnBehalfByUser(this.loggedInUser.id).subscribe((res: any) => {
                 if (_.isEmpty(res)) {
@@ -57,17 +57,17 @@ export class ImpersonatePage {
             this._facadeService.getAllUsers().subscribe((res: any) => {
                 this.users = res.filter(x => x.id !== this.loggedInUser.id && x.active === true);
 
-                this._facadeService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe((res:any) => {
+                this._facadeService.getAllImpersonatedUsersByUser(this.loggedInUser.id).subscribe((res: any) => {
                     if (_.isEmpty(res)) {
                         this.previousValuesOfImpersonatedUsers = null;
-                        this.impersonatedUsers = null;                        
+                        this.impersonatedUsers = null;
                         return;
                     }
                     this.previousValuesOfImpersonatedUsers = res.map((obj) => { return obj.id });
-                    this.impersonatedUsers = res.map((obj) => { return obj.id });           
-                    this.loading.dismiss();         
+                    this.impersonatedUsers = res.map((obj) => { return obj.id });
+                    this.loading.dismiss();
                 });
-            });            
+            });
         }).catch(() => {
             this.loggedInUser.firstName = 'Unknown';
             this.loggedInUser.lastName = 'Unknown';
@@ -75,10 +75,10 @@ export class ImpersonatePage {
         });
     }
 
-    impersonateNewUsers() {        
+    impersonateNewUsers() {
         // impersonate new users
         var itemsProcessed = 0;
-
+        this.showLoading();
         if (this.impersonatedUsers.length == 0) {
             this.loading.dismiss();
             this._toastService.onSuccess('Saved successfully');
@@ -101,7 +101,7 @@ export class ImpersonatePage {
         });
     }
 
-    updateImpersonateList() {        
+    updateImpersonateList() {
         if (this.previousValuesOfImpersonatedUsers != null && this.impersonatedUsers != null && this.previousValuesOfImpersonatedUsers.join() === this.impersonatedUsers.join())
             return;
 
@@ -121,29 +121,27 @@ export class ImpersonatePage {
                 this._facadeService.removeImpersonatedUser(impersonateUser).subscribe(res => {
                     itemsDeleted++;
                     if (itemsDeleted == this.previousValuesOfImpersonatedUsers.length) {
-                        this.presentLoading();
                         this.impersonateNewUsers();
                     }
                 });
             });
         } else if (this.previousValuesOfImpersonatedUsers == null && this.impersonatedUsers != null && this.impersonatedUsers.length > 0) {
-            this.presentLoading();
             this.impersonateNewUsers();
         }
 
     }
 
-    presentLoading(): void {
+    showLoading(): void {
         this.loading = this._loadingCtrl.create({
-            spinner: 'circles',
-            content: '',
-            cssClass: 'loadingBackdrop'
+            spinner: 'crescent',
+            content: 'loading...',
+            cssClass: ''
         });
         this.loading.present();
     };
 
     onSubmit() {
-
+        this.showLoading();
         const confirmDialog = this._alertCtrl.create({
             title: 'Release parking spot',
             message: `Are you sure you want to release parking spot?`,
@@ -162,10 +160,11 @@ export class ImpersonatePage {
                         this._facadeService.getUserById(result.user).subscribe((res) => {
                             if (ParkingSpots.UsersWithFixedParking.indexOf(result.user) !== -1) {
                                 this._facadeService.getFixedSpotInfo(result.user).subscribe((res) => {
-                                    this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res:any) => {                                        
+                                    this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res: any) => {
                                         if (res === false) {
                                             this._toastService.onWarning('Parking spot is already released');
-                                                return;
+                                            this.loading.dismiss();
+                                            return;
                                         }
                                         else {
                                             let releaseParkingSpot: ReleaseParkingSpot = {
@@ -174,28 +173,32 @@ export class ImpersonatePage {
                                                 sendMail: false,
                                                 releaseUserId: this.loggedInUser.id
                                             }
-                                            this._facadeService.releaseParkingSpotForUser(releaseParkingSpot).subscribe((res:any) => {
+                                            this._facadeService.releaseParkingSpotForUser(releaseParkingSpot).subscribe((res: any) => {
                                                 if (res === true) {
                                                     isSuccessfully = true;
                                                     this._toastService.onSuccess('You released parking spot sucessfully');
-                                                    this.releaseParkingForm.reset();     
+                                                    this.loading.dismiss();
+                                                    this.releaseParkingForm.reset();
                                                 } else {
-                                                    this._toastService.onError('Something went wrong');                      
+                                                    this._toastService.onError('Something went wrong');
+                                                    this.loading.dismiss();
                                                 }
 
                                                 if (!isSuccessfully) {
                                                     this._toastService.onWarning('User doesn\'t have parking spot for choosen date');
+                                                    this.loading.dismiss();
                                                 }
                                             })
                                         }
                                     })
                                 })
                             } else {
-                                this._facadeService.getSharedSpotInfo(result.user).subscribe((res:any) => {
+                                this._facadeService.getSharedSpotInfo(result.user).subscribe((res: any) => {
                                     if (res.parkingSpotNumber !== null && new Date(result.date) <= new Date(res.endDate) && new Date(result.date) >= new Date(res.startDate)) {
-                                        this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res:any) => {                                                                                 
+                                        this._facadeService.checkIfParkingSpotIsReleased(result.user, result.date).subscribe((res: any) => {
                                             if (res === false) {
                                                 this._toastService.onWarning('Parking spot is already released');
+                                                this.loading.dismiss();
                                                 return;
                                             } else {
                                                 let releaseParkingSpot: ReleaseParkingSpot = {
@@ -204,37 +207,44 @@ export class ImpersonatePage {
                                                     sendMail: false,
                                                     releaseUserId: this.loggedInUser.id
                                                 }
-                                                this._facadeService.releaseParkingSpotForUser(releaseParkingSpot).subscribe((res:any) => {
+                                                this._facadeService.releaseParkingSpotForUser(releaseParkingSpot).subscribe((res: any) => {
                                                     if (res == true) {
                                                         isSuccessfully = true;
                                                         this._toastService.onSuccess('You released parking spot sucessfully');
-                                                        this.releaseParkingForm.reset();                                                        
+                                                        this.loading.dismiss();
+                                                        this.releaseParkingForm.reset();
                                                     } else {
-                                                        this._toastService.onError('Something went wrong');                                                        
-                                                    }     
-                                                    
+                                                        this._toastService.onError('Something went wrong');
+                                                        this.loading.dismiss();
+                                                    }
+
                                                     if (!isSuccessfully) {
                                                         this._toastService.onWarning('User doesn\'t have parking spot for choosen date');
+                                                        this.loading.dismiss();
                                                     }
                                                 });
                                             }
 
-                                           
-                                            
+
+
                                         })
                                     }
                                     else if (res.parkingSpotNumber === null) {
-                                        this._toastService.onWarning("User doesn\'t have parking spot for choosen date");                                        
+                                        this._toastService.onWarning("User doesn\'t have parking spot for choosen date");
+                                        this.loading.dismiss();
                                     } else if (new Date(result.date) > new Date(res.endDate) || new Date(result.date) < new Date(res.endDate)) {
                                         this._toastService.onWarning("User doesn\'t have parking spot for choosen date");
-                                    } else {                                        
-                                        
+                                        this.loading.dismiss();
+                                    } else {
+                                        this._toastService.onWarning("Something strange is going on :)");
+                                        this.loading.dismiss();
                                     }
                                 }, error => {
                                     this._toastService.onWarning("User doesn\'t have parking spot for choosen date");
+                                    this.loading.dismiss();
                                 })
                             }
-                        });                        
+                        });
                     }
                 }
             ]

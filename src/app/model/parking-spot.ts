@@ -6,6 +6,7 @@ export interface ParkingSpot {
     userIdReplace?: number;
     userWhoReleasedTheParking?: number;
     date?: Date;
+    endDate?: Date;
     replaceUser?: User;
     user: User;
     parkingSpotNumber: number;

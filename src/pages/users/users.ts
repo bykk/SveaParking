@@ -101,9 +101,9 @@ export class UsersPage {
 
   presentLoading(): void {
     this.loading = this._loadingCtrl.create({
-      spinner: 'circles',
-      content: '',
-      cssClass: 'loadingBackdrop'
+      spinner: 'crescent',
+      content: 'loading..',
+      cssClass: ''
     });
     this.loading.present();
   };

@@ -14,14 +14,8 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
-
-.loadingBackdrop {
-    opacity: 1.0;
-}
-
-ion-spinner {
-    width: 30px !important;
-    height: 30px !important;
+.loadingBackdrop {    
+    opacity: .9;    
 }
 
 ::-webkit-scrollbar,
@@ -32,7 +26,7 @@ ion-spinner {
 button > ion-icon {
     font-size: 20px;
     zoom: 1.0; 
-    color:white;
+    color: white;
 }
 
 .menu-btn-text {
@@ -45,11 +39,7 @@ button > ion-icon {
 }
 
 .menu-header-icon {
-    color: color($colors, dark);
-}
-
-.menu-title {
-    background-color: color($colors, primary);
+    color: color($colors, primary);
 }
 
 .title-image {

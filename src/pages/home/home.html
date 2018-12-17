@@ -9,116 +9,119 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content [hidden]="!isPageReady" padding>
+<ion-content padding>
 
-  <div *ngIf="!hasParkingSpot && !hasSharedParkingSpot; else hasParkingRightNow">
+  <div [hidden]="!isPageReady">
     <h2 text-center> Welcome, {{ loggedInUser?.firstName }} {{ loggedInUser?.lastName }}</h2>
-
-    <ion-list *ngIf="availableParkingSpotsToday?.length > 0; else noAvailableParkingSpotsForToday">
-      <ion-list-header text-center>
-        Available parking spots (Today)
-      </ion-list-header>
-      <ion-item *ngFor="let parkingSpot of availableParkingSpotsToday">
-        <span class="parking-spot-number">{{ parkingSpot.parkingSpotNumber }} </span> {{ parkingSpot.user?.firstName }}
-        {{ parkingSpot.user?.lastName }}
-        <div item-end>
-          <div *ngIf="parkingSpot.userIdReplace == 0; else parkingTaken">
-            <button style="width: 125px;" ion-button color="secondary" [disabled]="userAlreadyHasParkingSpotToday"
-              (click)="takeParkingSpotToday(parkingSpot)" medium> Take</button>
-          </div>
-
-          <ng-template #parkingTaken>
-            <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>
-            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="returnParkingSpotForToday(parkingSpot)">
-              <ion-icon color="dark" name="refresh"></ion-icon>
-            </span>
-          </ng-template>
-        </div>
-      </ion-item>
-    </ion-list>
-    <ng-template #noAvailableParkingSpotsForToday text-center>
-      <ion-list>
-        <ion-list-header>
-          Available parking spots (Today)
-        </ion-list-header>
-        <ion-item text-center>
-          <img class="no-parking-logo" src="../../assets/imgs/no-parking.png" alt="No available parking spots" />
-          <p> No available parking spots </p>
-        </ion-item>
-      </ion-list>
-    </ng-template>
-    <br>
-    <ion-list *ngIf="availableParkingSpotsTomorrow?.length > 0; else noAvailableParkingSpotsForTomorrow;">
-      <ion-list-header text-center>
-        Available parking spots (Tomorrow)
-      </ion-list-header>
-      <ion-item *ngFor="let parkingSpot of availableParkingSpotsTomorrow">
-        <span class="parking-spot-number">{{ parkingSpot.parkingSpotNumber }} </span> {{ parkingSpot.user?.firstName }}
-        {{ parkingSpot.user?.lastName }}
-        <div item-end>
-          <div *ngIf="parkingSpot.userIdReplace == 0; else parkingTaken">
-            <button style="width: 125px;" ion-button color="secondary" [disabled]="userAlreadyHasParkingSpotTomorrow"
-              (click)="takeParkingSpotTomorrow(parkingSpot)" medium> Take</button>
-          </div>
-
-          <ng-template #parkingTaken>
-            <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>
-            <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="returnParkingSpotForTomorrow(parkingSpot)">
-              <ion-icon color="dark" name="refresh"></ion-icon>
-            </span>
-          </ng-template>
-        </div>
-      </ion-item>
-    </ion-list>
-    <ng-template #noAvailableParkingSpotsForTomorrow text-center>
-      <ion-list>
-        <ion-list-header text-center>
-          Available parking spots (Tomorrow)
-        </ion-list-header>
-        <ion-item text-center>
-          <img class="no-parking-logo" src="../../assets/imgs/no-parking.png" alt="No available parking spots" />
-          <p> No available parking spots </p>
-        </ion-item>
-      </ion-list>
-    </ng-template>
-
-  </div>
-
-  <ng-template #hasParkingRightNow>
-    <div *ngIf="hasParkingSpot">
-      <h2 text-center> Welcome, {{ loggedInUser?.firstName }} {{ loggedInUser?.lastName }}</h2>
+    <div *ngIf="hasParkingSpot;else noParkingSpotRightNow">
       <div class="current-parking-spot" padding text-center>
         <h1>Parking spot</h1>
-        <span> {{ userParkingSpot?.parkingSpotNumber }} </span>
+        <span> {{ loggedUserParkingSpot?.parkingSpotNumber }} </span>
       </div>
 
       <h4>Not coming:</h4>
       <button ion-button color="primary" [disabled]="isWeekend('today') || disableTodayButton" (click)="releaseParkingSpotToday()"
-        large block full> Today </button>
+        large block full> Today
+      </button>
       <button ion-button color="secondary" [disabled]="isWeekend('tomorrow') || disableTomorrowButton" (click)="releaseParkingSpotTomorrow()"
-        large block full> Tomorrow </button>
+        large block full>
+        Tomorrow </button>
+
+      <ion-list *ngIf="hasParkingSpot">
+        <h4>Parking info:</h4>
+        <ion-item>
+          Type:
+          <span item-end> {{ loggedUserParkingSpot?.parkingType }} </span>
+        </ion-item>
+
+        <ion-item>
+          Period:
+          <span item-end> {{ loggedUserParkingSpot?.parkingPeriod }} </span>
+        </ion-item>
+
+        <ion-item>
+          Days left:
+          <span item-end> {{ loggedUserParkingSpot?.daysLeft }} </span>
+        </ion-item>
+      </ion-list>
     </div>
-  </ng-template>
 
 
+    <ng-template #noParkingSpotRightNow>
+      <ion-list *ngIf="availableParkingSpotsToday?.length > 0; else noAvailableParkingSpotsForToday">
+        <ion-list-header text-center>
+          Available parking spots (Today)
+        </ion-list-header>
+        <ion-item *ngFor="let parkingSpot of availableParkingSpotsToday">
+          <span class="parking-spot-number">{{ parkingSpot.parkingSpotNumber }} </span> {{ parkingSpot.user?.firstName
+          }}
+          {{ parkingSpot.user?.lastName }}
+          <div item-end>
+            <div *ngIf="parkingSpot.userIdReplace == 0; else parkingTaken">
+              <button style="width: 125px;" ion-button color="secondary" [disabled]="userAlreadyHasParkingSpotToday"
+                (click)="takeParkingSpotToday(parkingSpot)" medium> Take</button>
+            </div>
 
-  <ion-list *ngIf="hasParkingSpot">
-    <h4>Parking info:</h4>
-    <ion-item>
-      Type:
-      <span item-end> {{ userParkingSpot?.parkingType }} </span>
-    </ion-item>
+            <ng-template #parkingTaken>
+              <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>
+              <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="returnParkingSpotForToday(parkingSpot)">
+                <ion-icon color="dark" name="refresh"></ion-icon>
+              </span>
+            </ng-template>
+          </div>
+        </ion-item>
+      </ion-list>
+      <ng-template #noAvailableParkingSpotsForToday text-center>
+        <ion-list>
+          <ion-list-header>
+            Available parking spots (Today)
+          </ion-list-header>
+          <ion-item text-center>
+            <img class="no-parking-logo" src="../../assets/imgs/no-parking.png" alt="No available parking spots" />
+            <p> No available parking spots </p>
+          </ion-item>
+        </ion-list>
+      </ng-template>
+      <br>
+      <ion-list *ngIf="availableParkingSpotsTomorrow?.length > 0; else noAvailableParkingSpotsForTomorrow;">
+        <ion-list-header text-center>
+          Available parking spots (Tomorrow)
+        </ion-list-header>
+        <ion-item *ngFor="let parkingSpot of availableParkingSpotsTomorrow">
+          <span class="parking-spot-number">{{ parkingSpot.parkingSpotNumber }} </span> {{ parkingSpot.user?.firstName
+          }}
+          {{ parkingSpot.user?.lastName }}
+          <div item-end>
+            <div *ngIf="parkingSpot.userIdReplace == 0; else parkingTaken">
+              <button style="width: 125px;" ion-button color="secondary" [disabled]="userAlreadyHasParkingSpotTomorrow"
+                (click)="takeParkingSpotTomorrow(parkingSpot)" medium> Take</button>
+            </div>
 
-    <ion-item>
-      Period:
-      <span item-end> {{ userParkingSpot?.parkingPeriod }} </span>
-    </ion-item>
+            <ng-template #parkingTaken>
+              <span> {{ parkingSpot.replaceUser?.firstName }} {{ parkingSpot.replaceUser?.lastName }} </span>
+              <span icon-start small *ngIf="parkingSpot.isLoggedInUser" (click)="returnParkingSpotForTomorrow(parkingSpot)">
+                <ion-icon color="dark" name="refresh"></ion-icon>
+              </span>
+            </ng-template>
+          </div>
+        </ion-item>
+      </ion-list>
+      <ng-template #noAvailableParkingSpotsForTomorrow text-center>
+        <ion-list>
+          <ion-list-header text-center>
+            Available parking spots (Tomorrow)
+          </ion-list-header>
+          <ion-item text-center>
+            <img class="no-parking-logo" src="../../assets/imgs/no-parking.png" alt="No available parking spots" />
+            <p> No available parking spots </p>
+          </ion-item>
+        </ion-list>
+      </ng-template>
+    </ng-template>
 
-    <ion-item>
-      Days left:
-      <span item-end> {{ userParkingSpot?.daysLeft }} </span>
-    </ion-item>
-  </ion-list>
+  </div>
+
+
 
 
   <ion-refresher (ionRefresh)="reloadPage($event)">

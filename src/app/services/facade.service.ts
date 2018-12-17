@@ -57,6 +57,14 @@ export class FacadeService {
     }
     
     ////////////// PARKING SERVICES //////////////
+    getAllFixedParkingSpots() {
+        return this.parkingService.getAllFixedParkingSpots(this.config);   
+    }
+
+    getAllSharedParkingSpotsToday() {
+        return this.parkingService.getAllSharedParkingSpots(this.config);
+    }
+
     getAvailableParkingSpotsToday() {        
         return this.parkingService.getAvailableParkingSpotsToday(this.config);
     }

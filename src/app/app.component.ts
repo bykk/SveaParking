@@ -1,3 +1,4 @@
+import { ParkingPlanPage } from './../pages/parking-plan/parking-plan';
 import { Network } from '@ionic-native/network';
 import { NetworkProvider } from './services/network.provider';
 import { ToastService } from './services/toast.service';
@@ -26,6 +27,7 @@ export class MyApp {
 
     this.pages = [
       { title: 'Home', component: HomePage, iconCss: 'home' },
+      { title: 'Parking plan', component: ParkingPlanPage, iconCss: 'calendar' },
       { title: 'Profile', component: ProfilePage, iconCss: 'contact' },
       { title: 'Users', component: UsersPage, iconCss: 'contacts' }
     ];
@@ -83,6 +85,7 @@ export class MyApp {
   onLogout(): void {
     this._storage.remove('authenticated');
     this._storage.remove('loggedInUser');
+    this._storage.remove('token_id');
     this.nav.setRoot(LoginPage);
   }
 }

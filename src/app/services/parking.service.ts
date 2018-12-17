@@ -10,6 +10,14 @@ import { ReleaseParkingSpot } from '../model/release-parking-spot';
 export class ParkingService {
     constructor(private _http: HttpClient) { }
 
+    getAllFixedParkingSpots(config: HttpConfig): Observable<any> {
+        return this._http.get(`${config.domain}/api/parking/getAllFixedParkingSpots`, { headers: config.headers }).map((response: Response) => { return response; });
+    } 
+    
+    getAllSharedParkingSpots(config: HttpConfig): Observable<any> {
+        return this._http.get(`${config.domain}/api/parking/getAllSharedParkingSpotsToday`, { headers: config.headers }).map((response: Response) => { return response; });
+    }
+
     getAvailableParkingSpotsToday(config: HttpConfig) : Observable<any> {          
         return this._http.get(`${config.domain}/api/parking/GetFreeParkingSpotsToday`, { headers: config.headers }).map((response: Response) => { return response; });
     }
