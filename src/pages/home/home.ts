@@ -112,6 +112,9 @@ export class HomePage {
             if (parking.userIdReplace == this.loggedInUser.id) {
               parking.isLoggedInUser = true;
               this.userAlreadyHasParkingSpotToday = true;
+            } else {
+              parking.isLoggedInUser = false;
+              this.userAlreadyHasParkingSpotToday = false;
             }
           }, error => {
             this.loading.dismiss();
@@ -129,6 +132,9 @@ export class HomePage {
             if (parking.userIdReplace == this.loggedInUser.id) {
               parking.isLoggedInUser = true;
               this.userAlreadyHasParkingSpotTomorrow = true;
+            } else {
+              parking.isLoggedInUser = false;
+              this.userAlreadyHasParkingSpotToday = false;
             }
           }, error => {
             this.loading.dismiss();
