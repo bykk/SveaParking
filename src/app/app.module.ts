@@ -1,3 +1,4 @@
+import { FacadeService } from './services/facade.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -23,7 +24,7 @@ import { Push}  from '@ionic-native/push';
 import { CallNumber } from '@ionic-native/call-number';
 import { SMS } from '@ionic-native/sms';
 import { ModalMessage } from '../components/modal-message.components';
-import { AuthService } from './services/auth/auth.service';
+import { AuthService } from './services/auth.service';
 import { TokenInterceptor } from './helpers/token.interceptor';
 
 @NgModule({
@@ -58,6 +59,7 @@ import { TokenInterceptor } from './helpers/token.interceptor';
     ModalMessage
   ],
   providers: [
+    FacadeService,
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },         

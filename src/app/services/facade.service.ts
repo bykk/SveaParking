@@ -8,7 +8,7 @@ import { Injectable, Injector } from "@angular/core";
 import 'rxjs/add/operator/map';
 
 import { ParkingService } from './parking.service';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 import { ImpersonateUser } from '../model/impersonate-user';
 
@@ -57,6 +57,10 @@ export class FacadeService {
     }
     
     ////////////// PARKING SERVICES //////////////
+    getAvailableParkingSpots() {
+        return this.parkingService.getAvailableParkingSpots(this.config);
+    }
+
     getAllFixedParkingSpots() {
         return this.parkingService.getAllFixedParkingSpots(this.config);   
     }

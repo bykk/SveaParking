@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 
 import { UserService } from './user.service';
 import { ParkingService } from './parking.service';
-import { FacadeService } from './facade.service';
 
 import { UtilsService } from './utils.service';
 import { ToastService } from './toast.service';
@@ -22,7 +21,6 @@ import { NetworkProvider } from './network.provider';
     UtilsService,
     ParkingService,  
     UserService,
-    FacadeService,
   
     NetworkProvider,
     ToastService

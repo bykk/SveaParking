@@ -1,9 +1,9 @@
 import { Storage } from '@ionic/storage';
-import { HttpConfig } from './../../model/http-config';
+import { HttpConfig } from '../model/http-config';
 import { Observable } from 'rxjs';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { UserCredentials } from '../../model/user-credentials';
+import { UserCredentials } from '../model/user-credentials';
 
 @Injectable()
 export class AuthService {

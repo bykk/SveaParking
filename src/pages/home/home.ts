@@ -17,6 +17,7 @@ export class HomePage {
   loggedInUser: LoggedInUser;
   availableParkingSpotsToday: ParkingSpot[];
   availableParkingSpotsTomorrow: ParkingSpot[];
+  availableParkingSpots: any;
   loggedUserParkingSpot: UserParkingSpot;
   isPageReady: boolean;
   hasParkingSpot: boolean;
@@ -26,7 +27,7 @@ export class HomePage {
   userAlreadyHasParkingSpotTomorrow: boolean = false;
   loading: Loading;
 
-  constructor(private _facadeService: FacadeService, private _storage: Storage, private _loadingCtrl: LoadingController, private _toastService: ToastService,   private _alertCtrl: AlertController) {
+  constructor(private _facadeService: FacadeService, private _storage: Storage, private _loadingCtrl: LoadingController, private _toastService: ToastService, private _alertCtrl: AlertController) {
     this.initComponent();
   }
 
@@ -35,7 +36,7 @@ export class HomePage {
 
     this._storage.get('loggedInUser').then(loggedUser => {
       this.loggedInUser = loggedUser;
-      this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe((res: any) => {        
+      this._facadeService.getFixedSpotInfo(this.loggedInUser.id).subscribe((res: any) => {
         if (res.parkingSpotNumber != null) {
           this.loggedUserParkingSpot = res;
           this.hasParkingSpot = true;
@@ -48,9 +49,9 @@ export class HomePage {
             if (this.hasParkingSpot) {
               this.loggedUserParkingSpot = res;
               this.initHasParkingSpot(false);
-            } else {              
+            } else {
               this.initNoParkingSpot();
-            }            
+            }
           });
         }
 
@@ -60,16 +61,16 @@ export class HomePage {
     })
   }
 
-  initHasParkingSpot(isFixedParkingSpot: boolean) {    
+  initHasParkingSpot(isFixedParkingSpot: boolean) {
     var today = new Date();
     var tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    
+
     if (isFixedParkingSpot) {
       this.loggedUserParkingSpot.parkingType = 'Fixed';
       this.loggedUserParkingSpot.parkingPeriod = '-';
       this.loggedUserParkingSpot.daysLeft = '-';
-      
+
     } else {
       var startDate = new Date(this.loggedUserParkingSpot.startDate);
       var endDate = new Date(this.loggedUserParkingSpot.endDate);
@@ -82,7 +83,7 @@ export class HomePage {
         this.loggedUserParkingSpot.daysLeft = Math.round(Math.abs((new Date().getTime() - endDate.getTime()) / (oneDay))) : '-';
     }
 
-    this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${today.getUTCFullYear()}-${today.getUTCMonth() + 1}-${today.getDate()}`).subscribe((res: any) => {      
+    this._facadeService.checkIfParkingSpotIsReleased(this.loggedInUser.id, `${today.getUTCFullYear()}-${today.getUTCMonth() + 1}-${today.getDate()}`).subscribe((res: any) => {
       if (res === false) {
         this.disableTodayButton = true;
       }
@@ -94,34 +95,34 @@ export class HomePage {
         this.loading.dismiss();
         this.isPageReady = true;
       })
-
     });
-
-
   }
 
-  initNoParkingSpot() {    
-    this._facadeService.getAvailableParkingSpotsToday().subscribe((availableParkingSpotsToday: any) => {      
-      this.availableParkingSpotsToday = availableParkingSpotsToday;
+  initNoParkingSpot() {
+    this._facadeService.getAvailableParkingSpots().subscribe((res: any) => {
+      this.availableParkingSpotsToday = res[0];
+      this.availableParkingSpotsTomorrow = res[1];
 
+      // fetch user data for replacments
       this.availableParkingSpotsToday.forEach(parking => {
-        this._facadeService.getUserById(parking.userIdReplace).subscribe((user: any) => {
-          parking.replaceUser = user;
+        if (parking.userIdReplace !== 0) {
+          this._facadeService.getUserById(parking.userIdReplace).subscribe((user: any) => {
+            parking.replaceUser = user;
 
-          if (parking.userIdReplace == this.loggedInUser.id) {
-            parking.isLoggedInUser = true;
-            this.userAlreadyHasParkingSpotToday = true;
-          }
-        }, error => {
-          this.loading.dismiss();
-          this._toastService.onError('Something went wrong');
-        });
+            if (parking.userIdReplace == this.loggedInUser.id) {
+              parking.isLoggedInUser = true;
+              this.userAlreadyHasParkingSpotToday = true;
+            }
+          }, error => {
+            this.loading.dismiss();
+            this._toastService.onError('Something went wrong');
+          });
+        }
       });
 
-      this._facadeService.getAvailableParkingSpotsTomorrow().subscribe((availableParkingSpotsTomorrow: any) => {
-        this.availableParkingSpotsTomorrow = availableParkingSpotsTomorrow;
-
-        this.availableParkingSpotsTomorrow.forEach(parking => {
+      // fetch user data for replacments
+      this.availableParkingSpotsTomorrow.forEach(parking => {
+        if (parking.userIdReplace !== 0) {
           this._facadeService.getUserById(parking.userIdReplace).subscribe((user: any) => {
             parking.replaceUser = user;
 
@@ -129,25 +130,22 @@ export class HomePage {
               parking.isLoggedInUser = true;
               this.userAlreadyHasParkingSpotTomorrow = true;
             }
-            
-            this.isPageReady = true;
           }, error => {
             this.loading.dismiss();
             this._toastService.onError('Something went wrong');
           });
-        });
-        this.loading.dismiss();
-      }, error => {
-        this.loading.dismiss();
-        this._toastService.onError('Something went wrong');
+        }
       });
-      
+      setTimeout(() => {
+        this.loading.dismiss();
+        this.isPageReady = true;
+      }, 2000);
+
     }, error => {
       this.loading.dismiss();
       this._toastService.onError('Something went wrong');
-    });
+    })
   }
-
 
   releaseParkingSpotToday(): void {
     const confirmDialog = this._alertCtrl.create({
@@ -162,15 +160,15 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             this.showLoading();
-            this._facadeService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe((res) => {              
+            this._facadeService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Today).subscribe((res) => {
               this.loading.dismiss();
               this.disableTodayButton = true;
               this.userAlreadyHasParkingSpotToday = false;
               this._toastService.onSuccess('Parking spot released successfully');
-            }, (error) => {                           
+            }, (error) => {
               this._toastService.onError('Parking not released');
               this.loading.dismiss();
-            });           
+            });
           }
         }
       ]
@@ -190,7 +188,7 @@ export class HomePage {
         },
         {
           text: 'Agree',
-          handler: () => {            
+          handler: () => {
             this.showLoading();
             this._facadeService.releaseParkingSpot(this.loggedInUser.id, ReleaseParkingSpotDay.Tomorrow).subscribe(res => {
               this.loading.dismiss();
@@ -210,16 +208,16 @@ export class HomePage {
 
   takeParkingSpotToday(userParkingSpot: ParkingSpot): void {
     this.showLoading();
-    
+
     let takeParking: TakeParking = {
       spotId: userParkingSpot.id,
       userIdReplace: this.loggedInUser.id
     }
-    this._facadeService.takeParkingSpot(takeParking).subscribe((res:any) => {
+    this._facadeService.takeParkingSpot(takeParking).subscribe((res: any) => {
       this._storage.get('loggedInUser').then((loggedInUser) => {
         this.availableParkingSpotsToday.forEach(parkingSpot => {
           if (parkingSpot.id == userParkingSpot.id) {
-            this._facadeService.getUserById(loggedInUser.id).subscribe((res:any) => {
+            this._facadeService.getUserById(loggedInUser.id).subscribe((res: any) => {
               parkingSpot.replaceUser = res;
               parkingSpot.userIdReplace = res.id;
 
@@ -235,7 +233,7 @@ export class HomePage {
         });
       });
 
-     
+
     }, () => {
       this._toastService.onError('Parking not taken, something went wrong :(');
       this.loading.dismiss();
@@ -250,11 +248,11 @@ export class HomePage {
       spotId: userParkingSpot.id,
       userIdReplace: this.loggedInUser.id
     }
-    
+
     this._facadeService.takeParkingSpot(takeParking).subscribe(res => {
       this.availableParkingSpotsTomorrow.forEach(parkingSpot => {
         if (parkingSpot.id == userParkingSpot.id) {
-          this._facadeService.getUserById(this.loggedInUser.id).subscribe((res:any) => {
+          this._facadeService.getUserById(this.loggedInUser.id).subscribe((res: any) => {
             parkingSpot.replaceUser = res;
             parkingSpot.userIdReplace = res.id;
 
@@ -267,14 +265,14 @@ export class HomePage {
           });
         }
       });
-    
+
     }, () => {
       this._toastService.onError('Parking not taken, something went wrong :( ');
       this.loading.dismiss();
     });
   };
 
-  
+
   returnParkingSpotForToday(parkingSpot: ParkingSpot) {
     const confirmDialog = this._alertCtrl.create({
       title: 'Release parking spot',

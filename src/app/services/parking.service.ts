@@ -10,31 +10,40 @@ import { ReleaseParkingSpot } from '../model/release-parking-spot';
 export class ParkingService {
     constructor(private _http: HttpClient) { }
 
+    getAvailableParkingSpots(config: HttpConfig): any {
+        const availableToday = this.getAvailableParkingSpotsToday(config);
+        const avaibableTomorrow = this.getAvailableParkingSpotsTomorrow(config);
+
+        return Observable.forkJoin([availableToday, avaibableTomorrow]);
+    }
+
     getAllFixedParkingSpots(config: HttpConfig): Observable<any> {
         return this._http.get(`${config.domain}/api/parking/getAllFixedParkingSpots`, { headers: config.headers }).map((response: Response) => { return response; });
-    } 
-    
+    }
+
     getAllSharedParkingSpots(config: HttpConfig): Observable<any> {
         return this._http.get(`${config.domain}/api/parking/getAllSharedParkingSpotsToday`, { headers: config.headers }).map((response: Response) => { return response; });
     }
 
-    getAvailableParkingSpotsToday(config: HttpConfig) : Observable<any> {          
-        return this._http.get(`${config.domain}/api/parking/GetFreeParkingSpotsToday`, { headers: config.headers }).map((response: Response) => { return response; });
+    getAvailableParkingSpotsToday(config: HttpConfig): Observable<any> {
+        return this._http.get(`${config.domain}/api/parking/GetFreeParkingSpotsToday`, { headers: config.headers }).map((response: Response) => {                        
+            return response;
+        });
     }
 
-    getAvailableParkingSpotsTomorrow(config: HttpConfig) : Observable<any> {
+    getAvailableParkingSpotsTomorrow(config: HttpConfig): Observable<any> {
         return this._http.get(`${config.domain}/api/parking/GetFreeParkingSpotsTomorrow`, { headers: config.headers }).map((response: Response) => { return response; });
     }
 
-    takeParkingSpot(takeParking:TakeParking, config: HttpConfig) {        
-        return this._http.post(`${config.domain}/api/parking/take`, takeParking, {headers: config.headers }).map((response: Response) => { return response; });
+    takeParkingSpot(takeParking: TakeParking, config: HttpConfig) {
+        return this._http.post(`${config.domain}/api/parking/take`, takeParking, { headers: config.headers }).map((response: Response) => { return response; });
     }
 
     getSharedSpotInfo(userId: number, config: HttpConfig) {
         return this._http.get(`${config.domain}/api/parking/GetSharedSpotInfo/${userId}`, { headers: config.headers }).map((response: Response) => { return response; });
     }
 
-    getFixedSpotInfo(userId: number, config: HttpConfig) {        
+    getFixedSpotInfo(userId: number, config: HttpConfig) {
         return this._http.get(`${config.domain}/api/parking/GetFixedSpotInfo/${userId}`, { headers: config.headers }).map((response: Response) => { return response; });
     }
 
@@ -46,11 +55,11 @@ export class ParkingService {
         return this._http.get(`${config.domain}/api/parking/CheckIfUserHasSharedParkingSpotRighNow/${userId}`, { headers: config.headers }).map((response: Response) => { return response; });
     }
 
-    checkIfParkingSpotIsReleased(userId: number, date: string, config: HttpConfig) {        
+    checkIfParkingSpotIsReleased(userId: number, date: string, config: HttpConfig) {
         return this._http.get(`${config.domain}/api/parking/CheckIfParkingSpotIsReleased/${userId}/${date}`, { headers: config.headers }).map((response: Response) => { return response; });
     }
 
-    releaseParkingSpotForUser(releaseParkingSpot: ReleaseParkingSpot, config: HttpConfig) {   
+    releaseParkingSpotForUser(releaseParkingSpot: ReleaseParkingSpot, config: HttpConfig) {
         return this._http.post(`${config.domain}/api/parking/ReleaseParkingSpot`, releaseParkingSpot, { headers: config.headers }).map((response: Response) => { return response; });
     }
 }
