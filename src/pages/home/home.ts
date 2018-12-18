@@ -100,6 +100,7 @@ export class HomePage {
 
   initNoParkingSpot() {    
     this.userAlreadyHasParkingSpotToday = false;
+    this.userAlreadyHasParkingSpotTomorrow = false;
 
     this._facadeService.getAvailableParkingSpots().subscribe((res: any) => {
       this.availableParkingSpotsToday = res[0];
