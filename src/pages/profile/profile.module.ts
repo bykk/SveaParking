@@ -11,12 +11,10 @@ import { ProfilePage } from './profile';
 import { ImpersonatePage } from './impersonate/impersonate';
 import { SettingsPage } from './settings/settings';
 import { ChangePasswordPage } from './change-password/change-password';
-import { MyPage } from './my-page/my-page';
 
 @NgModule({
   declarations: [
-    ProfilePage,
-    MyPage,
+    ProfilePage,    
     ChangePasswordPage,    
     SettingsPage,
     ImpersonatePage
@@ -31,8 +29,7 @@ import { MyPage } from './my-page/my-page';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    ProfilePage,
-    MyPage,
+    ProfilePage,    
     ChangePasswordPage,
     SettingsPage,
     ImpersonatePage

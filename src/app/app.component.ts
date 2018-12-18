@@ -1,6 +1,6 @@
 import { ParkingPlanPage } from './../pages/parking-plan/parking-plan';
 import { Network } from '@ionic-native/network';
-import { NetworkProvider } from './services/network.provider';
+import { NetworkProvider } from './helpers/network.provider';
 import { ToastService } from './services/toast.service';
 import { UsersPage } from './../pages/users/users';
 import { HomePage } from './../pages/home/home';

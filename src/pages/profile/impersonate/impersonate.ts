@@ -63,8 +63,8 @@ export class ImpersonatePage {
                         this.impersonatedUsers = null;
                         return;
                     }
-                    this.previousValuesOfImpersonatedUsers = res.map((obj) => { return obj.id });
-                    this.impersonatedUsers = res.map((obj) => { return obj.id });
+                    this.previousValuesOfImpersonatedUsers = res.filter(x=> x.id !== this.loggedInUser.id && x.active === true ).map((obj) => { return obj.id });
+                    this.impersonatedUsers = res.filter(x => x.id !== this.loggedInUser.id && x.active === true ).map((obj) => { return obj.id });
                     this.loading.dismiss();
                 });
             });

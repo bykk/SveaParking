@@ -8,7 +8,7 @@ import { ParkingService } from './parking.service';
 
 import { UtilsService } from './utils.service';
 import { ToastService } from './toast.service';
-import { NetworkProvider } from './network.provider';
+import { NetworkProvider } from '../helpers/network.provider';
 
 @NgModule({
   imports: [
