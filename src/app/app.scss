@@ -15,9 +15,9 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 .loadingBackdrop {    
-    opacity: .9;    
+    opacity: .7;    
+    background-color: white;
 }
-
 ::-webkit-scrollbar,
 *::-webkit-scrollbar {
   display: none;

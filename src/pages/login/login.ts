@@ -71,7 +71,7 @@ export class LoginPage {
     this.loading = this.loadingCtrl.create({
       spinner: 'crescent',
       content: 'loading...',
-      cssClass: '',
+      cssClass: 'loadingBackdrop',
       dismissOnPageChange: true
     });
     this.loading.present();

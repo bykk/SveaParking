@@ -55,7 +55,7 @@ export class ChangePasswordPage {
         this.loading = this._loadingCtrl.create({
             spinner: 'crescent',
             content: 'loading...',
-            cssClass: ''
+            cssClass: 'loadingBackdrop'
         });
         this.loading.present();
     };

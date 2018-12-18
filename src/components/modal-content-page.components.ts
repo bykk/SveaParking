@@ -111,7 +111,7 @@ export class ModalContentPage {
     this.loading = this.loadingCtrl.create({
       spinner: 'crescent',
       content: 'loading...',
-      cssClass: ''
+      cssClass: 'loadingBackdrop'
     });
     this.loading.present();
   };
