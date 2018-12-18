@@ -98,7 +98,9 @@ export class HomePage {
     });
   }
 
-  initNoParkingSpot() {
+  initNoParkingSpot() {    
+    this.userAlreadyHasParkingSpotToday = false;
+
     this._facadeService.getAvailableParkingSpots().subscribe((res: any) => {
       this.availableParkingSpotsToday = res[0];
       this.availableParkingSpotsTomorrow = res[1];
@@ -112,9 +114,6 @@ export class HomePage {
             if (parking.userIdReplace == this.loggedInUser.id) {
               parking.isLoggedInUser = true;
               this.userAlreadyHasParkingSpotToday = true;
-            } else {
-              parking.isLoggedInUser = false;
-              this.userAlreadyHasParkingSpotToday = false;
             }
           }, error => {
             this.loading.dismiss();
@@ -132,9 +131,6 @@ export class HomePage {
             if (parking.userIdReplace == this.loggedInUser.id) {
               parking.isLoggedInUser = true;
               this.userAlreadyHasParkingSpotTomorrow = true;
-            } else {
-              parking.isLoggedInUser = false;
-              this.userAlreadyHasParkingSpotToday = false;
             }
           }, error => {
             this.loading.dismiss();
