@@ -1,4 +1,4 @@
-import { FacadeService } from './services/facade.service';
+
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -26,6 +26,7 @@ import { SMS } from '@ionic-native/sms';
 import { ModalMessage } from '../components/modal-message.components';
 import { AuthService } from './services/auth.service';
 import { TokenInterceptor } from './helpers/token.interceptor';
+import { FacadeService } from './services/facade.service';
 
 @NgModule({
   declarations: [

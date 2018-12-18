@@ -53,7 +53,7 @@ export class ChangePasswordPage {
 
     presentLoading(): void {
         this.loading = this._loadingCtrl.create({
-            spinner: 'crescent',
+            spinner: 'circles',
             content: 'loading...',
             cssClass: 'loadingBackdrop'
         });

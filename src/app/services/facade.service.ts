@@ -36,7 +36,7 @@ export class FacadeService {
         return this._parkingService;
     }
 
-    public get userService(): UserService {
+    public get userService(): UserService {        
         if(!this._userService) {
             this._userService = this._injector.get(UserService);
         }
@@ -44,7 +44,7 @@ export class FacadeService {
     }
 
     public get authService(): AuthService {
-        if(!this._userService) {
+        if(!this._authService) {
             this._authService = this._injector.get(AuthService);
         }
         return this._authService;

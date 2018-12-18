@@ -52,6 +52,8 @@ export class ImpersonatePage {
                 if (this.impersonatedUsersOnBehalf.length > 0) {
                     this.releaseParkingForm.enable();
                 }
+            }, error => {
+                this.loading.dismiss();
             });
 
             this._facadeService.getAllUsers().subscribe((res: any) => {
@@ -61,12 +63,15 @@ export class ImpersonatePage {
                     if (_.isEmpty(res)) {
                         this.previousValuesOfImpersonatedUsers = null;
                         this.impersonatedUsers = null;
+                        this.loading.dismiss();
                         return;
                     }
                     this.previousValuesOfImpersonatedUsers = res.filter(x=> x.id !== this.loggedInUser.id && x.active === true ).map((obj) => { return obj.id });
                     this.impersonatedUsers = res.filter(x => x.id !== this.loggedInUser.id && x.active === true ).map((obj) => { return obj.id });
                     this.loading.dismiss();
                 });
+            }, error => {
+                this.loading.dismiss();
             });
         }).catch(() => {
             this.loggedInUser.firstName = 'Unknown';
@@ -133,7 +138,7 @@ export class ImpersonatePage {
 
     showLoading(): void {
         this.loading = this._loadingCtrl.create({
-            spinner: 'crescent',
+            spinner: 'circles',
             content: 'loading...',
             cssClass: 'loadingBackdrop'
         });

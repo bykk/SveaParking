@@ -69,7 +69,7 @@ export class LoginPage {
 
   showLoading() {
     this.loading = this.loadingCtrl.create({
-      spinner: 'crescent',
+      spinner: 'circles',
       content: 'loading...',
       cssClass: 'loadingBackdrop',
       dismissOnPageChange: true
