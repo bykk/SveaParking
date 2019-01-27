@@ -41,6 +41,13 @@ button > ion-icon {
     color: color($colors, primary);
 }
 
+.menu-btn:active {
+    background-color: color($colors, primary);
+}
+.menu-btn:hover {
+    background-color: color($colors, primary);
+}
+
 .title-image {
     display:inline-block;     
     width: 10%;
