@@ -19,14 +19,17 @@
   display: none;
 }
 
+ion-header {
+    border-bottom: 4px solid color($colors, secondary);
+}   
+
 button > ion-icon {
-    font-size: 20px;
-    zoom: 1.0; 
+    zoom: 0.9; 
     color: white;
 }
 
 .menu-btn-text {
-    font-size: 20px;
+    font-size: 18px;
     color: white;
 }
 

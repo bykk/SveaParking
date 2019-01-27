@@ -16,12 +16,12 @@ page-home {
     .current-parking-spot {
         border: 1px solid color($colors, primary);        
         font-weight: bold;
-        color: color($colors, primary);
+        color: color($colors, secondary);
         font-size: 60px;        
     }
 
     .parking-spot-number {
-        color: color($colors, primary);
+        color: color($colors, secondary);
         font-weight: bold;
         padding-right: 15px;        
     }
