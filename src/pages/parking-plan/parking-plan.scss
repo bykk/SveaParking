@@ -1,5 +1,9 @@
 .parking-spot-number {
-    color: color($colors, primary);
+    color: color($colors, secondary);
     font-weight: bold;
     padding-right: 15px;        
+}
+
+.parking-plan-until {
+    color: color($colors, secondary);
 }

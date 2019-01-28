@@ -13,7 +13,7 @@
 <ion-content class="parking-plan" padding text-center>
   <h4> Current parking plan </h4>
   <ion-list>
-    <ion-list-header>Until <small>{{ currentParkingPlanEnds }}</small></ion-list-header>
+    <ion-list-header>Until <small class="parking-plan-until">{{ currentParkingPlanEnds }}</small></ion-list-header>
     <ion-item *ngFor="let sharedSpot of sharedParkingSpots">
       <span>{{ sharedSpot.user.firstName }} {{ sharedSpot.user.lastName }}</span>      
       <span class="parking-spot-number" item-end>{{ sharedSpot.parkingSpotNumber }}</span>
