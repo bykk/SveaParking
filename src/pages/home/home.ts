@@ -355,8 +355,7 @@ export class HomePage {
   showLoading(): void {
     this.loading = this._loadingCtrl.create({
       spinner: 'circles',
-      content: 'loading...',
-      cssClass: 'loadingBackdrop'
+      content: 'loading...'
     });
     this.loading.present();
   };

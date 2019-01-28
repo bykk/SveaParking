@@ -102,8 +102,7 @@ export class UsersPage {
   presentLoading(): void {
     this.loading = this._loadingCtrl.create({
       spinner: 'crescent',
-      content: 'loading..',
-      cssClass: 'loadingBackdrop'
+      content: 'loading..'
     });
     this.loading.present();
   };
