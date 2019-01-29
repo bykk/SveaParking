@@ -72,7 +72,7 @@ export class MyApp {
 
     const pushObject: PushObject = this._push.init(options);
 
-    pushObject.on('notification').subscribe((notification: any) => this._toastService.onSuccess(notification));
+    pushObject.on('notification').subscribe((notification: any) => console.log('Received a notification', notification));
     pushObject.on('registration').subscribe((registration: any) => console.log('Device registered', registration));
     pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
   }

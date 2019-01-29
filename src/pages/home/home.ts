@@ -98,7 +98,7 @@ export class HomePage {
     });
   }
 
-  initNoParkingSpot() {    
+  initNoParkingSpot() {
     this.userAlreadyHasParkingSpotToday = false;
     this.userAlreadyHasParkingSpotTomorrow = false;
 
@@ -216,32 +216,48 @@ export class HomePage {
       spotId: userParkingSpot.id,
       userIdReplace: this.loggedInUser.id
     }
-    this._facadeService.takeParkingSpot(takeParking).subscribe((res: any) => {
-      this._storage.get('loggedInUser').then((loggedInUser) => {
-        this.availableParkingSpotsToday.forEach(parkingSpot => {
-          if (parkingSpot.id == userParkingSpot.id) {
-            this._facadeService.getUserById(loggedInUser.id).subscribe((res: any) => {
-              parkingSpot.replaceUser = res;
-              parkingSpot.userIdReplace = res.id;
+    this._facadeService.getAvailableParkingSpots().subscribe((res: any) => {
+      let availableParkingSpots = res[0] as ParkingSpot[];
+     
+      let parkingSpot = availableParkingSpots.find(x => x.id === takeParking.spotId && x.userIdReplace !== 0);
+      let isAlreadyTaken = parkingSpot !== undefined;
 
-              if (parkingSpot.userIdReplace == this.loggedInUser.id) {
-                this.userAlreadyHasParkingSpotToday = true;
-                parkingSpot.isLoggedInUser = true;
-              }
-
-              this.loading.dismiss();
-              this._toastService.onSuccess('Parking spot taken successfully');
-            });
-          }
+      if (isAlreadyTaken) {
+        this._facadeService.getUserById(parkingSpot.userIdReplace).subscribe((res: any) => {
+          debugger;
+          parkingSpot.replaceUser = res;
+          parkingSpot.userIdReplace = parkingSpot.userIdReplace;
+          this._toastService.onWarning('Spot already taken :(');
+          this.loading.dismiss();
         });
+        return;
+      }
+      this._facadeService.takeParkingSpot(takeParking).subscribe((res: any) => {
+        this._storage.get('loggedInUser').then((loggedInUser) => {
+          this.availableParkingSpotsToday.forEach(parkingSpot => {
+            if (parkingSpot.id == userParkingSpot.id) {
+              this._facadeService.getUserById(loggedInUser.id).subscribe((res: any) => {
+                parkingSpot.replaceUser = res;
+                parkingSpot.userIdReplace = res.id;
+
+                if (parkingSpot.userIdReplace == this.loggedInUser.id) {
+                  this.userAlreadyHasParkingSpotToday = true;
+                  parkingSpot.isLoggedInUser = true;
+                }
+
+                this.loading.dismiss();
+                this._toastService.onSuccess('Parking spot taken successfully');
+              });
+            }
+          });
+        });
+
+
+      }, () => {
+        this._toastService.onError('Parking not taken, something went wrong :(');
+        this.loading.dismiss();
       });
-
-
-    }, () => {
-      this._toastService.onError('Parking not taken, something went wrong :(');
-      this.loading.dismiss();
     });
-
   }
 
   takeParkingSpotTomorrow(userParkingSpot: ParkingSpot): void {
@@ -251,30 +267,45 @@ export class HomePage {
       spotId: userParkingSpot.id,
       userIdReplace: this.loggedInUser.id
     }
+   
+   
 
-    this._facadeService.takeParkingSpot(takeParking).subscribe(res => {
-      this.availableParkingSpotsTomorrow.forEach(parkingSpot => {
-        if (parkingSpot.id == userParkingSpot.id) {
-          this._facadeService.getUserById(this.loggedInUser.id).subscribe((res: any) => {
-            parkingSpot.replaceUser = res;
-            parkingSpot.userIdReplace = res.id;
+    this._facadeService.getAvailableParkingSpots().subscribe((res: any) => {
+      let availableParkingSpots = res[1] as ParkingSpot[];
+      let parkingSpot = availableParkingSpots.find(x => x.id === takeParking.spotId && x.userIdReplace !== 0);
+      let isAlreadyTaken = parkingSpot !== undefined;
+      
+      if (isAlreadyTaken) {
+        parkingSpot.userIdReplace = parkingSpot.userIdReplace;
+        this._toastService.onWarning('Spot already taken :(');
+        this.loading.dismiss();
+        return;
+      }
 
-            if (parkingSpot.userIdReplace == this.loggedInUser.id) {
-              parkingSpot.isLoggedInUser = true;
-              this.userAlreadyHasParkingSpotTomorrow = true;
-            }
-            this.loading.dismiss();
-            this._toastService.onSuccess('Parking spot taken successfully');
-          });
-        }
+      this._facadeService.takeParkingSpot(takeParking).subscribe(res => {
+        this.availableParkingSpotsTomorrow.forEach(parkingSpot => {
+          if (parkingSpot.id == userParkingSpot.id) {
+            this._facadeService.getUserById(this.loggedInUser.id).subscribe((res: any) => {
+              parkingSpot.replaceUser = res;
+              parkingSpot.userIdReplace = res.id;
+  
+              if (parkingSpot.userIdReplace == this.loggedInUser.id) {
+                parkingSpot.isLoggedInUser = true;
+                this.userAlreadyHasParkingSpotTomorrow = true;
+              }
+              this.loading.dismiss();
+              this._toastService.onSuccess('Parking spot taken successfully');
+            });
+          }
+        });
+  
+      }, () => {
+        this._toastService.onError('Parking not taken, something went wrong :( ');
+        this.loading.dismiss();
       });
-
-    }, () => {
-      this._toastService.onError('Parking not taken, something went wrong :( ');
-      this.loading.dismiss();
     });
+  
   };
-
 
   returnParkingSpotForToday(parkingSpot: ParkingSpot) {
     const confirmDialog = this._alertCtrl.create({
